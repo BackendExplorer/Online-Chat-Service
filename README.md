@@ -323,6 +323,7 @@ UDP通信を介してメッセージを送受信します。
 
 # バイト情報
 
+<img width="523" alt="スクリーンショット 2025-03-14 4 28 39" src="https://github.com/user-attachments/assets/d333999f-447e-41ca-8070-65221e197b44" />
 
 
 
