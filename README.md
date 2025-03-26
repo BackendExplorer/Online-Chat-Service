@@ -426,9 +426,6 @@ UDP通信を介してメッセージを送受信します。
 ## ✨ こだわりのポイント
 
 
-## ✨ こだわりのポイント
-
-## ✨ こだわりのポイント
 
 
 <img width="459" alt="スクリーンショット 2025-03-26 22 34 26" src="https://github.com/user-attachments/assets/cf3ca451-9e77-49a0-a9b6-f07ba7c1e4af" />
