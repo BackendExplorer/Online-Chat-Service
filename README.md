@@ -424,21 +424,10 @@ UDP通信を介してメッセージを送受信します。
 
 
 ## ✨ こだわりのポイント
-
-
 <p align="center">
-  <img width="274" alt="スクリーンショット 2025-03-27 0 59 06" src="https://github.com/user-attachments/assets/3eecddd4-3c9d-4f3b-9191-acda8daf3f55" />
-  <img width="326" alt="スクリーンショット 2025-03-27 0 59 11" src="https://github.com/user-attachments/assets/5ddab0b9-26cb-4d54-bd45-42874e07c6c4" />
+  <img width="413" alt="スクリーンショット 2025-03-27 1 41 43" src="https://github.com/user-attachments/assets/561e0e00-18ed-4df9-86a8-b3b9a0a25eed" />
+  <img width="307" alt="スクリーンショット 2025-03-27 1 41 33" src="https://github.com/user-attachments/assets/3bc079fb-d453-4824-9d0a-a5edf4d1da06" />
 </p>
-
-
-<img width="459" alt="スクリーンショット 2025-03-26 22 34 26" src="https://github.com/user-attachments/assets/cf3ca451-9e77-49a0-a9b6-f07ba7c1e4af" />
-
-
-
-
-<img width="308" alt="スクリーンショット 2025-03-26 19 28 12" src="https://github.com/user-attachments/assets/d5aa2c4f-c502-404b-b373-96ff84ebea96" />
-
 
 ## ⚠️ 苦労した点
 
