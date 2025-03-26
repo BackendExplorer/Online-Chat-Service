@@ -437,7 +437,7 @@ UDP通信を介してメッセージを送受信します。
 
 # バイト情報
 
-<img width="523" alt="スクリーンショット 2025-03-14 4 28 39" src="https://github.com/user-attachments/assets/d333999f-447e-41ca-8070-65221e197b44" />
+<img width="459" alt="スクリーンショット 2025-03-26 22 34 26" src="https://github.com/user-attachments/assets/cf3ca451-9e77-49a0-a9b6-f07ba7c1e4af" />
 
 
 
