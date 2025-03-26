@@ -426,6 +426,10 @@ UDP通信を介してメッセージを送受信します。
 ## ✨ こだわりのポイント
 
 
+<p align="center">
+  <img width="274" alt="スクリーンショット 2025-03-27 0 59 06" src="https://github.com/user-attachments/assets/3eecddd4-3c9d-4f3b-9191-acda8daf3f55" />
+  <img width="326" alt="スクリーンショット 2025-03-27 0 59 11" src="https://github.com/user-attachments/assets/5ddab0b9-26cb-4d54-bd45-42874e07c6c4" />
+</p>
 
 
 <img width="459" alt="スクリーンショット 2025-03-26 22 34 26" src="https://github.com/user-attachments/assets/cf3ca451-9e77-49a0-a9b6-f07ba7c1e4af" />
