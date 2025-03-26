@@ -425,6 +425,15 @@ UDP通信を介してメッセージを送受信します。
 
 ## ✨ こだわりのポイント
 
+
+<img width="459" alt="スクリーンショット 2025-03-26 22 34 26" src="https://github.com/user-attachments/assets/cf3ca451-9e77-49a0-a9b6-f07ba7c1e4af" />
+
+
+
+
+<img width="308" alt="スクリーンショット 2025-03-26 19 28 12" src="https://github.com/user-attachments/assets/d5aa2c4f-c502-404b-b373-96ff84ebea96" />
+
+
 ## ⚠️ 苦労した点
 
 ## 💡 さらに追加したい機能
@@ -437,9 +446,3 @@ UDP通信を介してメッセージを送受信します。
 
 # バイト情報
 
-<img width="459" alt="スクリーンショット 2025-03-26 22 34 26" src="https://github.com/user-attachments/assets/cf3ca451-9e77-49a0-a9b6-f07ba7c1e4af" />
-
-
-
-
-<img width="308" alt="スクリーンショット 2025-03-26 19 28 12" src="https://github.com/user-attachments/assets/d5aa2c4f-c502-404b-b373-96ff84ebea96" />
