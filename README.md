@@ -182,7 +182,7 @@ C1 --> D1
 
 
 
-<img width="791" alt="スクリーンショット 2025-03-29 4 18 51" src="https://github.com/user-attachments/assets/8b7d3359-779a-4e4f-b156-e4cca0b9f315" />
+<img width="786" alt="スクリーンショット 2025-03-29 4 23 21" src="https://github.com/user-attachments/assets/54a58cc9-184d-4283-b758-5feb11fca42b" />
 
 </div>
 
