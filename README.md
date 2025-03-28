@@ -283,8 +283,7 @@ class UDPClient {
 ```
 
 ---
-<img width="792" alt="スクリーンショット 2025-03-29 4 33 46" src="https://github.com/user-attachments/assets/4b9a1265-ae18-44b1-bac0-716e96a10e0c" />
-<img width="791" alt="スクリーンショット 2025-03-29 4 33 51" src="https://github.com/user-attachments/assets/8903bbce-53be-4f55-8e4f-3833143097cd" />
+<img width="789" alt="スクリーンショット 2025-03-29 4 51 39" src="https://github.com/user-attachments/assets/6067be70-5cbe-4077-a6de-d7f20cdd8231" />
 
 
 
