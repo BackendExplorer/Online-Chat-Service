@@ -100,7 +100,7 @@ classDef client fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
 classDef messaging fill:#ede7f6,stroke:#6a1b9a,stroke-width:2px
 classDef warning fill:#ffebee,stroke:#c62828,stroke-width:2px
 
-%% サーバー起動
+%% サーバー起動処理（左）
 subgraph サーバー起動[サーバー起動処理]
     A1(メインスレッド)
     A2(TCPサーバースレッド)
@@ -120,7 +120,7 @@ subgraph サーバー起動[サーバー起動処理]
     class A1,A2,A3,A4,A5,A6,A7 server
 end
 
-%% クライアント起動
+%% クライアント起動処理（サーバー起動の次）
 subgraph クライアント起動[クライアント起動処理]
     B1(クライアント実行)
     B2(TCPクライアント開始)
@@ -146,7 +146,7 @@ subgraph クライアント起動[クライアント起動処理]
     class B1,B2,B3,B4,B5,B6,B7,B8,B9,B10,B11 client
 end
 
-%% サーバーメッセージ処理
+%% メッセージ処理＆監視（さらに次）
 subgraph サーバーメッセージ処理[メッセージ処理＆監視]
     C1(UDPサーバー)
     C2(クライアントからメッセージ受信)
@@ -160,7 +160,7 @@ subgraph サーバーメッセージ処理[メッセージ処理＆監視]
     class C1,C2,C3,C4,C5 messaging
 end
 
-%% クライアント終了
+%% クライアント終了処理（右）
 subgraph クライアント終了[クライアント終了処理]
     D1(クライアント)
     D2(UDPで'exit!'送信)
@@ -174,7 +174,7 @@ subgraph クライアント終了[クライアント終了処理]
     class D1,D2,D3,D4,D5 warning
 end
 
-%% 流れ接続（全体の連携）
+%% 全体の連携（上から下）
 A1 --> B1
 B1 --> C1
 C1 --> D1
