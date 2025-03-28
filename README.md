@@ -88,7 +88,7 @@ flowchart TD
 
 
 <div style="font-size:120%; line-height:1.6;">
-
+---
 ## 🔀処理フロー
 
 ```mermaid
@@ -180,7 +180,7 @@ B1 --> C1
 C1 --> D1
 ```
 
----
+
 
 ### 🖥️ サーバー起動処理
 
