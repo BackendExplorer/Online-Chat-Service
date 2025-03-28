@@ -179,8 +179,7 @@ A1 --> B1
 B1 --> C1
 C1 --> D1
 ```
-<img width="711" alt="スクリーンショット 2025-03-29 4 12 55" src="https://github.com/user-attachments/assets/f6b9ad2b-2267-41cb-a1a3-e5ecff744d1c" />
-
+<img width="716" alt="スクリーンショット 2025-03-29 4 17 18" src="https://github.com/user-attachments/assets/dc3b4815-6eac-4066-b239-fe29211f281a" />
 
 </div>
 
