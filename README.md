@@ -92,7 +92,7 @@ flowchart TD
 ## 🔀処理フロー
 
 ```mermaid
-graph TD
+graph LR
 
 %% スタイル定義
 classDef server fill:#e3f2fd,stroke:#1e88e5,stroke-width:2px
