@@ -283,63 +283,10 @@ class UDPClient {
 ```
 
 ---
+<img width="792" alt="スクリーンショット 2025-03-29 4 33 46" src="https://github.com/user-attachments/assets/4b9a1265-ae18-44b1-bac0-716e96a10e0c" />
+<img width="791" alt="スクリーンショット 2025-03-29 4 33 51" src="https://github.com/user-attachments/assets/8903bbce-53be-4f55-8e4f-3833143097cd" />
 
 
-
-### 🖥 サーバープログラム
-サーバー側のクラスは、**クライアントの接続管理、リクエスト処理、ルーム管理** などを担当します。
-
-#### 🔹 TCPServer
-
-TCP通信を介してクライアントからのリクエストを受け取り、適切な処理を実行します。
-
-| 機能 | 説明 |
-|------|------|
-| クライアントからの接続受付 | `start_tcp_server()` |
-| リクエスト処理 | `handle_client_request()` |
-| クライアント情報の登録 | `register_client()` |
-| ルームの作成 | `create_room()` |
-| ルームへの参加 | `join_room()` |
-| メッセージの解析 | `decode_message()` |
-
-#### 🔹 UDPServer
-
-UDP通信を介してメッセージを受信し、リレーまたは適切な処理を行います。
-
-| 機能 | 説明 |
-|------|------|
-| クライアントからのメッセージ受信 | `handle_messages()` |
-| メッセージの処理 | `decode_message()` |
-| ルーム内のメンバーにメッセージをブロードキャスト | `broadcast_message()` |
-| 非アクティブクライアントの削除 | `remove_inactive_clients()` |
-
----
-
-### 💻 クライアントプログラム
-クライアント側のクラスは、**サーバーとの通信、メッセージ送受信、ユーザーインターフェース** を担当します。
-
-#### 🔹 TCPClient
-
-TCP通信を介してサーバーにリクエストを送信し、レスポンスを受信します。
-
-| 機能 | 説明 |
-|------|------|
-| サーバー接続 | `connect_to_server()` |
-| ルームの作成 | `create_room()` |
-| ルームへの参加 | `join_room()` |
-| ルーム一覧の取得 | `input_room_name()` |
-| パケット作成 | `create_packet()` |
-
-#### 🔹 UDPClient
-
-UDP通信を介してメッセージを送受信します。
-
-| 機能 | 説明 |
-|------|------|
-| ユーザー名の送信 | `send_username()` |
-| メッセージの送信 | `send_message()` |
-| メッセージの受信 | `receive_message()` |
-| パケット作成 | `create_packet()` |
 
 ---
 
