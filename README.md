@@ -180,10 +180,11 @@ B1 --> C1
 C1 --> D1
 ```
 
-<table style="width:100%;">
+
+<table>
   <tr>
-    <td style="vertical-align: top; padding: 10px;">
-      <div style="border: 2px solid #4CAF50; border-radius: 8px; padding: 15px;">
+    <td>
+
 ### 🖥️ サーバー起動処理
 
 #### 🔹 1. メインスレッド
@@ -204,10 +205,10 @@ C1 --> D1
 - `UDPServer` を起動し、以下の2つのスレッドを開始します：
   - 💬 **チャットメッセージの処理**
   - ⏱️ **非アクティブクライアントの監視**
-      </div>
+
     </td>
-    <td style="vertical-align: top; padding: 10px;">
-      <div style="border: 2px solid #4CAF50; border-radius: 8px; padding: 15px;">
+    <td>
+
 ### 🧑‍💻 クライアント起動処理
 
 #### 🔹 1. TCPクライアント起動
@@ -227,15 +228,15 @@ C1 --> D1
 
 - `UDPClient` を使用して、UDP通信によるチャットを開始。
 - メッセージの送受信をスレッドで並行処理します。
-      </div>
+
     </td>
   </tr>
 </table>
 
-<table style="width:100%;">
+<table>
   <tr>
-    <td style="vertical-align: top; padding: 10px;">
-      <div style="border: 2px solid #FF9800; border-radius: 8px; padding: 15px;">
+    <td>
+
 ### 🔁 メッセージ処理 & クライアント監視（UDP）
 
 #### 💬 1. メッセージ受信とブロードキャスト
@@ -250,10 +251,10 @@ C1 --> D1
 
 - 最終アクティブ時刻を定期チェック（100秒未活動でキック）。
 - ホストがタイムアウトした場合、ルームを削除し通知を送信。
-      </div>
+
     </td>
-    <td style="vertical-align: top; padding: 10px;">
-      <div style="border: 2px solid #FF9800; border-radius: 8px; padding: 15px;">
+    <td>
+
 ### ❌ クライアント終了処理
 
 #### 🔔 1. サーバーからの通知で切断
@@ -267,7 +268,7 @@ C1 --> D1
 - サーバーは以下を実施：
   - ホスト ➡️ ルーム削除
   - ゲスト ➡️ ルームから除外
-      </div>
+
     </td>
   </tr>
 </table>
@@ -549,7 +550,6 @@ UDP通信を介してメッセージを送受信します。
 <p align="center">
   <img src="https://github.com/user-attachments/assets/43766c52-7a68-4d7e-852d-18bf48755f78" width="100%">
 </p>
-
 
 
 
