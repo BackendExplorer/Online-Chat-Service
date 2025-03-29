@@ -181,8 +181,8 @@ C1 --> D1
 ```
 
 
-<img width="790" alt="スクリーンショット 2025-03-29 7 08 01" src="https://github.com/user-attachments/assets/1ac71207-c491-4221-ab1b-6bff8026599b" />
 
+<img width="787" alt="スクリーンショット 2025-03-30 6 09 28" src="https://github.com/user-attachments/assets/37ffb75b-7fc5-4698-aeb6-dfd6f2b0932a" />
 
 </div>
 
