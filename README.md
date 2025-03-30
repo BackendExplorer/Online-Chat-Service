@@ -1,8 +1,3 @@
-> **サーバプログラム(server.py)はこちら**  
-> [▶ backend ディレクトリを見る](https://github.com/ユーザー名/リポジトリ名/tree/main/backend)
-
-
-
 # 🌐 オンラインチャットサービス 💬  
 
 **ユーザがルームを作成または参加して、グループチャットができるサービス**
@@ -245,6 +240,11 @@ class UDPServer {
     - disconnect_inactive_client(client_token: bytes, client_info: list): None
 }
 ```
+
+
+> **サーバプログラム(server.py)はこちら**  
+> [▶ backend ディレクトリを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py)
+
 
 ### 📍 client.py のクラス図
 ```mermaid
