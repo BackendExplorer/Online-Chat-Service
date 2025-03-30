@@ -245,7 +245,7 @@ class UDPServer {
 [▶ サーバプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py)
 
 
-<img width="792" alt="スクリーンショット 2025-03-30 21 05 02" src="https://github.com/user-attachments/assets/188c3f12-ca71-4dd4-bf42-a71105a25c39" />
+<img width="790" alt="スクリーンショット 2025-03-30 20 58 46" src="https://github.com/user-attachments/assets/00e08403-a874-4293-b079-219073b49853" />
 
 
 
@@ -294,7 +294,8 @@ class UDPClient {
 
 
 
-<img width="791" alt="スクリーンショット 2025-03-30 21 05 08" src="https://github.com/user-attachments/assets/cdbc5aa7-7c65-4d4e-827f-6327ead06d7f" />
+<img width="787" alt="スクリーンショット 2025-03-30 20 58 52" src="https://github.com/user-attachments/assets/5198db5a-b34d-4c42-8d2a-e282a87a6cbc" />
+
 
 
 ---
