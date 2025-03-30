@@ -1,4 +1,4 @@
-> 💻 **Go（サーバー）側の処理コードはこちら**  
+> **サーバプログラム(server.py)はこちら**  
 > [▶ backend ディレクトリを見る](https://github.com/ユーザー名/リポジトリ名/tree/main/backend)
 
 
