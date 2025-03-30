@@ -242,8 +242,8 @@ class UDPServer {
 ```
 
 
-> **サーバプログラム(server.py)はこちら**  
-> [▶ backend ディレクトリを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py)
+ 
+ [▶ サーバプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py)
 
 
 ### 📍 client.py のクラス図
