@@ -286,6 +286,7 @@ class UDPClient {
     - create_packet(message: bytes = b"" ): bytes
 }
 ```
+[▶ クライアントプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py)
 
 
 
