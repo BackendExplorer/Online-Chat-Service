@@ -4,7 +4,6 @@
 ## 🖥 デモ
 https://github.com/user-attachments/assets/4a4c6f99-aa94-4867-924d-e112d16efbf8
 
-
 ## **📎 概要**
 - [概要](#概要)
 - [セットアップ](#セットアップ)
@@ -31,8 +30,6 @@ https://github.com/user-attachments/assets/4a4c6f99-aa94-4867-924d-e112d16efbf8
 - [参考文献](#参考文献)
 
 ---
-
-## 🖥 シミュレーション
 
 ## ▶️ 実行方法
 
@@ -73,10 +70,6 @@ flowchart TD
     チャット中 --> End
 
 ```
-
-
-
-
 ---
 <div style="font-size:120%; line-height:1.6;">
 
@@ -183,13 +176,8 @@ C1 --> D1
 
 ## 📦 クラス図と構成
 
-
 このプロジェクトは、**TCP/UDP通信を用いたチャットシステム** を構成するクラス群で成り立っています。<br>
 サーバーとクライアントでそれぞれの役割を持ち、以下のように分類されます。
-
-
-
-
 
 ### 📍 server.py のクラス図
 ```mermaid
@@ -283,20 +271,9 @@ class UDPClient {
 ```
 [▶ クライアントプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py)
 
-
-
-
 <img width="787" alt="スクリーンショット 2025-03-30 20 58 52" src="https://github.com/user-attachments/assets/5198db5a-b34d-4c42-8d2a-e282a87a6cbc" />
 
-
-
 ---
-
-
-
-
-
-
 ## ✨ こだわりのポイント
 <p align="center">
   <img width="413" alt="スクリーンショット 2025-03-27 1 41 43" src="https://github.com/user-attachments/assets/561e0e00-18ed-4df9-86a8-b3b9a0a25eed" />
