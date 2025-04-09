@@ -1,22 +1,8 @@
 # 🌐 オンラインチャットサービス 💬  
-
 **ユーザがルームを作成または参加して、グループチャットができるサービス**
 
-
-
 ## 🖥 デモ
-
-
-
-
-
-
-https://github.com/user-attachments/assets/4a4c6f99-aa94-4867-924d-e112d16efbf8
-
-
-
-
-
+[![デモ動画を再生](https://user-images.githubusercontent.com/your-username/your-thumbnail.png)](https://github.com/user-attachments/assets/4a4c6f99-aa94-4867-924d-e112d16efbf8)
 
 ## **📎 概要**
 - [概要](#概要)
