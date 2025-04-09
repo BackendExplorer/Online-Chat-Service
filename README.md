@@ -2,7 +2,7 @@
 **ユーザがルームを作成または参加して、グループチャットができるサービス**
 
 ## 🖥 デモ
-[![Watch the video](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://github.com/user-attachments/assets/4a4c6f99-aa94-4867-924d-e112d16efbf8)
+[![Watch the video](https://yourdomain.com/thumbnail-with-play.png)](https://github.com/user-attachments/assets/4a4c6f99-aa94-4867-924d-e112d16efbf8)
 
 ## **📎 概要**
 - [概要](#概要)
