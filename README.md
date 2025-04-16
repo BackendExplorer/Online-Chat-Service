@@ -41,6 +41,8 @@
 
 ### 1. クローン
 
+まずはGitHubよりリポジトリをローカルにクローンします
+
 ```bash
 git clone https://github.com/your-username/chat-app-tcp-udp.git
 ```
@@ -51,15 +53,20 @@ cd chat-app-tcp-udp
 
 ### 2. サーバ起動
 
+サーバスクリプトを実行し、クライアントの接続を待機します。
+
 ```bash
 python3 server.py
 ```
-
+サーバは接続された複数のクライアントとのやりとりを同時に処理します。
 
 ### 3. クライアント起動
+別のターミナルを開き、以下のコマンドでクライアントを起動します。
+
 ```bash
 python client.py
 ```
+複数のクライアントを起動することで、実際のチャットのようなやり取りをシミュレーションできます。
 
 #### サーバのターミナル
 <img width="543" alt="スクリーンショット 2025-04-16 20 53 08" src="https://github.com/user-attachments/assets/bf3e0349-713d-4896-942e-3b763b907cda" />
