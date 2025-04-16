@@ -270,7 +270,7 @@ class UDPServer {
 ```
 
 
-[👉 サーバプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py)
+👉 [サーバプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py)
 
 
 
@@ -318,7 +318,7 @@ class UDPClient {
     - create_packet(message: bytes = b"" ): bytes
 }
 ```
-[▶ クライアントプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py)
+👉 [クライアントプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py)
 
 <img width="787" alt="スクリーンショット 2025-03-30 20 58 52" src="https://github.com/user-attachments/assets/5198db5a-b34d-4c42-8d2a-e282a87a6cbc" />
 
