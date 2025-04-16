@@ -68,14 +68,6 @@ python client.py
 ```
 複数のクライアントを起動することで、実際のチャットのようなやり取りをシミュレーションできます。
 
-### サーバのターミナル
-<img width="543" alt="スクリーンショット 2025-04-16 20 53 08" src="https://github.com/user-attachments/assets/bf3e0349-713d-4896-942e-3b763b907cda" />
-
-### クライアントのターミナル1
-<img width="490" alt="スクリーンショット 2025-04-16 20 53 19" src="https://github.com/user-attachments/assets/8584d7d1-7114-4670-8aea-f95011718e68" />
-
-### クライアントのターミナル2
-<img width="487" alt="スクリーンショット 2025-04-16 20 53 32" src="https://github.com/user-attachments/assets/f5c697a8-8542-40ef-8b52-254d441ee628" />
 
 
 ## <a id="使用技術"></a>🛠 使用技術
