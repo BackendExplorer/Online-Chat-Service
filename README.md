@@ -43,7 +43,7 @@
   👉 [Python公式サイト](https://www.python.org/downloads/) からインストールできます
 
 - **Git**  
-  👉 [Git公式サイト](https://git-scm.com/) よりダウンロード
+  👉 [Git公式サイト](https://git-scm.com/) からインストールできます
 
 ---
 
