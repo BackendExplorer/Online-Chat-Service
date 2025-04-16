@@ -1,4 +1,4 @@
-<hr style="border: none; height: 1px; background-color: #e0e0e0;" />
+<hr style="border: none; height: 0.1px; background-color: #e0e0e0;" />
 
 
 # 🌐 オンラインチャットサービス 💬  
