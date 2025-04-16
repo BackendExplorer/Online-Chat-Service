@@ -44,7 +44,7 @@
 まずはGitHubよりリポジトリをローカルにクローンします
 
 ```bash
-git clone https://github.com/your-username/chat-app-tcp-udp.git
+https://github.com/BackendExplorer/Online-Chat-Service.git
 ```
 
 ```bash
