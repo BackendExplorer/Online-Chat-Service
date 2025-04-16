@@ -352,6 +352,69 @@ class UDPClient {
 
 ## <a id="苦労した点"></a> ⚠️ 苦労した点
 
+### 1. TCPとUDPを併用した通信設計の構築
+
+#### 課題:
+TCPには信頼性は高いが遅延がある。一方UDPは高速だが信頼性がない。それぞれの特性を活かすには、制御系（ルーム作成・参加）はTCP、リアルタイム通信（チャット）はUDPで分離する必要があった。
+
+#### 工夫した点:
+TCPで受け取ったトークンやルーム情報をUDPサーバー側で再利用するため、`TCPServer`クラスのデータを`UDPServer`で引き継ぐ設計にしました。
+
+```python
+# UDPServerのコンストラクタより(TCPで構成したマップを再利用)
+self.room_members_map = TCPServer.room_members_map
+self.clients_map = TCPServer.clients_map
+```
+
+#### 問題になった点:
+UDPサーバーでルームメンバーを認識できない問題があり、TCPの情報をクラス変数として保持して同期させる形に変更しました。
+
+---
+
+### 2. クライアント状態の管理（トークン・ルーム情報）の一元化
+
+#### 課題:
+トークンだけでクライアントを識別しつつ、ルーム名やユーザー名、ホストかゲストかなどを適切に記録・利用する必要がありました。
+
+#### 該当コード:
+
+```python
+# クライアント情報を登録（トークン、アドレス、ルーム名、ユーザー名、ホストフラグ、最終アクティブ時間）
+self.clients_map[token] = [client_address, room_name, payload, 1 if operation == 1 else 0, None]
+```
+
+#### 工夫した点:
+- トークンをユニークキーとして辞書で一元管理
+- クライアントの状態（最終アクティブ時間）を定期的に監視し、管理の整合性を保つ
+
+
+
+### 3. 非アクティブユーザーの検出と自動退出処理
+
+#### 課題:
+長時間操作のないユーザーをルームから退出させ、ルームに通知する必要がありました。特にホストが退出した場合にはルームごと削除する処理が必要です。
+
+#### 該当コード:
+
+```python
+if last_active_time and (current_time - last_active_time > 100):
+    self.disconnect_inactive_client(client_token, client_info)
+```
+
+#### ホスト切断時の処理:
+
+```python
+if is_host == 1:
+    self.broadcast_message(room_id, f"ホストの{username}がルームを退出しました．")
+    self.broadcast_message(room_id, "exit!")
+    del self.room_members_map[room_id]  # ルーム削除
+```
+
+#### 工夫した点:
+- `is_host`のフラグに応じてルームの削除またはメンバー削除を分岐
+- `broadcast_message()` を使って、ルーム内の他メンバーに状況を共有
+
+
 ## <a id="さらに追加したい機能"></a>💡 さらに追加したい機能
 
 
