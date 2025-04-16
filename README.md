@@ -35,7 +35,32 @@
 
 ---
 
-## <a id="実行方法"></a>▶️ 実行方法
+
+
+## <a id="利用方法"></a>▶️ 利用方法
+
+### 1. クローン
+
+```bash
+git clone https://github.com/your-username/chat-app-tcp-udp.git
+```
+
+```bash
+cd chat-app-tcp-udp
+```
+
+### 2. サーバ起動
+
+```bash
+python3 server.py
+```
+
+
+### 3. クライアント起動
+```bash
+python client.py
+```
+
 
 ## <a id="使用技術"></a>🛠 使用技術
 
