@@ -1,7 +1,8 @@
 # 🌐 オンラインチャットサービス 💬  
 **ユーザがルームを作成または参加して、グループチャットができるサービス**
 
-[![デモ動画を見る](https://img.youtube.com/vi/＜動画ID＞/0.jpg)](https://www.youtube.com/watch?v=＜動画ID＞)
+[![デモ動画を見る](https://img.youtube.com/vi/r2hxTKuWAok/0.jpg)](https://youtu.be/r2hxTKuWAok "YouTubeで動画を見る")
+
 
 
 ## 🖥 デモ
