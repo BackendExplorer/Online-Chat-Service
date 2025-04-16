@@ -324,7 +324,7 @@ class UDPClient {
 
 ---
 ## <a id="こだわりのポイント"></a> ✨ こだわりのポイント
-この図は、チャットルーム接続のために設計された独自プロトコル TCRP（Talk Chat Room Protocol） のパケット構造を示しています。
+- この図は、チャットルーム接続のために設計された独自プロトコル TCRP（Talk Chat Room Protocol） のパケット構造を示しています。
 
 <p align="center">
   <img width="413" alt="スクリーンショット 2025-03-27 1 41 43" src="https://github.com/user-attachments/assets/561e0e00-18ed-4df9-86a8-b3b9a0a25eed" />
