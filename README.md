@@ -132,7 +132,7 @@ flowchart TD
 | カテゴリ | 技術スタック |
 |----------|------------|
 | 開発言語 | Python 3.13.2 |
-| インフラ | MacOS, Visual Studio Code |
+| 開発環境 | MacOS, VSCode |
 | その他 | Git, GitHub |
 
 
