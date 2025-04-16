@@ -44,7 +44,7 @@ https://github.com/user-attachments/assets/4a4c6f99-aa94-4867-924d-e112d16efbf8
 | その他 | Git, GitHub |
 
 
-## ⚙ 機能一覧
+## <a id="機能一覧"></a>⚙ 機能一覧
 
 
 
@@ -176,12 +176,12 @@ C1 --> D1
 
 
 
-## 📦 クラス図と構成
+## <a id="クラス図と構成"></a>📦 クラス図と構成
 
 このプロジェクトは、**TCP/UDP通信を用いたチャットシステム** を構成するクラス群で成り立っています。<br>
 サーバーとクライアントでそれぞれの役割を持ち、以下のように分類されます。
 
-### 📍 server.py のクラス図
+### <a id="server.py のクラス図"></a>📍 server.py のクラス図
 ```mermaid
 %%{init: {'themeVariables': {'scale': 0.3}}}%%
 classDiagram
@@ -231,7 +231,7 @@ class UDPServer {
 
 
 
-### 📍 client.py のクラス図
+### <a id="client.py のクラス図"></a>📍 client.py のクラス図
 ```mermaid
 %%{init: {'themeVariables': {'scale': 0.05}}}%%
 classDiagram
@@ -276,15 +276,15 @@ class UDPClient {
 <img width="787" alt="スクリーンショット 2025-03-30 20 58 52" src="https://github.com/user-attachments/assets/5198db5a-b34d-4c42-8d2a-e282a87a6cbc" />
 
 ---
-## ✨ こだわりのポイント
+##<a id="こだわりのポイント"></a> ✨ こだわりのポイント
 <p align="center">
   <img width="413" alt="スクリーンショット 2025-03-27 1 41 43" src="https://github.com/user-attachments/assets/561e0e00-18ed-4df9-86a8-b3b9a0a25eed" />
   <img width="307" alt="スクリーンショット 2025-03-27 1 41 33" src="https://github.com/user-attachments/assets/3bc079fb-d453-4824-9d0a-a5edf4d1da06" />
 </p>
 
-## ⚠️ 苦労した点
+##<a id="苦労した点"></a> ⚠️ 苦労した点
 
-## 💡 さらに追加したい機能
+## <a id="さらに追加したい機能"></a>💡 さらに追加したい機能
 
 
 
