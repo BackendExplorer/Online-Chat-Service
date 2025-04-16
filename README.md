@@ -153,10 +153,10 @@ flowchart TD
 - **Threading**: クライアントごとの並行処理を軽量に行うため
 
 
-
+---
 
 <div style="font-size:120%; line-height:1.6;">
----
+  
 ## <a id="処理の流れ"></a>🔀処理の流れ
 
 ```mermaid
