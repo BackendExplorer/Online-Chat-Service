@@ -58,9 +58,6 @@ git clone https://github.com/yourusername/your-repo-name.git
 cd your-repo-name
 ```
 
-### 🔄 フローチャート
-
-
 ## <a id="利用方法"></a>▶️ 利用方法
 
 ### 1. サーバ起動
@@ -80,7 +77,7 @@ python client.py
 ```
 複数のクライアントを起動することで、実際のチャットのようなやり取りをシミュレーションできます。
 
-
+### 🔄 フローチャート
 
 ```mermaid
 flowchart TD
