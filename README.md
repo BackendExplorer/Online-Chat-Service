@@ -387,7 +387,7 @@ self.clients_map[token] = [client_address, room_name, payload, 1 if operation ==
 - トークンをユニークキーとして辞書で一元管理
 - クライアントの状態（最終アクティブ時間）を定期的に監視し、管理の整合性を保つ
 
-
+---
 
 ### 3. 非アクティブユーザーの検出と自動退出処理
 
