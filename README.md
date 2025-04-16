@@ -282,7 +282,8 @@ class UDPClient {
   <img width="307" alt="スクリーンショット 2025-03-27 1 41 33" src="https://github.com/user-attachments/assets/3bc079fb-d453-4824-9d0a-a5edf4d1da06" />
 </p>
 
-##<a id="苦労した点"></a> ⚠️ 苦労した点
+
+## <a id="苦労した点"></a> ⚠️ 苦労した点
 
 ## <a id="さらに追加したい機能"></a>💡 さらに追加したい機能
 
