@@ -6,9 +6,8 @@
 
 
 ## 🖥 デモ
-<img width="1164" alt="スクリーンショット 2025-04-16 19 35 21" src="https://github.com/user-attachments/assets/a36e9852-52bf-4500-b0b6-354abc926b4e" />
+![output](https://github.com/user-attachments/assets/207ba639-b7a9-4c94-a6c8-ed5c396f1a73)
 
- 
 
 
 ## **📎 概要**
