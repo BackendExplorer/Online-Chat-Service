@@ -9,6 +9,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 class TCPServer:
+    
     HEADER_MAX_BYTE = 32     # ヘッダーサイズ（バイト）
     TOKEN_MAX_BYTE = 255     # クライアントトークンの最大バイト数
 
@@ -123,6 +124,7 @@ class TCPServer:
 
 
 class UDPServer:
+    
     def __init__(self, server_address, server_port):
         self.server_address = server_address
         self.server_port = server_port
