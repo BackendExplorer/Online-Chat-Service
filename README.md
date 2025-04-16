@@ -1,12 +1,15 @@
 # 🌐 オンラインチャットサービス 💬  
 **ユーザがルームを作成または参加して、グループチャットができるサービス**
 
-[![デモ動画を見る](https://img.youtube.com/vi/r2hxTKuWAok/0.jpg)](https://youtu.be/r2hxTKuWAok "YouTubeで動画を見る")
+
 
 
 
 ## 🖥 デモ
 <img width="1164" alt="スクリーンショット 2025-04-16 19 35 21" src="https://github.com/user-attachments/assets/a36e9852-52bf-4500-b0b6-354abc926b4e" />
+
+📺 [▶️ デモ動画をYouTubeで見る](https://youtu.be/r2hxTKuWAok)
+
 
 ## **📎 概要**
 - [概要](#概要)
