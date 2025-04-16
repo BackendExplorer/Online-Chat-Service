@@ -136,10 +136,6 @@ flowchart TD
 | その他 | Git, GitHub |
 
 
-## <a id="機能一覧"></a>⚙ 機能一覧
-
-
-
 ---
 <div style="font-size:120%; line-height:1.6;">
 
