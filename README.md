@@ -1,3 +1,6 @@
+<hr style="border: none; height: 1px; background-color: #e0e0e0;" />
+
+
 # 🌐 オンラインチャットサービス 💬  
 **ユーザがルームを作成または参加して、グループチャットができるサービス**
 
