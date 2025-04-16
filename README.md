@@ -35,6 +35,29 @@
 
 ---
 
+## <a id="セットアップ"></a>▶🚀 セットアップ
+
+### 1. 以下のソフトウェアがインストールされていることを確認してください：
+
+- **Python 3.8以上**  
+  👉 [Python公式サイト](https://www.python.org/downloads/) からインストールできます
+
+- **Git**  
+  👉 [Git公式サイト](https://git-scm.com/) よりダウンロード
+
+---
+
+### 2. 📦 リポジトリのクローン
+
+以下のコマンドを使って、このプロジェクトのコードをローカルに取得します：
+
+```bash
+git clone https://github.com/yourusername/your-repo-name.git
+```
+```bash
+cd your-repo-name
+```
+
 
 
 ## <a id="利用方法"></a>▶️ 利用方法
