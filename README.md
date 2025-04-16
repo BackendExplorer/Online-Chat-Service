@@ -442,4 +442,4 @@ if is_host == 1:
 - [Python](https://docs.python.org/ja/3/)
 
 ### 参考にしたサイト
-- [Pythonによるソケット通信の解説記事]([https://www.python.org/downloads/](https://qiita.com/t_katsumura/items/a83431671a41d9b6358f))
+- [Pythonによるソケット通信の実装](https://qiita.com/t_katsumura/items/a83431671a41d9b6358f)
