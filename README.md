@@ -2,7 +2,10 @@
 **ユーザがルームを作成または参加して、グループチャットができるサービス**
 
 ## 🖥 デモ
-<img width="1164" alt="スクリーンショット 2025-04-16 19 35 21" src="https://github.com/user-attachments/assets/b0599f9e-f3fe-4c3e-adac-220be2dae5e5" />
+
+
+https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
+
 
 
 ## **📎 概要**
