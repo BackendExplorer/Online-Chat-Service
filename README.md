@@ -3,10 +3,7 @@
 
 ## 🖥 デモ
 
-
 https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
-
-
 
 ## **📎 概要**
 - [概要](#概要)
@@ -26,7 +23,6 @@ https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
 - [さらに追加したい機能](#さらに追加したい機能)
 
 
-
 ## **📄 参考情報**
 - [参考文献](#参考文献)
 
@@ -37,7 +33,6 @@ https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
 このプロジェクトは、Pythonとソケット通信（TCP/UDP）を用いたリアルタイムチャットアプリケーションです。  
 独自設計の通信プロトコル「TCRP」によって、効率的かつ柔軟なチャット体験を提供します。
 ユーザー管理、トークン認証、ルーム機能、非アクティブ検知など実運用を想定した設計が特徴です。
-
 
 
 ###  主な特徴
@@ -147,7 +142,6 @@ flowchart TD
 - **UDP**: チャットメッセージ送信などリアルタイム性を重視する通信に利用
 - **Threading**: クライアントごとの並行処理を軽量に行うため
 
-
 ---
 
 <div style="font-size:120%; line-height:1.6;">
@@ -243,15 +237,12 @@ B1 --> C1
 C1 --> D1
 ```
 
-
 <img width="791" alt="スクリーンショット 2025-03-30 6 07 30" src="https://github.com/user-attachments/assets/39088dab-ca24-4f72-af74-a5bfdec1807b" />
 
 
 </div>
 
 ---
-
-
 
 ## <a id="クラス図"></a>📦 クラス図と構成
 
@@ -300,13 +291,10 @@ class UDPServer {
 }
 ```
 
-
  [サーバプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py)
 
 
-
 <img width="792" alt="スクリーンショット 2025-03-30 21 22 18" src="https://github.com/user-attachments/assets/5ebe17b8-059c-4fd8-91d1-5325b591040b" />
-
 
 
 ### <a id="client.py のクラス図"></a> client.py のクラス図
@@ -430,8 +418,6 @@ if is_host == 1:
 ---
 
 ## <a id="さらに追加したい機能"></a> 🌱 さらに追加したい機能
-
-
 
 ### 　メッセージの暗号化
 - クライアントとサーバは、RSAに似た暗号化方式を使用してメッセージを保護。
