@@ -325,7 +325,7 @@ class UDPServer {
 
 <br>
 
-[クライアントプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py)
+[**クライアントプログラムを見る**](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py)
 
 <br>
 
