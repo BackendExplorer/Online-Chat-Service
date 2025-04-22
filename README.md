@@ -261,8 +261,9 @@ C1 --> D1
 
 ## <a id="クラス図"></a>📦 クラス図と構成
 
-このプロジェクトは、**TCP/UDP通信を用いたチャットシステム** を構成するクラス群で成り立っています。<br>
-サーバーとクライアントでそれぞれの役割を持ち、以下のように分類されます。
+<br>
+[サーバプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py)
+<br>
 
 ### <a id="server.py のクラス図"></a> server.py のクラス図
 ```mermaid
@@ -306,13 +307,19 @@ class UDPServer {
 }
 ```
 
- [サーバプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py)
+ 
 
 
 <img width="792" alt="スクリーンショット 2025-03-30 21 22 18" src="https://github.com/user-attachments/assets/5ebe17b8-059c-4fd8-91d1-5325b591040b" />
 
 
+<br>
+
+
 ### <a id="client.py のクラス図"></a> client.py のクラス図
+
+[クライアントプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py)
+
 ```mermaid
 %%{init: {'themeVariables': {'scale': 0.05}}}%%
 classDiagram
@@ -352,7 +359,7 @@ class UDPClient {
     - create_packet(message: bytes = b"" ): bytes
 }
 ```
- [クライアントプログラムを見る](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py)
+ 
 
 <img width="787" alt="スクリーンショット 2025-03-30 20 58 52" src="https://github.com/user-attachments/assets/5198db5a-b34d-4c42-8d2a-e282a87a6cbc" />
 
