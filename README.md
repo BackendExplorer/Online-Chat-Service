@@ -67,9 +67,11 @@ https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
 ### 1. 前提条件
 
 - **Python 3.8以上**  
+
   [Python公式サイト](https://www.python.org/downloads/) からインストールできます
 
 - **Git**  
+
   [Git公式サイト](https://git-scm.com/) からインストールできます
 
 
@@ -148,7 +150,9 @@ flowchart TD
 ### 技術選定の理由
 
 - **TCP**: ルーム参加・ユーザー認証など、確実なデータ転送が必要な処理に利用
+
 - **UDP**: チャットメッセージ送信などリアルタイム性を重視する通信に利用
+
 - **Threading**: クライアントごとの並行処理を軽量に行うため
 
 ---
