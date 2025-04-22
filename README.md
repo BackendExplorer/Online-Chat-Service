@@ -261,13 +261,15 @@ C1 --> D1
 
 ## <a id="クラス図"></a>📦 クラス図と構成
 
+### <a id="server.py のクラス図"></a> server.py のクラス図
+
 <br>
 
 [**サーバプログラムを見る**](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py)
 
 <br>
 
-### <a id="server.py のクラス図"></a> server.py のクラス図
+
 ```mermaid
 %%{init: {'themeVariables': {'scale': 0.3}}}%%
 classDiagram
