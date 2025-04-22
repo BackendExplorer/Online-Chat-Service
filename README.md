@@ -81,6 +81,8 @@ https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
 
   操作や通信はログ出力。非アクティブユーザーは自動で切断。
 
+<br>
+
 ---
 
 ## <a id="セットアップ"></a> 🚀 セットアップ
@@ -107,6 +109,8 @@ git clone https://github.com/yourusername/your-repo-name.git
 ```bash
 cd your-repo-name
 ```
+
+<br>
 
 ---
 
@@ -155,6 +159,9 @@ flowchart TD
     チャット中 --> End
 
 ```
+
+<br>
+
 ---
 
 
@@ -178,6 +185,8 @@ flowchart TD
 - **UDP**: チャットメッセージ送信などリアルタイム性を重視する通信に利用
 
 - **Threading**: クライアントごとの並行処理を軽量に行うため
+
+<br>
 
 ---
 
@@ -278,6 +287,8 @@ C1 --> D1
 
 
 </div>
+
+<br>
 
 ---
 
@@ -394,6 +405,8 @@ class UDPClient {
 
 <img width="787" alt="スクリーンショット 2025-03-30 20 58 52" src="https://github.com/user-attachments/assets/5198db5a-b34d-4c42-8d2a-e282a87a6cbc" />
 
+<br>
+
 ---
 ## <a id="こだわりのポイント"></a> ✨ こだわりのポイント
 この図は、チャットルーム接続のために設計された独自プロトコル TCRP（Talk Chat Room Protocol） のパケット構造を示しています。
@@ -402,6 +415,8 @@ class UDPClient {
   <img width="413" alt="スクリーンショット 2025-03-27 1 41 43" src="https://github.com/user-attachments/assets/561e0e00-18ed-4df9-86a8-b3b9a0a25eed" />
   <img width="307" alt="スクリーンショット 2025-03-27 1 41 33" src="https://github.com/user-attachments/assets/3bc079fb-d453-4824-9d0a-a5edf4d1da06" />
 </p>
+
+<br>
 
 ---
 ## <a id="苦労した点"></a> ⚠️ 苦労した点
@@ -423,6 +438,8 @@ self.clients_map = TCPServer.clients_map
 #### 問題になった点:
 UDPサーバーでルームメンバーを認識できない問題があり、TCPの情報をクラス変数として保持して同期させる形に変更しました。
 
+<br>
+
 ---
 
 ###  2. クライアント状態の管理（トークン・ルーム情報）の一元化
@@ -440,6 +457,9 @@ self.clients_map[token] = [client_address, room_name, payload, 1 if operation ==
 ####  工夫した点:
 - トークンをユニークキーとして辞書で一元管理
 - クライアントの状態（最終アクティブ時間）を定期的に監視し、管理の整合性を保つ
+
+
+<br>
 
 ---
 
@@ -470,7 +490,10 @@ if is_host == 1:
 
 - `broadcast_message()` を使って、ルーム内の他メンバーに状況を共有
 
+<br>
+
 ---
+
 
 ## <a id="さらに追加したい機能"></a> 🌱 さらに追加したい機能
 
@@ -498,6 +521,8 @@ if is_host == 1:
 
 - 例えば、500ルーム、各ルーム10人が毎秒2メッセージ送信する状況を処理可能。
 
+<br>
+
 ---
 ## <a id="参考文献"></a>📄 参考文献
 
@@ -508,6 +533,8 @@ if is_host == 1:
 ### 参考にしたサイト
 
 - [Pythonによるソケット通信の実装](https://qiita.com/t_katsumura/items/a83431671a41d9b6358f)
+
+<br>
 
 ---
 
