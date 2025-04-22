@@ -46,6 +46,8 @@ https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
 
 - [ライセンス](#ライセンス)
 
+<br>
+
 ---
 
 ## <a id="説明"></a> 📝 説明
