@@ -251,6 +251,7 @@ class UDPServer:
 
 
 if __name__ == "__main__":
+    
     # サーバーのアドレスとポート番号を設定
     server_address = '0.0.0.0'
     tcp_server_port = 9001
