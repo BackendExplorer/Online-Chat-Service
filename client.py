@@ -262,12 +262,16 @@ class UDPClient:
 
 
 if __name__ == "__main__":
+    
+    # サーバーのアドレスとポート番号を設定
     server_address = '0.0.0.0'
     tcp_server_port = 9001
     udp_server_port = 9002
 
+    # TCP クライアント を作成
     tcp_client = TCPClient(server_address, tcp_server_port)
     my_info = tcp_client.start_tcp_client()
-    
+
+    # UDP クライアント を作成
     udp_client = UDPClient(server_address, udp_server_port, my_info)
     udp_client.start_udp_chat()
