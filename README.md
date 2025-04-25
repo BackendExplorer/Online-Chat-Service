@@ -359,15 +359,16 @@ class UDPServer {
 
 <br>
 
+
+
+
+
+### <a id="client.py のクラス図"></a> [**client.py**](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py) のクラス図
 <br>
 
-### <a id="client.py のクラス図"></a> client.py のクラス図
 
-<br>
 
-[**クライアントプログラムを見る**](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py)
 
-<br>
 
 ```mermaid
 %%{init: {'themeVariables': {'scale': 0.05}}}%%
