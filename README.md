@@ -353,7 +353,7 @@ class UDPServer {
 <br>
 
 
-### <a id="client.py のクラス図"></a> [**クライアントプログラム**](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py) のクラス図
+### <a id="client.py のクラス図"></a> [クライアントプログラム](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py) のクラス図
 
 <br>
 
@@ -398,8 +398,6 @@ class UDPClient {
 }
 ```
  
-
-
 <br>
 
 ---
@@ -442,8 +440,6 @@ UDP側でも正しくメンバーを認識できるように同期を実現
 #### 成果:
 単一構造でクライアント状態を安全に管理
 
-
-
 <br>
 
 ---
@@ -465,7 +461,6 @@ UDP側でも正しくメンバーを認識できるように同期を実現
 
 ---
 
-
 ## <a id="さらに追加したい機能"></a> 🌱 さらに追加したい機能
 
 ### メッセージの暗号化
@@ -485,8 +480,6 @@ UDP側でも正しくメンバーを認識できるように同期を実現
 - 参加時にパスワードを要求し、一致しない場合は参加不可。
 
 <br>
-
-
 
 ---
 ## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ Qiita｜制作過程の解説記事
