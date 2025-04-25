@@ -534,8 +534,6 @@ if is_host == 1:
 
 開発の裏側ついて知りたい方は、ぜひご覧ください！
 
-**記事はこちら**  
-
 [TCP×UDP×スレッドでつくるリアルタイムチャット（設計の裏側）](https://qiita.com/your-article-link)
 
 <br>
