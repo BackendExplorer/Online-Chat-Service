@@ -302,13 +302,11 @@ C1 --> D1
 
 <br>
 
-### <a id="server.py のクラス図"></a> server.py のクラス図
+### <a id="server.py のクラス図"></a> [**サーバプログラム**](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py) のクラス図
 
 <br>
 
-[**サーバプログラムを見る**](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py)
 
-<br>
 
 
 ```mermaid
@@ -352,22 +350,12 @@ class UDPServer {
 }
 ```
 
- 
-
-
-
-
 <br>
 
 
+### <a id="client.py のクラス図"></a> [**クライアントプログラム**](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py) のクラス図
 
-
-
-### <a id="client.py のクラス図"></a> [**サーバプログラム**](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py) のクラス図
 <br>
-
-
-
 
 
 ```mermaid
