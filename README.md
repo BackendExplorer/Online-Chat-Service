@@ -1,4 +1,4 @@
-# 🌐 オンラインチャットサービス 💬  
+# 🌐 Online Chat Service 💬  
 
 <br>
 
