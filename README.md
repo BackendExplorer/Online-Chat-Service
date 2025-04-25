@@ -134,7 +134,10 @@ python3 server.py
 ```
 以下のようにサーバは接続された複数のクライアントとのやりとりを同時に処理します。
 
-<img width="538" alt="スクリーンショット 2025-04-25 22 31 55" src="https://github.com/user-attachments/assets/f0eb8168-5df7-437a-be00-09cbcdfaa7c8" />
+
+| サーバーの起動 |
+|:-------------------:|
+|<br><img src="https://github.com/user-attachments/assets/f0eb8168-5df7-437a-be00-09cbcdfaa7c8" width="100%" /> |
 
 
 <br><br>
