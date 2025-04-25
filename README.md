@@ -137,7 +137,7 @@ python3 server.py
 
 | サーバーの起動 |
 |:-------------------:|
-|<br><img src="https://github.com/user-attachments/assets/f0eb8168-5df7-437a-be00-09cbcdfaa7c8" width="100%" /> |
+|<br><img src="https://github.com/user-attachments/assets/f0eb8168-5df7-437a-be00-09cbcdfaa7c8" width="60%" /> |
 
 
 <br><br>
