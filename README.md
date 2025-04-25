@@ -1,8 +1,6 @@
 | ユーザ1 | ユーザ2 |
 |:-------:|:--------:|
-| <img src="https://github.com/user-attachments/assets/029b84c7-bccd-4934-95eb-8f379a20c132" style="height:600px; width:auto; display:block; margin: 0 auto;" /> | <img src="https://github.com/user-attachments/assets/407ce680-79e4-491c-8658-f6ec0470440a" style="height:600px; width:auto; display:block; margin: 0 auto;" /> |
-
-
+|<br><img src="https://github.com/user-attachments/assets/029b84c7-bccd-4934-95eb-8f379a20c132" width="100%" /> |<br><img src="https://github.com/user-attachments/assets/407ce680-79e4-491c-8658-f6ec0470440a" width="100%" /> |
 
 # 🌐 Online Chat Service 💬  
 
