@@ -154,11 +154,11 @@ python3 client.py
 <table align="center">
   <tr>
     <td style="border: 2px solid #ccc; padding: 10px; text-align: center;">
-      <strong>ユーザ1 / ユーザ2</strong><br>
+      <strong>ユーザ1</strong><br>
       <img src="https://github.com/user-attachments/assets/029b84c7-bccd-4934-95eb-8f379a20c132" width="300" />
     </td>
     <td style="border: 2px solid #ccc; padding: 10px; text-align: center;">
-      <strong>他のクライアント視点</strong><br>
+      <strong>ユーザ2</strong><br>
       <img src="https://github.com/user-attachments/assets/407ce680-79e4-491c-8658-f6ec0470440a" width="300" />
     </td>
   </tr>
