@@ -146,10 +146,10 @@ python3 client.py
 
 <br>
 
-<img width="552" alt="スクリーンショット 2025-04-25 22 25 10" src="https://github.com/user-attachments/assets/9b7e1095-dc8f-4eec-94fb-076f5ce11751" />
-
-
-<img width="527" alt="スクリーンショット 2025-04-25 22 25 22" src="https://github.com/user-attachments/assets/e9492be3-3e95-4d03-a224-4dbfd7f9b01b" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/9b7e1095-dc8f-4eec-94fb-076f5ce11751" width="45%" />
+  <img src="https://github.com/user-attachments/assets/e9492be3-3e95-4d03-a224-4dbfd7f9b01b" width="45%" />
+</p>
 
 
 
