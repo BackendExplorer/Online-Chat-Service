@@ -154,11 +154,13 @@ python3 client.py
 <table align="center" width="100%">
   <tr>
     <td style="border: 2px solid #ccc; padding: 10px; text-align: center; width: 50%;">
-      <strong>ユーザ1</strong><br>
+      <strong>ユーザ1</strong>
+      <hr style="margin: 8px 0;">
       <img src="https://github.com/user-attachments/assets/029b84c7-bccd-4934-95eb-8f379a20c132" style="width: 90%;" />
     </td>
     <td style="border: 2px solid #ccc; padding: 10px; text-align: center; width: 50%;">
-      <strong>ユーザ2</strong><br>
+      <strong>ユーザ2</strong>
+      <hr style="margin: 8px 0;">
       <img src="https://github.com/user-attachments/assets/407ce680-79e4-491c-8658-f6ec0470440a" style="width: 90%;" />
     </td>
   </tr>
