@@ -125,7 +125,7 @@ cd your-repo-name
 
 ## <a id="使い方"></a>🧑‍💻 使い方
 
-### 1. サーバ起動
+### 1. サーバー起動
 
 サーバスクリプトを実行し、クライアントの接続を待機します。
 
@@ -150,8 +150,8 @@ python3 client.py
 <br>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/9b7e1095-dc8f-4eec-94fb-076f5ce11751" width="50%" />
-  <img src="https://github.com/user-attachments/assets/e9492be3-3e95-4d03-a224-4dbfd7f9b01b" width="48%" />
+  <img src="https://github.com/user-attachments/assets/029b84c7-bccd-4934-95eb-8f379a20c132" width="50%" />
+  <img src="https://github.com/user-attachments/assets/407ce680-79e4-491c-8658-f6ec0470440a" width="48%" />
 </p>
 
 <br>
