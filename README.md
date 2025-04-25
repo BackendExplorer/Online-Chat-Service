@@ -302,7 +302,7 @@ C1 --> D1
 
 <br>
 
-### <a id="server.py のクラス図"></a> [**サーバプログラム**](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py) のクラス図
+### <a id="server.py のクラス図"></a> [サーバプログラム](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py) のクラス図
 
 <br>
 
