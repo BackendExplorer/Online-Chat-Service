@@ -151,21 +151,20 @@ python3 client.py
 
 <br>
 
-<div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
-  <!-- ユーザ1 -->
-  <div style="border: 2px solid #ccc; padding: 10px; width: 45%; box-sizing: border-box;">
-    <div style="text-align: center; font-weight: bold; font-size: 18px;">ユーザ1</div>
-    <hr style="margin: 8px 0;">
-    <img src="https://github.com/user-attachments/assets/029b84c7-bccd-4934-95eb-8f379a20c132" style="width: 100%; display: block; margin: 0 auto;" />
-  </div>
-
-  <!-- ユーザ2 -->
-  <div style="border: 2px solid #ccc; padding: 10px; width: 45%; box-sizing: border-box;">
-    <div style="text-align: center; font-weight: bold; font-size: 18px;">ユーザ2</div>
-    <hr style="margin: 8px 0;">
-    <img src="https://github.com/user-attachments/assets/407ce680-79e4-491c-8658-f6ec0470440a" style="width: 100%; display: block; margin: 0 auto;" />
-  </div>
-</div>
+<table align="center" width="100%">
+  <tr>
+    <td style="border: 2px solid #ccc; padding: 10px; text-align: center; width: 50%;">
+      <strong>ユーザ1</strong>
+      <hr style="margin: 8px 0;">
+      <img src="https://github.com/user-attachments/assets/029b84c7-bccd-4934-95eb-8f379a20c132" style="width: 90%;" />
+    </td>
+    <td style="border: 2px solid #ccc; padding: 10px; text-align: center; width: 50%;">
+      <strong>ユーザ2</strong>
+      <hr style="margin: 8px 0;">
+      <img src="https://github.com/user-attachments/assets/407ce680-79e4-491c-8658-f6ec0470440a" style="width: 90%;" />
+    </td>
+  </tr>
+</table>
 
 <br>
 
