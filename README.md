@@ -158,7 +158,7 @@ python3 client.py
 
 <br>
 
-### ユーザーの操作手順
+### 3. ユーザーの操作手順
 
 ```mermaid
 flowchart TD
