@@ -354,7 +354,6 @@ class UDPServer {
  
 
 
-<img width="792" alt="スクリーンショット 2025-03-30 21 22 18" src="https://github.com/user-attachments/assets/5ebe17b8-059c-4fd8-91d1-5325b591040b" />
 
 
 <br>
@@ -410,7 +409,6 @@ class UDPClient {
 ```
  
 
-<img width="787" alt="スクリーンショット 2025-03-30 20 58 52" src="https://github.com/user-attachments/assets/5198db5a-b34d-4c42-8d2a-e282a87a6cbc" />
 
 <br>
 
