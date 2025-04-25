@@ -503,6 +503,8 @@ UDP側でも正しくメンバーを認識できるように同期を実現
 
 - [Python](https://docs.python.org/ja/3/)
 
+<br>
+
 ### 参考にしたサイト
 
 - [Pythonによるソケット通信の実装](https://qiita.com/t_katsumura/items/a83431671a41d9b6358f)
