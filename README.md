@@ -422,22 +422,16 @@ class UDPClient {
 ---
 ## <a id="苦労した点"></a> ⚠️ 苦労した点
 
-###  1. TCPとUDPを併用した通信設計の構築
+###  1. TCPとUDPを併用した通信
 
 #### 課題:
-TCPには信頼性は高いが遅延がある。一方UDPは高速だが信頼性がない。それぞれの特性を活かすには、制御系（ルーム作成・参加）はTCP、リアルタイム通信（チャット）はUDPで分離する必要があった。
+制御系は信頼性重視のTCP、チャットは高速なUDPで分ける必要があった
 
 #### 工夫した点:
-TCPで受け取ったトークンやルーム情報をUDPサーバー側で再利用するため、`TCPServer`クラスのデータを`UDPServer`で引き継ぐ設計にしました。
+TCPServerのクラス変数（ルーム・トークン情報）をUDPServerで参照し共有
 
-```python
-# UDPServerのコンストラクタより(TCPで構成したマップを再利用)
-self.room_members_map = TCPServer.room_members_map
-self.clients_map = TCPServer.clients_map
-```
-
-#### 問題になった点:
-UDPサーバーでルームメンバーを認識できない問題があり、TCPの情報をクラス変数として保持して同期させる形に変更しました。
+#### 成果：
+UDP側でも正しくメンバーを認識できるように同期を実現
 
 <br>
 
