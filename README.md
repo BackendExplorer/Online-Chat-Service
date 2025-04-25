@@ -42,7 +42,7 @@ https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
 
 ## **📚 参考情報・ライセンス**
 
-- [Qiita｜制作過程の解説記事](#Qiita｜制作過程の解説記事)
+- [Qiita｜制作過程の解説記事](#qiita-seisaku-katei-no-kaisetsu-ki)
 
 - [参考文献](#参考文献)
 
@@ -527,13 +527,15 @@ if is_host == 1:
 
 
 ---
-## <a id="Qiita｜制作過程の解説記事"></a>✏️ Qiita｜制作過程の解説記事
+## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ Qiita｜制作過程の解説記事
+
 
 このプロジェクトの制作過程や技術的な挑戦、学びをQiitaに記事としてまとめました。  
-開発の裏話や工夫したポイントについて知りたい方は、ぜひご覧ください！
+開発の裏側ついて知りたい方は、ぜひご覧ください！
 
 **記事はこちら**  
-> [TCP×UDP×スレッドでつくるリアルタイムチャット（設計の裏側）](https://qiita.com/your-article-link)
+[TCP×UDP×スレッドでつくるリアルタイムチャット（設計の裏側）](https://qiita.com/your-article-link)
+
 
 
 ---
