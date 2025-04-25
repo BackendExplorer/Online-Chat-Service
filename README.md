@@ -42,7 +42,7 @@ https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
 
 ## **📚 参考情報・ライセンス**
 
-- [解説記事](#解説記事)
+- [Qitta 解説記事](#解説記事)
 
 - [参考文献](#参考文献)
 
