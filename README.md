@@ -363,7 +363,7 @@ class UDPServer {
 
 
 
-### <a id="client.py のクラス図"></a> [**client.py**](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py) のクラス図
+### <a id="client.py のクラス図"></a> [**サーバプログラム**](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py) のクラス図
 <br>
 
 
