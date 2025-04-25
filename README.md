@@ -62,6 +62,7 @@ https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
 
 ユーザー管理、トークン認証、ルーム機能、非アクティブ検知など実運用を想定した設計が特徴です。
 
+<br>
 
 ###  主な特徴
 
