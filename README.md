@@ -460,22 +460,10 @@ UDP側でも正しくメンバーを認識できるように同期を実現
 一定時間操作なしのユーザーを自動で退出させ、ホスト退出時はルームごと削除
 
 #### 対策：
-`last_active_time`を監視し閾値超過でdisconnect_inactive_clientを実行。ホスト退出時は全員へ通知後にルー
+`last_active_time`を監視し閾値超過で`disconnect_inactive_client`を実行。ホスト退出時は全員へ通知後にルーム削除
 
-#### ホスト切断時の処理:
-
-```python
-if is_host == 1:
-    self.broadcast_message(room_id, f"ホストの{username}がルームを退出しました．")
-    self.broadcast_message(room_id, "exit!")
-    del self.room_members_map[room_id]  # ルーム削除
-```
-
-####  工夫した点:
-
-- `is_host`のフラグに応じてルームの削除またはメンバー削除を分岐
-
-- `broadcast_message()` を使って、ルーム内の他メンバーに状況を共有
+#### 成果:
+非アクティブ管理とルーム維持を安定化
 
 <br>
 
