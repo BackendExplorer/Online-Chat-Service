@@ -135,9 +135,19 @@ python3 server.py
 以下のようにサーバは接続された複数のクライアントとのやりとりを同時に処理します。
 
 
-| サーバーの起動 |
-|:-------------------:|
-|<br><img src="https://github.com/user-attachments/assets/f0eb8168-5df7-437a-be00-09cbcdfaa7c8" width="60%" /> |
+<div align="center">
+
+<table>
+  <tr>
+    <td align="center">
+
+<img src="https://github.com/user-attachments/assets/f0eb8168-5df7-437a-be00-09cbcdfaa7c8" width="60%" />
+
+</td>
+  </tr>
+</table>
+
+</div>
 
 
 <br><br>
