@@ -151,9 +151,10 @@ python3 client.py
   <img src="https://github.com/user-attachments/assets/e9492be3-3e95-4d03-a224-4dbfd7f9b01b" width="48%" />
 </p>
 
-
+<br>
 
 ### フローチャート
+
 以下は、このアプリの基本的な操作フローです
 
 ```mermaid
