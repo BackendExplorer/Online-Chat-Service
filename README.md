@@ -158,9 +158,7 @@ python3 client.py
 
 <br>
 
-### フローチャート
-
-以下は、このアプリの基本的な操作フローです
+### ユーザーの操作手順
 
 ```mermaid
 flowchart TD
