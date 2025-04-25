@@ -200,7 +200,7 @@ flowchart TD
 
 | カテゴリ       | 技術スタック                                                                 |
 |----------------|------------------------------------------------------------------------------|
-| 開発言語       | Python 3.13.2<br>（標準ライブラリのみ使用：`socket`, `threading`, `secrets`, `logging`, `base64`, `time`, `sys`） |
+| 開発言語       | Python 3.13.2<br>（標準ライブラリのみ使用：`socket`, `threading`, `logging`, `time`, `sys`） |
 | 通信技術       | TCP / UDP ソケット通信<br>独自プロトコル「TCRP（Talk Chat Room Protocol）」による通信設計 |
 | 並列処理       | `threading` モジュールによるマルチスレッド処理<br>（クライアント・サーバー間の非同期処理を実現） |
 | 開発環境       | macOS ・ VSCode                               |
