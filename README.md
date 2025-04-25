@@ -68,7 +68,7 @@ https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
 
 <br>
 
-###  主な特徴
+###  できること
 
 - **リアルタイムチャット**
 
@@ -91,6 +91,9 @@ https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
   操作や通信はログ出力。非アクティブユーザーは自動で切断。
 
 <br>
+
+### 作成動機
+
 
 ---
 
