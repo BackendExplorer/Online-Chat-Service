@@ -153,12 +153,12 @@ python3 client.py
 
 <table align="center" width="100%">
   <tr>
-    <td style="border: 2px solid #ccc; padding: 10px; width: 50%; vertical-align: top;">
+    <td style="border: 2px solid #ccc; padding: 10px; width: 55%; vertical-align: top;">
       <div style="text-align: center; font-weight: bold;">ユーザ1</div>
       <hr style="margin: 8px 0;">
       <img src="https://github.com/user-attachments/assets/029b84c7-bccd-4934-95eb-8f379a20c132" style="width: 90%; display: block; margin: 0 auto;" />
     </td>
-    <td style="border: 2px solid #ccc; padding: 10px; width: 50%; vertical-align: top;">
+    <td style="border: 2px solid #ccc; padding: 10px; width: 55%; vertical-align: top;">
       <div style="text-align: center; font-weight: bold;">ユーザ2</div>
       <hr style="margin: 8px 0;">
       <img src="https://github.com/user-attachments/assets/407ce680-79e4-491c-8658-f6ec0470440a" style="width: 90%; display: block; margin: 0 auto;" />
