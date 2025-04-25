@@ -20,6 +20,7 @@ https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
 
 - [使い方](#使い方)
 
+<br>
 
 ## **🛠 技術関連**
 
@@ -29,6 +30,7 @@ https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
 
 - [処理の流れ](#処理の流れ)
 
+<br>
 
 ## **💡 開発のポイント**
 
@@ -38,6 +40,7 @@ https://github.com/user-attachments/assets/6127e9a1-df6e-4458-9b09-e88161da66b6
 
 - [さらに追加したい機能](#さらに追加したい機能)
 
+<br>
 
 ## **📚 参考情報・ライセンス**
 
