@@ -1,21 +1,6 @@
-<table align="center" width="100%" cellspacing="0" cellpadding="0">
-  <tr>
-    <td style="border: 2px solid #ccc; padding: 0px; width: 50%; vertical-align: top;">
-      <div style="display: flex; justify-content: center; font-weight: bold; padding-top: 10px;">
-        ユーザ1
-      </div>
-      <hr style="margin: 8px 0;">
-      <img src="https://github.com/user-attachments/assets/029b84c7-bccd-4934-95eb-8f379a20c132" style="width: 100%; display: block;" />
-    </td>
-    <td style="border: 2px solid #ccc; padding: 0px; width: 50%; vertical-align: top;">
-      <div style="display: flex; justify-content: center; font-weight: bold; padding-top: 10px;">
-        ユーザ2
-      </div>
-      <hr style="margin: 8px 0;">
-      <img src="https://github.com/user-attachments/assets/407ce680-79e4-491c-8658-f6ec0470440a" style="width: 100%; display: block;" />
-    </td>
-  </tr>
-</table>
+| ユーザ1 | ユーザ2 |
+|:-------:|:--------:|
+| ユーザ1<br><img src="https://github.com/user-attachments/assets/029b84c7-bccd-4934-95eb-8f379a20c132" width="100%" /> | ユーザ2<br><img src="https://github.com/user-attachments/assets/407ce680-79e4-491c-8658-f6ec0470440a" width="100%" /> |
 
 
 
