@@ -147,8 +147,8 @@ python3 client.py
 <br>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/9b7e1095-dc8f-4eec-94fb-076f5ce11751" width="45%" />
-  <img src="https://github.com/user-attachments/assets/e9492be3-3e95-4d03-a224-4dbfd7f9b01b" width="45%" />
+  <img src="https://github.com/user-attachments/assets/9b7e1095-dc8f-4eec-94fb-076f5ce11751" width="48%" />
+  <img src="https://github.com/user-attachments/assets/e9492be3-3e95-4d03-a224-4dbfd7f9b01b" width="48%" />
 </p>
 
 
