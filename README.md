@@ -506,7 +506,6 @@ UDP側でも正しくメンバーを認識できるように同期を実現
 
 - [Python](https://docs.python.org/ja/3/)
 
-<br>
 
 ### 参考にしたサイト
 
