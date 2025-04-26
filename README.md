@@ -210,6 +210,17 @@ flowchart TD
 | 描画ツール | Mermaid ・ Latex |
 
 
+| カテゴリ       | 技術スタック                                                                 |
+|----------------|------------------------------------------------------------------------------|
+| 開発言語       | ![Python](https://img.shields.io/badge/Python-3.13.2-blue) <br>（標準ライブラリ使用：`socket`, `threading`, `logging`, `time`, `sys`） |
+| 通信技術       | TCP / UDP ソケット通信<br>独自プロトコル「TCRP（Talk Chat Room Protocol）」による通信設計 |
+| 並列処理       | `threading` モジュールによるマルチスレッド処理<br>（クライアント・サーバー間の非同期処理を実現） |
+| 開発環境       | macOS ・ VSCode                               |
+| バージョン管理 | Git（バージョン管理）・GitHub（コード共有・公開）                          |
+| 描画ツール     | Mermaid ・ Latex                                                                |
+
+
+
 <br>
 
 ### 技術選定の理由
