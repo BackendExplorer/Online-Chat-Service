@@ -131,7 +131,7 @@ cd your-repo-name
 
 <br>
 
-- サーバー起動コマンド
+- **サーバー起動コマンド**
 
 ```bash
 python3 server.py
@@ -139,7 +139,7 @@ python3 server.py
 
 <br>
 
-- 実行結果の例
+- **実行結果の例**
 
 
 
