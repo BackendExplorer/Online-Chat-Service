@@ -1,3 +1,5 @@
+![Python](https://img.shields.io/badge/python-3.8+-blue)
+
 # 🌐 Online Chat Service 💬  
 
 ### ユーザがルームを作成または参加して、グループチャットができるサービス
