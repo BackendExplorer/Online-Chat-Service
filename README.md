@@ -208,6 +208,16 @@ flowchart TD
 | 描画ツール     | ![Mermaid](https://img.shields.io/badge/Diagram-Mermaid-green) ![LaTeX](https://img.shields.io/badge/Doc-LaTeX-9cf) |
 
 
+| カテゴリ       | 技術スタック                                                                 |
+|----------------|------------------------------------------------------------------------------|
+| 開発言語       | ![Python](https://img.shields.io/badge/-Python-blue) |
+| 通信技術       | ![TCP](https://img.shields.io/badge/-TCP-blue) ![UDP](https://img.shields.io/badge/-UDP-blue) |
+| 並列処理       | ![Threading](https://img.shields.io/badge/-Threading-yellow) |
+| 開発環境       | ![macOS](https://img.shields.io/badge/-macOS-lightgrey) ![VSCode](https://img.shields.io/badge/-VSCode-blue) |
+| バージョン管理 | ![Git](https://img.shields.io/badge/-Git-orange) ![GitHub](https://img.shields.io/badge/-GitHub-black) |
+| 描画ツール     | ![Mermaid](https://img.shields.io/badge/-Mermaid-green) ![LaTeX](https://img.shields.io/badge/-LaTeX-9cf) |
+
+
 <br>
 
 ### 技術選定の理由
