@@ -1,5 +1,3 @@
-![Python](https://img.shields.io/badge/python-3.8+-blue)
-
 # 🌐 Online Chat Service 💬  
 
 ### ユーザがルームを作成または参加して、グループチャットができるサービス
@@ -202,22 +200,23 @@ flowchart TD
 
 | カテゴリ       | 技術スタック                                                                 |
 |----------------|------------------------------------------------------------------------------|
-| 開発言語       | Python 3.13.2<br>（標準ライブラリのみ使用：`socket`, `threading`, `logging`, `time`, `sys`） |
-| 通信技術       | TCP / UDP ソケット通信<br>独自プロトコル「TCRP（Talk Chat Room Protocol）」による通信設計 |
-| 並列処理       | `threading` モジュールによるマルチスレッド処理<br>（クライアント・サーバー間の非同期処理を実現） |
-| 開発環境       | macOS ・ VSCode                               |
-| バージョン管理 | Git（バージョン管理）・GitHub（コード共有・公開）                          |
-| 描画ツール | Mermaid ・ Latex |
-
-
-| カテゴリ       | 技術スタック                                                                 |
-|----------------|------------------------------------------------------------------------------|
 | 開発言語       | ![Python](https://img.shields.io/badge/Python-3.13.2-blue) <br>（標準ライブラリ使用：`socket`, `threading`, `logging`, `time`, `sys`） |
 | 通信技術       | TCP / UDP ソケット通信<br>独自プロトコル「TCRP（Talk Chat Room Protocol）」による通信設計 |
 | 並列処理       | `threading` モジュールによるマルチスレッド処理<br>（クライアント・サーバー間の非同期処理を実現） |
 | 開発環境       | macOS ・ VSCode                               |
 | バージョン管理 | Git（バージョン管理）・GitHub（コード共有・公開）                          |
 | 描画ツール     | Mermaid ・ Latex                                                                |
+
+
+| カテゴリ       | 技術スタック                                                                 |
+|----------------|------------------------------------------------------------------------------|
+| 開発言語       | ![Python](https://img.shields.io/badge/Python-3.13.2-blue) <br>（標準ライブラリ使用：`socket`, `threading`, `logging`, `time`, `sys`） |
+| 通信技術       | ![TCP](https://img.shields.io/badge/Protocol-TCP-blue) ![UDP](https://img.shields.io/badge/Protocol-UDP-blue) <br>独自プロトコル「TCRP（Talk Chat Room Protocol）」による通信設計 |
+| 並列処理       | ![Threading](https://img.shields.io/badge/Concurrency-Threading-yellow) <br>`threading` モジュールによるマルチスレッド処理（非同期対応） |
+| 開発環境       | ![macOS](https://img.shields.io/badge/OS-macOS-lightgrey) ![VSCode](https://img.shields.io/badge/Editor-VSCode-blue) |
+| バージョン管理 | ![Git](https://img.shields.io/badge/VersionControl-Git-orange) ![GitHub](https://img.shields.io/badge/Repo-GitHub-black) |
+| 描画ツール     | ![Mermaid](https://img.shields.io/badge/Diagram-Mermaid-green) ![LaTeX](https://img.shields.io/badge/Doc-LaTeX-9cf) |
+
 
 
 
