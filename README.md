@@ -347,23 +347,21 @@ C1 --> D1
 
 
 ```mermaid
+
 %%{init: {'themeVariables': {'scale': 0.3}}}%%
 classDiagram
 direction LR
 
-TCPServer -- UDPServer
-
 class TCPServer {
+    <<static>> - room_members_map: dict
+    <<static>> - clients_map: dict
     - HEADER_MAX_BYTE: int
     - TOKEN_MAX_BYTE: int
     - server_address: str
     - server_port: int
     - sock: socket
-    - room_members_map: dict
-    - clients_map: dict
     + __init__(server_address: str, server_port: int)
-    + start_tcp_server(): None
-    - accept_tcp_connections(): None
+    + accept_tcp_connections(): None
     - handle_client_request(connection: socket, client_address: tuple): None
     - decode_message(data: bytes): tuple
     - register_client(token: bytes, client_address: tuple, room_name: str, payload: str, operation: int): None
@@ -374,17 +372,25 @@ class TCPServer {
 class UDPServer {
     - server_address: str
     - server_port: int
+    - sock: socket
     - room_members_map: dict
     - clients_map: dict
-    - sock: socket
     + __init__(server_address: str, server_port: int)
     + start_udp_server(): None
     - handle_messages(): None
     - decode_message(data: bytes): tuple
+    - update_client_activity(token: bytes, address: tuple): None
     - broadcast_message(room_name: str, message: str): None
+    - broadcast_list(members: list, message: str): None
     - remove_inactive_clients(): None
+    - is_client_inactive(last_active_time: float, current_time: float): bool
     - disconnect_inactive_client(client_token: bytes, client_info: list): None
+    - handle_host_disconnect(room_id: str, username: str, members_snapshot: list): None
+    - handle_guest_disconnect(client_token: bytes, client_address: tuple, room_id: str, username: str, members_snapshot: list): None
 }
+
+TCPServer -- UDPServer
+
 ```
 
 <br>
