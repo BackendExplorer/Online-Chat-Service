@@ -465,6 +465,9 @@ class UDPClient {
 
   ホスト退出時は全員に通知を行い、ルーム自体を削除。
 
+<img width="521" alt="スクリーンショット 2025-05-01 23 17 27" src="https://github.com/user-attachments/assets/de6e6ae4-c64e-4836-8839-e46a59501d2f" />
+
+
 
 <br>
 
