@@ -275,3 +275,5 @@ if __name__ == "__main__":
     # UDP クライアント を作成して起動
     udp_client = UDPClient(server_address, udp_server_port, my_info)
     udp_client.start_udp_chat()
+
+
