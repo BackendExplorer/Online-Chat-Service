@@ -8,21 +8,14 @@
 
 <br>
 
-**2人のユーザーが、ルームを作成してチャットルームに入室するデモ動画**
+**2人のユーザーが、ルームを作成してチャットをするデモ動画**
 
 <br>
 
-https://github.com/user-attachments/assets/d1ee8aa6-3e5c-4c18-9b33-834a59e5be02
+https://github.com/user-attachments/assets/b4fbe70e-1723-401b-a76e-3fa2cfbe431a
 
 <br>
 
-**2人のユーザーが、チャットをするデモ動画** 
-
-<br>
-
-https://github.com/user-attachments/assets/f0c69b9a-8aac-4cbd-a13d-f114e939d3e2
-
-<br>
 
 ## **📝 概要**
 
