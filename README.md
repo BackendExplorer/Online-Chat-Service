@@ -116,7 +116,7 @@ https://github.com/user-attachments/assets/f0c69b9a-8aac-4cbd-a13d-f114e939d3e2
 
   [Git公式サイト](https://git-scm.com/) からインストールできます
 
-- **Streamlit 1.45.0** -
+- **Streamlit 1.45.0** 
 
   [Streamlit公式サイト]( https://streamlit.io/) からインストールできます
   
