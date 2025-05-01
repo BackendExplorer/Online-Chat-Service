@@ -2,278 +2,200 @@ import socket
 import threading
 import time
 import sys
-import logging
 
-logging.basicConfig(level=logging.INFO, format='%(message)s')
+TOKEN_MAX_BYTE = 255
+ROOM_NAME_MAX_BYTE = 2 ** 8
+PAYLOAD_MAX_BYTE = 2 ** 29
+HEADER_SIZE = 32
+USER_NAME_MAX_BYTE_SIZE = 255
 
-TOKEN_MAX_BYTE = 255         # クライアントトークンの最大バイト数
-ROOM_NAME_MAX_BYTE = 2 ** 8    # ルーム名の最大バイト数
-PAYLOAD_MAX_BYTE = 2 ** 29     # ペイロードの最大バイト数
-HEADER_SIZE = 32             # ヘッダーサイズ（バイト）
-USER_NAME_MAX_BYTE_SIZE = 255 # ユーザ名の最大バイト数
 
 class TCPClient:
-    
     def __init__(self, server_address, server_port):
         self.server_address = server_address
         self.server_port = server_port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_info = {}
 
-    # TCP クライアントを開始し、サーバーと通信を行う関数
-    def start_tcp_client(self):
-        # サーバーに接続
+    # サーバーに接続し、ルーム一覧を取得するメソッド
+    def list_rooms(self, username):
         self.connect_to_server()
-
-        # ユーザー名と操作内容を入力
-        username = self.input_user_name()
-        operation = self.input_operation()
-
-        # 操作に応じてルームを作成または参加
-        if operation == 1:
-            room_name, client_token = self.create_room(username)
-        else:
-            room_name, client_token = self.join_room(username)
-
-        # クライアント情報を保存
-        self.client_info = {client_token: [room_name, username]}
-        
-        # ソケットを閉じる
-        self.sock.close()
-        
-        # クライアント情報を返す
-        return self.client_info
-
-    # サーバーに接続を試みる関数
-    def connect_to_server(self):
-        logging.info("=============================================")
-        logging.info("          🚀 クライアント起動")
-        logging.info("=============================================")
-        logging.info("")
-        logging.info(f"📡 {self.server_address}:{self.server_port} に接続を試みています...")
-        logging.info("✅ サーバーへの接続に成功しました！")
-        logging.info("")
-        logging.info("---------------------------------------------")
-
-        try:
-            # サーバーへ接続
-            self.sock.connect((self.server_address, self.server_port))
-            logging.info("")
-
-        except socket.error as err:
-            logging.info("サーバーへの接続エラー: " + str(err))
-
-
-    # ユーザ名 を入力する関数
-    def input_user_name(self):
-        while True:
-            username = input("👤 ユーザー名を入力してください: ")
-            if len(username) > PAYLOAD_MAX_BYTE:
-                logging.info("2^29バイトを超えています。再度入力してください。")
-            elif len(username) == 0:
-                logging.info("ユーザー名を入力してください")
-            else:
-                return username
-            
-    # operation を入力する関数        
-    def input_operation(self):
-        while True:
-            try:
-                operation = int(input("🔹 1または2を入力してください (1: ルーム作成, 2: ルームに参加) -> "))
-                if operation not in [1, 2]:
-                    logging.info("1または2のみ入力可能です。再度入力してください。")
-                else:
-                    return operation
-            except ValueError:
-                logging.info("数字を入力してください。")
-                
-    # クライアントが新しいルームを作成する関数
-    def create_room(self, username):
-        # ユーザーにルーム名の入力を求める
-        room_name = self.input_room_name(1)
-        
-        state = 0
-        
-        # ルーム作成のためのパケットを作成
-        packet = self.create_packet(room_name, 1, state, username)
-        
-        # サーバーにパケットを送信
-        self.sock.send(packet)
-        
-        # サーバーからクライアントトークンを受信
-        client_token = self.sock.recv(TOKEN_MAX_BYTE)
-        
-        # ルーム名とクライアントトークンを返す
-        return room_name, client_token
-
-    # ユーザが ルーム名 を入力する関数
-    def input_room_name(self, operation):
-        while True:
-            if operation == 1:
-                room_name = input("🏠 作成するルーム名を入力してください -> ")
-            else:
-                room_name = input("参加したいルーム名を入力してください -> ")
-            if len(room_name) > ROOM_NAME_MAX_BYTE:
-                logging.info("2^8 バイトを超えています。再度入力してください。")
-            elif len(room_name) == 0:
-                logging.info("ルーム名を入力してください。")
-            else:
-                if operation == 1:
-                    logging.info("\n---------------------------------------------\n")
-                return room_name
-
-    # ルーム名, operation, state, ペイロードを受け取って、パケットを返す関数
-    def create_packet(self, room_name, operation, state, payload):
-        # ヘッダーをバイト列として作成
-        header = self.create_header(room_name, operation, state, payload) 
-        
-        # ルーム名とペイロードをバイト列としてエンコード
-        room_name_bytes = room_name.encode("utf-8") 
-        payload_bytes = payload.encode("utf-8") 
-        
-        # ヘッダーとボディを結合してパケットを作成
-        packet = header + room_name_bytes + payload_bytes 
-        
-        return packet
-
-    # ルーム名, operation, state, ペイロードを受け取って、ヘッダを返す関数
-    def create_header(self, room_name, operation, state, payload):
-        # ルーム名とペイロードのサイズを取得
-        room_name_size = len(room_name) 
-        payload_size = len(payload)  
-
-        # ヘッダを作成
-        header = (
-            room_name_size.to_bytes(1, "big") +
-            operation.to_bytes(1, "big") +
-            state.to_bytes(1, "big") +
-            payload_size.to_bytes(HEADER_SIZE - 3, "big")
-        )
-        
-        return header
-
-    # クライアントが既存のルームに参加する関数
-    def join_room(self, username):
-        # ルーム参加リクエストのパケットを作成
         packet = self.create_packet("", 2, 0, username)
-        
-        # サーバーにパケットを送信
         self.sock.send(packet)
-        
-        # サーバーから利用可能なルーム一覧を受信し、デコード
         room_list = self.sock.recv(4096).decode("utf-8")
         try:
             rooms = room_list.strip()[1:-1].split(',')
-            rooms = [room.strip().strip("'").strip('"') for room in rooms if room.strip() != '']
-        except:
+            rooms = [r.strip().strip("'").strip('"') for r in rooms if r.strip()]
+        except Exception:
             rooms = [room_list]
-        logging.info("\n📜 利用可能なルーム一覧")
-        logging.info("-----------------------------------")
-        for idx, room in enumerate(rooms, start=1):
-            logging.info(f"🏠 {idx}. {room}")
-        logging.info("-----------------------------------\n")
-        
-        # ユーザーにルーム名の入力を求める
-        room_name = self.input_room_name(2)
-        
-        # 入力されたルーム名をサーバーに送信
+        return rooms
+
+    # サーバーに接続し、ルームを新規作成してトークンを取得するメソッド
+    def quick_create_room(self, username, room_name):
+        self.connect_to_server()
+        packet = self.create_packet(room_name, 1, 0, username)
+        self.sock.send(packet)
+        token = self.sock.recv(TOKEN_MAX_BYTE)
+        self.client_info = {token: [room_name, username]}
+        return self.client_info
+
+    # 既存ルームに参加後、トークンを取得して情報を登録するメソッド
+    def register_room(self, username, room_name):
         self.sock.send(room_name.encode("utf-8"))
-        
-        # サーバーからクライアントトークンを受信
-        client_token = self.sock.recv(TOKEN_MAX_BYTE)
-        
-        # ルーム名とクライアントのトークンを返す
-        return room_name, client_token
+        token = self.sock.recv(TOKEN_MAX_BYTE)
+        self.client_info = {token: [room_name, username]}
+        return self.client_info
+
+    # サーバーへTCP接続を確立するメソッド
+    def connect_to_server(self):
+        try:
+            self.sock.connect((self.server_address, self.server_port))
+        except socket.error as e:
+            raise
+
+    # ユーザー入力に基づき、ルーム作成または参加の処理を行うメソッド
+    def start_tcp_client(self):
+        self.connect_to_server()
+        username = self.input_user_name()
+        op = self.input_operation()
+        if op == 1:
+            room, token = self.create_room(username)
+        else:
+            room, token = self.join_room(username)
+        self.client_info = {token: [room, username]}
+        self.sock.close()
+        return self.client_info
+
+    # ユーザー名を入力させ、バリデーションを行うメソッド
+    def input_user_name(self):
+        while True:
+            u = input("\U0001F464 ユーザー名: ")
+            if not u:
+                print("ユーザー名を入力してください")
+            elif len(u) > PAYLOAD_MAX_BYTE:
+                print("長すぎます。再度入力してください。")
+            else:
+                return u
+
+    # 操作選択（ルーム作成 or 参加）の入力を受け付けるメソッド
+    def input_operation(self):
+        while True:
+            try:
+                o = int(input("1: ルーム作成  2: ルーム参加 -> "))
+                if o in (1, 2):
+                    return o
+            except ValueError:
+                pass
+            print("1または2 を入力してください。")
+
+    # ユーザーからルーム名を入力させ、作成処理を行うメソッド
+    def create_room(self, username):
+        rn = self.input_room_name(1)
+        pkt = self.create_packet(rn, 1, 0, username)
+        self.sock.send(pkt)
+        token = self.sock.recv(TOKEN_MAX_BYTE)
+        return rn, token
+
+    # ユーザーからルーム参加を選択し、リストを受け取って参加処理を行うメソッド
+    def join_room(self, username):
+        pkt = self.create_packet("", 2, 0, username)
+        self.sock.send(pkt)
+        rl = self.sock.recv(4096).decode("utf-8")
+        try:
+            rooms = rl.strip()[1:-1].split(',')
+            rooms = [r.strip().strip("'").strip('"') for r in rooms if r.strip()]
+        except:
+            rooms = [rl]
+        print("\U0001F4DC 利用可能なルーム:")
+        for i, r in enumerate(rooms, start=1):
+            print(f"{i}. {r}")
+        rn = self.input_room_name(2)
+        self.sock.send(rn.encode("utf-8"))
+        token = self.sock.recv(TOKEN_MAX_BYTE)
+        return rn, token
+
+    # ルーム名の入力を求め、バリデーションを行うメソッド
+    def input_room_name(self, op):
+        while True:
+            prompt = "ルーム名作成 -> " if op == 1 else "参加するルーム名 -> "
+            rn = input(prompt)
+            if not rn:
+                print("空です。再入力してください。")
+            elif len(rn) > ROOM_NAME_MAX_BYTE:
+                print("長すぎます。再入力してください。")
+            else:
+                return rn
+
+    # TCPパケットを組み立てるメソッド
+    def create_packet(self, room_name, operation, state, payload):
+        header = self.create_header(room_name, operation, state, payload)
+        return header + room_name.encode("utf-8") + payload.encode("utf-8")
+
+    # TCPヘッダーを組み立てるメソッド
+    def create_header(self, room_name, operation, state, payload):
+        rn_size = len(room_name)
+        pl_size = len(payload)
+        return (
+            rn_size.to_bytes(1, "big") +
+            operation.to_bytes(1, "big") +
+            state.to_bytes(1, "big") +
+            pl_size.to_bytes(HEADER_SIZE - 3, "big")
+        )
 
 
 class UDPClient:
-
     def __init__(self, server_address, server_port, my_info):
+        # UDP通信に必要なソケットとクライアント情報を初期化するメソッド
         self.server_address = server_address
         self.server_port = server_port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.my_info = my_info
+        for t in my_info:
+            self.token = t
+            self.room_name = my_info[t][0]
 
-        for token in self.my_info:
-            self.my_token = token
-            self.room_name = self.my_info[token][0]
-
-    # UDPチャットを開始する関数
-    def start_udp_chat(self):
-        # ユーザー名をサーバーに送信
-        self.send_username()
-        logging.info(f"🔍 クライアントソケット情報: {self.sock.getsockname()}")
-        logging.info("")
-        logging.info("************ 💬 チャット開始 ************\n")
-        
-        # メッセージ送信用スレッドと受信用スレッドを作成
-        thread_send = threading.Thread(target=self.send_message)
-        thread_receive = threading.Thread(target=self.receive_message)
-        
-        # スレッドを開始
-        thread_send.start()
-        thread_receive.start()
-        
-        # スレッドの終了を待機
-        thread_send.join()
-        thread_receive.join()
-
-    # ユーザー名をサーバーに送信する関数
+    # 参加時にユーザー名をシステムメッセージとして送信するメソッド
     def send_username(self):
-        # ユーザー情報を含むパケットを作成
-        data = self.create_packet()
-        
-        # サーバーにパケットを送信
+        username = self.my_info[self.token][1]
+        init_msg = f"System: {username} が参加しました。"
+        data = self._make_packet(init_msg.encode("utf-8"))
         self.sock.sendto(data, (self.server_address, self.server_port))
-        logging.info(f"🔗 ルームに接続しました: {self.room_name}")
 
-    # メッセージを送信する関数
-    def send_message(self):
+    # 通常メッセージを送信するメソッド
+    def send(self, message):
+        nm = f"{self.my_info[self.token][1]}: {message}"
+        data = self._make_packet(nm.encode("utf-8"))
+        self.sock.sendto(data, (self.server_address, self.server_port))
+
+    # 非同期に受信可能なバッファからすべてのメッセージを取得するメソッド
+    def fetch_messages(self):
+        msgs = []
+        self.sock.setblocking(False)
         while True:
-            message = input("")
-            print("\033[1A\033[1A")
-            message_with_name = self.my_info[self.my_token][1] + ": " + message
+            try:
+                data = self.sock.recvfrom(4096)[0].decode("utf-8")
+                msgs.append(data)
+            except (BlockingIOError, OSError):
+                break
+        self.sock.setblocking(True)
+        return msgs
 
-            data = self.create_packet(message_with_name.encode())
-            self.sock.sendto(data, (self.server_address, self.server_port))
-            time.sleep(0.1)
+    # ルーム名とトークンを付与してUDPパケットを作成する内部メソッド
+    def _make_packet(self, body):
+        rn_size = len(self.room_name).to_bytes(1, "big")
+        tk_size = len(self.token).to_bytes(1, "big")
+        return rn_size + tk_size + self.room_name.encode("utf-8") + self.token + body
 
-    # メッセージを受信する関数
-    def receive_message(self):
+    # CUIでチャットを開始し、送受信のスレッドを管理するメソッド
+    def start_udp_chat(self):
+        self.send_username()
+        threading.Thread(target=self._cui_receive, daemon=True).start()
         while True:
-            received_data = self.sock.recvfrom(4096)[0].decode("utf-8")
+            msg = input()
+            self.send(msg)
 
-            if received_data in ["Timeout!", "exit!"]:
-                logging.info(received_data)
-                logging.info("*****************************************")
-                self.sock.close()
-                sys.exit()
-            else:
-                logging.info(received_data)
-
-    # パケットを作成し、メッセージと必要な情報を含める関数
-    def create_packet(self, message=b""):
-        room_name_size = len(self.room_name).to_bytes(1, "big")
-        token_size = len(self.my_token).to_bytes(1, "big")
-        
-        header = room_name_size + token_size
-        
-        return header + self.room_name.encode("utf-8") + self.my_token + message
-
-
-if __name__ == "__main__":
-    
-    # サーバーのアドレスとポート番号を設定
-    server_address = '0.0.0.0'
-    tcp_server_port = 9001
-    udp_server_port = 9002
-
-    # TCP クライアント を作成して起動
-    tcp_client = TCPClient(server_address, tcp_server_port)
-    my_info = tcp_client.start_tcp_client()
-
-    # UDP クライアント を作成して起動
-    udp_client = UDPClient(server_address, udp_server_port, my_info)
-    udp_client.start_udp_chat()
-
-
+    # CUIで受信メッセージを継続的に表示するメソッド
+    def _cui_receive(self):
+        while True:
+            data = self.sock.recvfrom(4096)[0].decode("utf-8")
+            print(data)
