@@ -155,8 +155,6 @@ python3 server.py
 
 
 
-<img width="538" alt="スクリーンショット 2025-04-25 22 31 55" src="https://github.com/user-attachments/assets/f0eb8168-5df7-437a-be00-09cbcdfaa7c8" />
-
 
 
 <br><br>
@@ -167,7 +165,7 @@ python3 server.py
 別のターミナルを開き、以下のコマンドでクライアントを起動します。
 
 ```bash
-python3 client.py
+streamlit run gui.py
 ```
 以下のように複数のクライアントを起動することで、ユーザー同士がチャットのやり取りができます
 
@@ -175,9 +173,11 @@ python3 client.py
 
 | ホスト | ゲスト |
 |:-------:|:--------:|
-|<br><img src="https://github.com/user-attachments/assets/029b84c7-bccd-4934-95eb-8f379a20c132" width="100%" /> |<br><img src="https://github.com/user-attachments/assets/407ce680-79e4-491c-8658-f6ec0470440a" width="100%" /> |
+|<br><img src="https://github.com/user-attachments/assets/2a9d5ed3-b330-4921-b019-7edc3717aca4" width="100%" /> |<br><img src="https://github.com/user-attachments/assets/9493b56c-00e7-476c-bcec-f2322f5b6ff6" width="100%" /> |
 
 <br>
+
+
 
 ### 3. ユーザーの操作手順
 
