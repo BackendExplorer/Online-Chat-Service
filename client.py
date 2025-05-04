@@ -2,200 +2,321 @@ import socket
 import threading
 import time
 import sys
+from pathlib import Path
 
-TOKEN_MAX_BYTE = 255
-ROOM_NAME_MAX_BYTE = 2 ** 8
-PAYLOAD_MAX_BYTE = 2 ** 29
-HEADER_SIZE = 32
-USER_NAME_MAX_BYTE_SIZE = 255
+import streamlit as st
+from streamlit_autorefresh import st_autorefresh
+import streamlit.components.v1 as components
 
+# =========================================================
+# TCP 通信（ルーム作成、参加、取得など）
+# =========================================================
+class ChatTCPClient:
+    TOKEN_MAX_BYTES = 255
+    ROOM_NAME_MAX_BYTES = 2 ** 8
 
-class TCPClient:
-    def __init__(self, server_address, server_port):
+    def __init__(self, server_address: str, server_port: int):
         self.server_address = server_address
         self.server_port = server_port
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_info = {}
 
-    # サーバーに接続し、ルーム一覧を取得するメソッド
-    def list_rooms(self, username):
-        self.connect_to_server()
-        packet = self.create_packet("", 2, 0, username)
-        self.sock.send(packet)
-        room_list = self.sock.recv(4096).decode("utf-8")
-        try:
-            rooms = room_list.strip()[1:-1].split(',')
-            rooms = [r.strip().strip("'").strip('"') for r in rooms if r.strip()]
-        except Exception:
-            rooms = [room_list]
-        return rooms
-
-    # サーバーに接続し、ルームを新規作成してトークンを取得するメソッド
-    def quick_create_room(self, username, room_name):
-        self.connect_to_server()
-        packet = self.create_packet(room_name, 1, 0, username)
-        self.sock.send(packet)
-        token = self.sock.recv(TOKEN_MAX_BYTE)
-        self.client_info = {token: [room_name, username]}
-        return self.client_info
-
-    # 既存ルームに参加後、トークンを取得して情報を登録するメソッド
-    def register_room(self, username, room_name):
-        self.sock.send(room_name.encode("utf-8"))
-        token = self.sock.recv(TOKEN_MAX_BYTE)
-        self.client_info = {token: [room_name, username]}
-        return self.client_info
-
-    # サーバーへTCP接続を確立するメソッド
-    def connect_to_server(self):
-        try:
-            self.sock.connect((self.server_address, self.server_port))
-        except socket.error as e:
-            raise
-
-    # ユーザー入力に基づき、ルーム作成または参加の処理を行うメソッド
-    def start_tcp_client(self):
-        self.connect_to_server()
-        username = self.input_user_name()
-        op = self.input_operation()
-        if op == 1:
-            room, token = self.create_room(username)
-        else:
-            room, token = self.join_room(username)
-        self.client_info = {token: [room, username]}
-        self.sock.close()
-        return self.client_info
-
-    # ユーザー名を入力させ、バリデーションを行うメソッド
-    def input_user_name(self):
-        while True:
-            u = input("\U0001F464 ユーザー名: ")
-            if not u:
-                print("ユーザー名を入力してください")
-            elif len(u) > PAYLOAD_MAX_BYTE:
-                print("長すぎます。再度入力してください。")
-            else:
-                return u
-
-    # 操作選択（ルーム作成 or 参加）の入力を受け付けるメソッド
-    def input_operation(self):
-        while True:
-            try:
-                o = int(input("1: ルーム作成  2: ルーム参加 -> "))
-                if o in (1, 2):
-                    return o
-            except ValueError:
-                pass
-            print("1または2 を入力してください。")
-
-    # ユーザーからルーム名を入力させ、作成処理を行うメソッド
-    def create_room(self, username):
-        rn = self.input_room_name(1)
-        pkt = self.create_packet(rn, 1, 0, username)
-        self.sock.send(pkt)
-        token = self.sock.recv(TOKEN_MAX_BYTE)
-        return rn, token
-
-    # ユーザーからルーム参加を選択し、リストを受け取って参加処理を行うメソッド
-    def join_room(self, username):
-        pkt = self.create_packet("", 2, 0, username)
-        self.sock.send(pkt)
-        rl = self.sock.recv(4096).decode("utf-8")
-        try:
-            rooms = rl.strip()[1:-1].split(',')
-            rooms = [r.strip().strip("'").strip('"') for r in rooms if r.strip()]
-        except:
-            rooms = [rl]
-        print("\U0001F4DC 利用可能なルーム:")
-        for i, r in enumerate(rooms, start=1):
-            print(f"{i}. {r}")
-        rn = self.input_room_name(2)
-        self.sock.send(rn.encode("utf-8"))
-        token = self.sock.recv(TOKEN_MAX_BYTE)
-        return rn, token
-
-    # ルーム名の入力を求め、バリデーションを行うメソッド
-    def input_room_name(self, op):
-        while True:
-            prompt = "ルーム名作成 -> " if op == 1 else "参加するルーム名 -> "
-            rn = input(prompt)
-            if not rn:
-                print("空です。再入力してください。")
-            elif len(rn) > ROOM_NAME_MAX_BYTE:
-                print("長すぎます。再入力してください。")
-            else:
-                return rn
-
-    # TCPパケットを組み立てるメソッド
-    def create_packet(self, room_name, operation, state, payload):
-        header = self.create_header(room_name, operation, state, payload)
-        return header + room_name.encode("utf-8") + payload.encode("utf-8")
-
-    # TCPヘッダーを組み立てるメソッド
-    def create_header(self, room_name, operation, state, payload):
+    def make_packet(self, room_name: str, operation: int, state: int, payload: str) -> bytes:
         rn_size = len(room_name)
         pl_size = len(payload)
-        return (
-            rn_size.to_bytes(1, "big") +
-            operation.to_bytes(1, "big") +
-            state.to_bytes(1, "big") +
-            pl_size.to_bytes(HEADER_SIZE - 3, "big")
+        header = (
+            rn_size.to_bytes(1, 'big') +
+            operation.to_bytes(1, 'big') +
+            state.to_bytes(1, 'big') +
+            pl_size.to_bytes(32 - 3, 'big')
         )
+        return header + room_name.encode('utf-8') + payload.encode('utf-8')
+
+    def parse_room_list(self, data_str: str) -> list[str]:
+        try:
+            trimmed = data_str.strip()
+            inner = trimmed[1:-1]
+            rooms = [room.strip().strip("'\"") for room in inner.split(',') if room.strip()]
+        except Exception:
+            rooms = [data_str]
+        return rooms
+
+    def request_create_room(self, username: str, room: str) -> dict[bytes, list[str]]:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.connect((self.server_address, self.server_port))
+            pkt = self.make_packet(room, 1, 0, username)
+            sock.send(pkt)
+            token = sock.recv(self.TOKEN_MAX_BYTES)
+        return {token: [room, username]}
+
+    def request_room_list(self, username: str) -> list[str]:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.connect((self.server_address, self.server_port))
+            pkt = self.make_packet("", 2, 0, username)
+            sock.send(pkt)
+            raw = sock.recv(4096).decode("utf-8")
+        return self.parse_room_list(raw)
+
+    def request_join_room(self, username: str, room: str) -> dict[bytes, list[str]]:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.connect((self.server_address, self.server_port))
+            # まずルーム一覧取得リクエストと同じ操作
+            pkt1 = self.make_packet("", 2, 0, username)
+            sock.send(pkt1)
+            _ = sock.recv(4096)
+            # 参加するルーム名を送信
+            sock.send(room.encode("utf-8"))
+            token = sock.recv(self.TOKEN_MAX_BYTES)
+        return {token: [room, username]}
 
 
-class UDPClient:
-    def __init__(self, server_address, server_port, my_info):
-        # UDP通信に必要なソケットとクライアント情報を初期化するメソッド
+# =========================================================
+# UDP 通信（チャット送受信）
+# =========================================================
+class ChatUDPClient:
+    def __init__(self, server_address: str, server_port: int, client_info: dict[bytes, list[str]]):
         self.server_address = server_address
         self.server_port = server_port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.my_info = my_info
-        for t in my_info:
-            self.token = t
-            self.room_name = my_info[t][0]
+        self.token, (self.room_name, self.username) = next(iter(client_info.items()))
 
-    # 参加時にユーザー名をシステムメッセージとして送信するメソッド
-    def send_username(self):
-        username = self.my_info[self.token][1]
-        init_msg = f"System: {username} が参加しました。"
-        data = self._make_packet(init_msg.encode("utf-8"))
-        self.sock.sendto(data, (self.server_address, self.server_port))
+    def make_packet(self, body: bytes) -> bytes:
+        room_bytes = self.room_name.encode('utf-8')
+        return (
+            len(room_bytes).to_bytes(1, 'big') +
+            len(self.token).to_bytes(1, 'big') +
+            room_bytes +
+            self.token +
+            body
+        )
 
-    # 通常メッセージを送信するメソッド
-    def send(self, message):
-        nm = f"{self.my_info[self.token][1]}: {message}"
-        data = self._make_packet(nm.encode("utf-8"))
-        self.sock.sendto(data, (self.server_address, self.server_port))
+    def send_system_message(self) -> None:
+        system_msg = f"System: {self.username} が参加しました。".encode('utf-8')
+        self.sock.sendto(self.make_packet(system_msg), (self.server_address, self.server_port))
 
-    # 非同期に受信可能なバッファからすべてのメッセージを取得するメソッド
-    def fetch_messages(self):
-        msgs = []
-        self.sock.setblocking(False)
-        while True:
+    def send_chat_message(self, message: str) -> None:
+        body = f"{self.username}: {message}".encode('utf-8')
+        self.sock.sendto(self.make_packet(body), (self.server_address, self.server_port))
+
+    def receive_messages(self, existing: list[str]) -> list[str]:
+        self.sock.settimeout(0.1)
+        new_msgs = []
+        try:
+            while True:
+                data, _ = self.sock.recvfrom(4096)
+                msg = data.decode("utf-8")
+                if msg and msg not in ("exit!", "Timeout!") and msg not in existing:
+                    new_msgs.append(msg)
+        except socket.timeout:
+            pass
+        return new_msgs
+
+
+# =========================================================
+# Streamlit による UI 描画
+# =========================================================
+class ChatUIManager:
+    CSS_FILE = "style.css"
+
+    def __init__(self, controller: "ChatAppController", tcp_client: ChatTCPClient):
+        self.ctrl = controller
+        self.tcp = tcp_client
+
+    def setup_page(self) -> None:
+        st.set_page_config(
+            page_title="💬 リアルタイムチャット",
+            page_icon="💬",
+            layout="centered",
+        )
+        self._load_local_css()
+        st.markdown("<div class='app-scale'>", unsafe_allow_html=True)
+
+    def _load_local_css(self) -> None:
+        css_path = Path(self.CSS_FILE)
+        if css_path.exists():
+            st.markdown(f"<style>{css_path.read_text()}</style>", unsafe_allow_html=True)
+
+    def render(self) -> None:
+        page = self.ctrl.state.page
+        if page == "home":
+            self._render_home()
+        elif page == "create":
+            self._render_create()
+        elif page == "join":
+            self._render_join()
+        elif page == "chat" and self.ctrl.state.client_info:
+            if "udp_client" not in self.ctrl.state:
+                self.ctrl.connect_udp()
+            self._render_chat()
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    def _render_home(self) -> None:
+        st.markdown(
+            """
+            <div class="home-card">
+              <h1>💬 リアルタイムチャット</h1>
+            """,
+            unsafe_allow_html=True,
+        )
+        st.button("ルームを作成", on_click=lambda: self.ctrl.switch_page("create"))
+        st.button("ルームに参加", on_click=lambda: self.ctrl.switch_page("join"))
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    def _render_create(self) -> None:
+        state = self.ctrl.state
+        st.markdown('<div class="form-card">', unsafe_allow_html=True)
+        with st.form("create_room_form"):
+            st.markdown("### ルーム作成", unsafe_allow_html=True)
+            user = st.text_input("", key="create_user", placeholder="ユーザー名を入力")
+            room = st.text_input("", key="create_room", placeholder="ルーム名を入力")
+            col1, col2 = st.columns(2)
+            with col1:
+                create_clicked = st.form_submit_button("作成", type="primary", use_container_width=True)
+            with col2:
+                back_clicked = st.form_submit_button("← 戻る", type="secondary", use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        if create_clicked:
+            if not user or not room:
+                st.warning("ユーザー名とルーム名を入力してください。")
+                st.stop()
             try:
-                data = self.sock.recvfrom(4096)[0].decode("utf-8")
-                msgs.append(data)
-            except (BlockingIOError, OSError):
-                break
-        self.sock.setblocking(True)
-        return msgs
+                info = self.tcp.request_create_room(user, room)
+            except Exception as e:
+                st.error(f"接続失敗: {e}")
+                st.stop()
 
-    # ルーム名とトークンを付与してUDPパケットを作成する内部メソッド
-    def _make_packet(self, body):
-        rn_size = len(self.room_name).to_bytes(1, "big")
-        tk_size = len(self.token).to_bytes(1, "big")
-        return rn_size + tk_size + self.room_name.encode("utf-8") + self.token + body
+            state.client_info = info
+            state.username = user
+            state.room_name = room
+            self.ctrl.connect_udp()
+            self.ctrl.switch_page("chat")
 
-    # CUIでチャットを開始し、送受信のスレッドを管理するメソッド
-    def start_udp_chat(self):
-        self.send_username()
-        threading.Thread(target=self._cui_receive, daemon=True).start()
-        while True:
-            msg = input()
-            self.send(msg)
+        if back_clicked:
+            self.ctrl.switch_page("home")
 
-    # CUIで受信メッセージを継続的に表示するメソッド
-    def _cui_receive(self):
-        while True:
-            data = self.sock.recvfrom(4096)[0].decode("utf-8")
-            print(data)
+    def _render_join(self) -> None:
+        state = self.ctrl.state
+        st.markdown('<div class="join-card">', unsafe_allow_html=True)
+        st.markdown("### ルーム参加", unsafe_allow_html=True)
+        user = st.text_input("", key="join_user", placeholder="ユーザー名を入力")
+
+        if st.button("ルーム一覧取得", disabled=not user):
+            try:
+                state.rooms = self.tcp.request_room_list(user)
+            except Exception as e:
+                st.error(f"取得失敗: {e}")
+
+        if state.rooms:
+            sel = st.selectbox("参加するルーム", state.rooms)
+            if st.button("参加", disabled=not user or not sel):
+                try:
+                    info = self.tcp.request_join_room(user, sel)
+                except Exception as e:
+                    st.error(f"参加失敗: {e}")
+                    st.stop()
+
+                state.client_info = info
+                state.username = user
+                state.room_name = sel
+                self.ctrl.connect_udp()
+                self.ctrl.switch_page("chat")
+
+        if st.button("← 戻る"):
+            self.ctrl.switch_page("home")
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    def _render_chat(self) -> None:
+        state = self.ctrl.state
+        udp: ChatUDPClient = state.udp_client
+
+        # 自動リロード
+        st_autorefresh(interval=2000, key="chat-refresh")
+
+        # 新着メッセージ受信
+        new_msgs = udp.receive_messages(state.messages)
+        state.messages.extend(new_msgs)
+
+        # チャット表示
+        css = f"<style>{Path(self.CSS_FILE).read_text()}</style>"
+        html = (
+            f'<div class="chat-wrapper">'
+            f'<div class="room-header">🏠 {state.room_name}</div>'
+            f'<div class="chat-box" id="chat-box">'
+        )
+        for m in state.messages[-300:]:
+            if ":" in m:
+                sender, content = (s.strip() for s in m.split(":", 1))
+                if sender == "System":
+                    html += f'<div class="wrap system"><div class="msg">{content}</div></div>'
+                else:
+                    cls = "mine" if sender == state.username else "other"
+                    html += (
+                        f'<div class="wrap {cls}">'
+                        f'<div class="name">{sender}</div>'
+                        f'<div class="msg">{content}</div>'
+                        f'</div>'
+                    )
+            elif m.strip():
+                html += f'<div class="wrap system"><div class="msg">{m}</div></div>'
+        html += """
+                  <div id="bottom-anchor"></div>
+                </div></div>
+                <script>
+                  const anchor=document.getElementById('bottom-anchor');
+                  requestAnimationFrame(()=>anchor.scrollIntoView({block:'end'}));
+                </script>
+            """
+        components.html(css + html, height=780, scrolling=False)
+
+        # メッセージ送信フォーム
+        with st.form("chat-form", clear_on_submit=True):
+            msg = st.text_input("", key="chat-input", placeholder="メッセージを入力")
+            if st.form_submit_button("送信", type="primary") and msg:
+                udp.send_chat_message(msg)
+
+
+# =========================================================
+# 状態管理、ページ遷移、UDP 起動
+# =========================================================
+class ChatAppController:
+    def __init__(self) -> None:
+        self.server = "127.0.0.1"
+        self.tcp_port = 9001
+        self.udp_port = 9002
+        self.state = st.session_state
+        self._init_session()
+
+    def _init_session(self) -> None:
+        defaults = {
+            "page": "home",
+            "client_info": None,
+            "username": "",
+            "room_name": "",
+            "messages": [],
+            "rooms": [],
+            "udp_client": None,
+        }
+        for k, v in defaults.items():
+            if k not in self.state:
+                self.state[k] = v
+
+    def switch_page(self, page: str) -> None:
+        self.state.page = page
+        st.rerun()
+
+    def connect_udp(self) -> None:
+        self.state.udp_client = ChatUDPClient(
+            self.server, self.udp_port, self.state.client_info
+        )
+        self.state.udp_client.send_system_message()
+
+
+# =========================================================
+# エントリーポイント
+# =========================================================
+if __name__ == '__main__':
+    ctrl = ChatAppController()
+    tcp_client = ChatTCPClient(ctrl.server, ctrl.tcp_port)
+    ui_manager = ChatUIManager(ctrl, tcp_client)
+
+    ui_manager.setup_page()
+    ui_manager.render()
