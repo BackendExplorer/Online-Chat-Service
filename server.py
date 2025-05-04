@@ -125,23 +125,16 @@ class UDPServer:
         return room_name, token, message
 
     def broadcast_to_room(self, room_name, message):
-        members = self.room_members_map.get(room_name, [])
         encoded_message = message.encode()
-
-        for token in members:
+    
+        for token in self.room_members_map.get(room_name, []):
             client_info = self.clients_map.get(token)
-            if not client_info:
-                continue
+            if client_info and client_info[0]:
+                try:
+                    self.sock.sendto(encoded_message, client_info[0])
+                except Exception:
+                    pass
 
-            addr = client_info[0]
-            if not addr:
-                continue
-
-            try:
-                self.sock.sendto(encoded_message, addr)
-            except Exception:
-                pass
-            
     def remove_inactive_clients(self):
         while True:
             now = time.time()
