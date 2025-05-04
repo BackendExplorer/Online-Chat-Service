@@ -107,10 +107,10 @@ class UDPServer:
         while True:
             data, client_address = self.sock.recvfrom(4096)
             room_name, token, message = self.decode_message(data)
-            # アクティブ状態を更新
+            
             self.clients_map[token][0]  = client_address
             self.clients_map[token][-1] = time.time()
-            # ブロードキャスト
+            
             self.broadcast_to_room(room_name, message)
 
     def decode_message(self, data):
@@ -127,26 +127,36 @@ class UDPServer:
 
     def broadcast_to_room(self, room_name, message):
         members = self.room_members_map.get(room_name, [])
-        for member_token in members:
-            if member_token not in self.clients_map:
+        encoded_message = message.encode()
+
+        for token in members:
+            client_info = self.clients_map.get(token)
+            if not client_info:
                 continue
-            addr = self.clients_map[member_token][0]
+
+            addr = client_info[0]
             if not addr:
                 continue
+
             try:
-                self.sock.sendto(message.encode(), addr)
+                self.sock.sendto(encoded_message, addr)
             except Exception:
                 pass
-
+            
     def remove_inactive_clients(self):
         while True:
             now = time.time()
-            for token, info in list(self.clients_map.items()):
-                if now - info[-1] > 100:
-                    try:
-                        self.disconnect_inactive_client(token, info)
-                    except Exception:
-                        pass
+            inactive_tokens = [
+                (token, info) for token, info in self.clients_map.items()
+                if now - info[-1] > 100
+            ]
+    
+            for token, info in inactive_tokens:
+                try:
+                    self.disconnect_inactive_client(token, info)
+                except Exception:
+                    continue
+    
             time.sleep(60)
 
     def disconnect_inactive_client(self, client_token, client_info):
