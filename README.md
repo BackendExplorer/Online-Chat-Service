@@ -215,7 +215,7 @@ flowchart TD
 
 - **`Streamlit`**
 
-  フロントエンド開発なしで、Pythonだけで高速にWeb UIを構築できるため
+  Pythonのみで手軽にWeb UIを構築できるため、開発効率を重視して採用
 
 <br><br>
 
