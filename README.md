@@ -49,7 +49,7 @@ https://github.com/user-attachments/assets/e810880b-abfb-4507-a21c-3f91b413be87
 
 ## **📚 参考情報・ライセンス**
 
-- [Qiita｜制作過程の解説記事](#qiita-seisaku-katei-no-kaisetsu-ki)
+- [開発ストーリー & Qiita 記事](#qiita-seisaku-katei-no-kaisetsu-ki)
 
 - [参考文献](#参考文献)
 
@@ -430,15 +430,13 @@ class UDPClient {
 <br>
 
 ---
-## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ Qiita｜制作過程の解説記事
+## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ 開発ストーリー & Qiita 記事
 
 <br>
 
-このプロジェクトの制作過程と技術的な挑戦について、Qiitaに記事をまとめました。  
+実装の背景や設計の工夫について、Qiita記事で詳しく解説しています。
 
-「開発の裏側」を知りたい方は、ぜひご覧ください！
-
-[TCP×UDP×スレッドでつくるリアルタイムチャット（設計の裏側）](https://qiita.com/your-article-link)
+[チャットアプリをゼロから設計・実装する「TCP・UDPソケットとスレッドの活用」](https://qiita.com/your-article-link)
 
 <br>
 
