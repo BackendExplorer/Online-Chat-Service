@@ -198,6 +198,28 @@ flowchart TD
 
 <br>
 
+
+### 技術選定の理由
+
+- **`TCPソケット`**
+
+  ルーム参加・ユーザー認証など、確実なデータ転送が必要な処理に利用
+
+- **`UDP`**
+
+  チャットメッセージ送信などリアルタイム性を重視する通信に利用
+
+- **`マルチスレッド`**
+
+  クライアントごとの並行処理を軽量に行うため
+
+- **`Streamlit`**
+
+  フロントエンド開発なしで、Pythonだけで高速にWeb UIを構築できるため
+
+<br><br>
+
+
 | カテゴリ       | 技術スタック                                                                                                         |
 |----------------|----------------------------------------------------------------------------------------------------------------------|
 | 開発言語       | ![Python](https://img.shields.io/badge/Python-3.13.2-blue) <br>（標準ライブラリ使用：`socket`, `threading`, `logging`, `time`, `sys`） |
@@ -208,17 +230,6 @@ flowchart TD
 | バージョン管理 | ![Git](https://img.shields.io/badge/VersionControl-Git-orange) ![GitHub](https://img.shields.io/badge/Repo-GitHub-black)     |
 | 描画ツール     | ![Mermaid](https://img.shields.io/badge/Diagram-Mermaid-green) ![LaTeX](https://img.shields.io/badge/Doc-LaTeX-9cf)         |
 
-<br>
-
-### 技術選定の理由
-
-- **TCP**: ルーム参加・ユーザー認証など、確実なデータ転送が必要な処理に利用
-
-- **UDP**: チャットメッセージ送信などリアルタイム性を重視する通信に利用
-
-- **Threading**: クライアントごとの並行処理を軽量に行うため
-
-- **Streamlit**: フロントエンド開発なしで、Pythonだけで高速にWeb UIを構築できるため
 
 <br>
 
