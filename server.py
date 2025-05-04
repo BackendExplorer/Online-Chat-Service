@@ -33,12 +33,10 @@ class TCPServer:
         data = connection.recv(4096)
         room_name_size, operation, state, payload_size, room_name, payload = self.decode_message(data)
         token = secrets.token_bytes(self.TOKEN_MAX_BYTE)
-        
         self.register_client(token, client_address, room_name, payload, operation)
 
         if operation == 1:
-            self.create_room(connection, room_name, token)
-            
+            self.create_room(connection, room_name, token)    
         elif operation == 2:
             self.join_room(connection, token)
 
