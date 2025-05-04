@@ -432,6 +432,8 @@ class UDPClient {
 ---
 ## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ Qiita｜制作過程の解説記事
 
+<BR>
+
 このプロジェクトの制作過程と技術的な挑戦について、Qiitaに記事をまとめました。  
 
 「開発の裏側」を知りたい方は、ぜひご覧ください！
