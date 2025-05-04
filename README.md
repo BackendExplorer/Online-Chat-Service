@@ -432,7 +432,7 @@ class UDPClient {
 ---
 ## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ Qiita｜制作過程の解説記事
 
-<BR>
+<br>
 
 このプロジェクトの制作過程と技術的な挑戦について、Qiitaに記事をまとめました。  
 
@@ -445,7 +445,7 @@ class UDPClient {
 ---
 ## <a id="参考文献"></a>📗 参考文献
 
-<BR>
+<br>
 
 ### 公式ドキュメント
 
