@@ -101,23 +101,21 @@ https://github.com/user-attachments/assets/e810880b-abfb-4507-a21c-3f91b413be87
 
 ### 1. 前提条件
 
-- **Python 3.8以上**  
+以下を事前にインストールしてください
 
-  [Python公式サイト](https://www.python.org/downloads/) からインストールできます
+- [Python 3.8以上](https://www.python.org/downloads/)
 
-- **Git**  
+- [Git](https://git-scm.com/)
 
-  [Git公式サイト](https://git-scm.com/) からインストールできます
+- [Streamlit 1.45.0](https://streamlit.io/)
 
-- **Streamlit 1.45.0** 
 
-  [Streamlit公式サイト]( https://streamlit.io/) からインストールできます
   
 <br>
 
 ### 2. リポジトリのクローン
 
-以下のコマンドを使って、このプロジェクトのコードをローカルに取得します：
+以下のコマンドをターミナルで実行します
 
 ```bash
 git clone https://github.com/yourusername/your-repo-name.git
