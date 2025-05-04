@@ -227,7 +227,7 @@ flowchart TD
 
 | カテゴリ       | 技術スタック                                                                                                         |
 |----------------|----------------------------------------------------------------------------------------------------------------------|
-| 開発言語       | ![Python](https://img.shields.io/badge/Python-3.13.2-blue) <br>（標準ライブラリ使用：`socket`, `threading`, `logging`, `time`, `sys`） |
+| 開発言語       | ![Python](https://img.shields.io/badge/Python-3.13.2-blue) <br>標準ライブラリ使用：`socket`, `threading`, `logging`, `time`, `sys` |
 | 通信技術       | ![TCP](https://img.shields.io/badge/Protocol-TCP-blue) ![UDP](https://img.shields.io/badge/Protocol-UDP-blue) <br>独自プロトコルTCRP（Talk Chat Room Protocol）を用いた通信設計 |
 | 並列処理       | ![Threading](https://img.shields.io/badge/Concurrency-Threading-yellow) <br>マルチスレッドによる並列処理                      |
 | UIフレームワーク| ![Streamlit](https://img.shields.io/badge/UI-Streamlit-ff4b4b) <br>バージョン: 1.45.0 ／ Webアプリとして動作                     |
