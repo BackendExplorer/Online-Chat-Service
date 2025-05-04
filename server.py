@@ -139,16 +139,13 @@ class UDPServer:
             except Exception:
                 pass
 
-    def remove_inactive_clients(self):
+   def remove_inactive_clients(self):
         while True:
-            current_time = time.time()
-            for client_token, client_info in list(self.clients_map.items()):
-                # client_info = [address, room_id, username, is_host, last_active_time]
-                last_active = client_info[-1]
-                # 100秒以上アクティブでなければ切断
-                if last_active is not None and (current_time - last_active) > 100:
+            now = time.time()
+            for token, info in list(self.clients_map.items()):
+                if now - info[-1] > 100:
                     try:
-                        self.disconnect_inactive_client(client_token, client_info)
+                        self.disconnect_inactive_client(token, info)
                     except Exception:
                         pass
             time.sleep(60)
