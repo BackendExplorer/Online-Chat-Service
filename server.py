@@ -87,7 +87,6 @@ class UDPServer:
     def __init__(self, server_address, server_port):
         self.server_address    = server_address
         self.server_port       = server_port
-        # TCPServer と同じマップ参照
         self.room_members_map  = TCPServer.room_members_map
         self.clients_map       = TCPServer.clients_map
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
