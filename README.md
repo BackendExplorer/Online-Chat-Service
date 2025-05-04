@@ -49,7 +49,7 @@ https://github.com/user-attachments/assets/e810880b-abfb-4507-a21c-3f91b413be87
 
 ## **📚 参考情報・ライセンス**
 
-- [開発ストーリー & Qiita 記事](#qiita-seisaku-katei-no-kaisetsu-ki)
+- [Qiitaで語る開発ストーリー](#qiita-seisaku-katei-no-kaisetsu-ki)
 
 - [参考文献](#参考文献)
 
@@ -430,7 +430,7 @@ class UDPClient {
 <br>
 
 ---
-## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ 開発ストーリー & Qiita 記事
+## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ Qiitaで語る開発ストーリー
 
 <br>
 
