@@ -39,10 +39,10 @@ class TCPServer:
         self.register_client(token, client_address, room_name, payload, operation)
 
         if operation == 1:
-            self.create_room(connection, room_name, payload, token)
+            self.create_room(connection, room_name, token)
             
         elif operation == 2:
-            self.join_room(connection, room_name, payload, token)
+            self.join_room(connection, token)
 
     def decode_message(self, data):
         header = data[:self.HEADER_MAX_BYTE]
@@ -66,11 +66,11 @@ class TCPServer:
             time.time(),
         ]
 
-    def create_room(self, connection, room_name, payload, token):
+    def create_room(self, connection, room_name, token):
         connection.send(token)
         self.room_members_map[room_name] = [token]
 
-    def join_room(self, connection, room_name, payload, token):
+    def join_room(self, connection, token):
         connection.send(str(list(self.room_members_map.keys())).encode("utf-8"))
         room_name = connection.recv(4096).decode("utf-8")
 
