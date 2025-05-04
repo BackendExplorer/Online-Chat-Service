@@ -155,32 +155,19 @@ class UDPServer:
 
     def disconnect_inactive_client(self, client_token, client_info):
         client_address, room_id, username, is_host = client_info[:4]
-        members = self.room_members_map.get(room_id)
-        if not members:
-            return
-
-        snapshot = list(members)
+        members = self.room_members_map[room_id]
         
         if is_host == 1:
-            # ホスト切断 → ルーム終了通知
             self.broadcast_to_room(room_id, f"System: ホストの{username}がルームを退出したので、ルームは終了します")
             self.broadcast_to_room(room_id, "exit!")
             del self.room_members_map[room_id]
-            
+        
         else:
-            # ゲスト切断 → タイムアウト通知
             self.broadcast_to_room(room_id, f"System: {username}がタイムアウトにより退出しました。")
-            # 当該クライアントにも個別通知
-            try:
-                self.sock.sendto("Timeout!".encode(), client_address)
-            except Exception:
-                pass
-            # ルーム／クライアントマップから削除
-            self.room_members_map[room_id].remove(client_token)
-            if not self.room_members_map[room_id]:
-                del self.room_members_map[room_id]
+            self.sock.sendto("Timeout!".encode(), client_address)
+            members.remove(client_token)
             del self.clients_map[client_token]
-
+    
 
 if __name__ == "__main__":
 
