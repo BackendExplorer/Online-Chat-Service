@@ -20,7 +20,6 @@ class TCPServer:
         self.sock.bind((self.server_address, self.server_port))
         self.sock.listen()
 
-                
     def accept_tcp_connections(self):
         while True:
             conn, addr = self.sock.accept()
@@ -29,7 +28,6 @@ class TCPServer:
                     self.handle_client_request(conn, addr)
                 except Exception:
                     pass 
-                
 
     def handle_client_request(self, connection, client_address):
         data = connection.recv(4096)
@@ -126,7 +124,7 @@ class UDPServer:
 
     def broadcast_to_room(self, room_name, message):
         encoded_message = message.encode()
-    
+
         for token in self.room_members_map.get(room_name, []):
             client_info = self.clients_map.get(token)
             if client_info and client_info[0]:
@@ -134,23 +132,18 @@ class UDPServer:
                     self.sock.sendto(encoded_message, client_info[0])
                 except Exception:
                     pass
-
+            
     def remove_inactive_clients(self):
         while True:
-            now = time.time()
-            inactive_tokens = [
-                (token, info) for token, info in self.clients_map.items()
-                if now - info[-1] > 100
-            ]
-    
-            for token, info in inactive_tokens:
-                try:
-                    self.disconnect_inactive_client(token, info)
-                except Exception:
-                    continue
-    
+            cutoff = time.time() - 100
+            for token, info in list(self.clients_map.items()):
+                if info[-1] < cutoff:
+                    try:
+                        self.disconnect_inactive_client(token, info)
+                    except Exception:
+                        pass
             time.sleep(60)
-
+    
     def disconnect_inactive_client(self, client_token, client_info):
         client_address, room_id, username, is_host = client_info[:4]
         members = self.room_members_map[room_id]
