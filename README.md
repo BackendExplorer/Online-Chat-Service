@@ -61,6 +61,8 @@ https://github.com/user-attachments/assets/e810880b-abfb-4507-a21c-3f91b413be87
 
 ## <a id="説明"></a> 📝 説明
 
+<br>
+
 このプロジェクトは、**グループチャットができるサービス**です。
 
 ホストユーザがチャットルームを作成し、
@@ -99,6 +101,8 @@ https://github.com/user-attachments/assets/e810880b-abfb-4507-a21c-3f91b413be87
 
 ## <a id="セットアップ"></a> 🚀 セットアップ
 
+<br>
+
 ### 1. 前提条件
 
 以下を事前にインストールしてください
@@ -129,6 +133,8 @@ cd your-repo-name
 ---
 
 ## <a id="使い方"></a>🧑‍💻 使い方
+
+<br>
 
 ### 1. サーバー起動
 
@@ -197,7 +203,6 @@ flowchart TD
 ## <a id="使用技術"></a>🧰 使用技術
 
 <br>
-
 
 ### 技術選定の理由
 
@@ -268,15 +273,11 @@ sequenceDiagram
 ---
 ## <a id="クラス図"></a>📌 クラス図
 
-
 <br>
 
 ### <a id="server.py のクラス図"></a> [サーバプログラム](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py) のクラス図
 
 <br>
-
-
-
 
 ```mermaid
 %%{init: {'themeVariables': {'scale': 0.3}}}%%
@@ -370,6 +371,9 @@ class UDPClient {
 
 ---
 ## <a id="こだわりのポイント"></a>⭐️ こだわりのポイント
+
+<br>
+
 以下は、チャットルーム接続のために設計された **独自プロトコル TCRP**（Talk Chat Room Protocol） のパケット構造を表します。
 
 <p align="center">
