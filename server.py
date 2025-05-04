@@ -138,7 +138,7 @@ class UDPServer:
             except Exception:
                 pass
 
-   def remove_inactive_clients(self):
+    def remove_inactive_clients(self):
         while True:
             now = time.time()
             for token, info in list(self.clients_map.items()):
