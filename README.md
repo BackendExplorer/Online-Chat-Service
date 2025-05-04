@@ -226,9 +226,9 @@ flowchart TD
 | 通信技術       | ![TCP](https://img.shields.io/badge/Protocol-TCP-blue) ![UDP](https://img.shields.io/badge/Protocol-UDP-blue) <br>独自プロトコルTCRP（Talk Chat Room Protocol）を用いた通信設計 |
 | 並列処理       | ![Threading](https://img.shields.io/badge/Concurrency-Threading-yellow) <br>マルチスレッドによる並列処理                      |
 | UIフレームワーク| ![Streamlit](https://img.shields.io/badge/UI-Streamlit-ff4b4b) <br>バージョン: 1.45.0 ／ Webアプリとして動作                     |
-| 開発環境       | ![macOS](https://img.shields.io/badge/OS-macOS-lightgrey) ![VSCode](https://img.shields.io/badge/Editor-VSCode-blue)         |
-| バージョン管理 | ![Git](https://img.shields.io/badge/VersionControl-Git-orange) ![GitHub](https://img.shields.io/badge/Repo-GitHub-black)     |
-| 描画ツール     | ![Mermaid](https://img.shields.io/badge/Diagram-Mermaid-green) ![LaTeX](https://img.shields.io/badge/Doc-LaTeX-9cf)         |
+| 開発環境       | ![macOS](https://img.shields.io/badge/OS-macOS-lightgrey)&nbsp;&nbsp;&nbsp;&nbsp;![VSCode](https://img.shields.io/badge/Editor-VSCode-blue) |
+| バージョン管理 | ![Git](https://img.shields.io/badge/VersionControl-Git-orange)&nbsp;&nbsp;&nbsp;&nbsp;![GitHub](https://img.shields.io/badge/Repo-GitHub-black) |
+| 描画ツール     | ![Mermaid](https://img.shields.io/badge/Diagram-Mermaid-green)&nbsp;&nbsp;&nbsp;&nbsp;![LaTeX](https://img.shields.io/badge/Doc-LaTeX-9cf) |
 
 
 <br>
