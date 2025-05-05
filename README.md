@@ -436,7 +436,7 @@ class UDPClient {
 
 実装の背景や設計の工夫について、Qiita記事で詳しく解説しています。
 
-[チャットアプリをゼロから設計・実装する「TCP・UDPソケットとスレッドの活用」](https://qiita.com/your-article-link)
+[TCP・UDP×マルチスレッドで作る、ゼロからのチャットアプリ開発](https://qiita.com/your-article-link)
 
 <br>
 
