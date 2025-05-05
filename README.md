@@ -1,31 +1,37 @@
 ```mermaid
 flowchart TD
-  %%───── クラス定義 ─────
-  classDef startend  fill:#FFE699,stroke:#333,stroke-width:2px,font-weight:bold;
-  classDef decision  fill:#F7C6C7,stroke:#333,stroke-width:1px;
-  classDef process   fill:#C9DAF8,stroke:#333,stroke-width:1px;
-  classDef autoExit  fill:#F4B084,stroke:#333,stroke-width:1px;
-  classDef endnode   fill:#B6D7A8,stroke:#333,stroke-width:2px,font-weight:bold;
+    %%─── クラス定義 ───
+    classDef startend  fill:#FFE699,stroke:#333,stroke-width:2px,font-weight:bold;
+    classDef decision  fill:#F7C6C7,stroke:#333,stroke-width:1px;
+    classDef process   fill:#C9DAF8,stroke:#333,stroke-width:1px;
+    classDef autoExit  fill:#F4B084,stroke:#333,stroke-width:1px;
+    classDef endNode   fill:#B6D7A8,stroke:#333,stroke-width:2px,font-weight:bold;
 
-  %%───── ノード定義 ─────
-  Start([スタート])                       :::startend
-  選択["「作成」または「参加」"]       :::decision
+    %%─── ノード定義 ───
+    Start([スタート]):::startend
+    選択["「作成」または「参加」"]:::decision
 
-  入力作成[ユーザー名を入力]             :::process
-  ルーム名入力[ルーム名を入力]           :::process
+    入力作成[ユーザー名を入力]:::process
+    ルーム名入力[ルーム名を入力]:::process
 
-  入力参加[ユーザー名を入力]             :::process
-  ルーム一覧[ルーム一覧から選択]         :::process
+    入力参加[ユーザー名を入力]:::process
+    ルーム一覧[ルーム一覧から選択]:::process
 
-  チャット中[チャット中]                 :::process
-  自動退出[自動退出]                     :::autoExit
-  End([終了])                            :::endnode
+    チャット中[チャット中]:::process
+    自動退出[自動退出]:::autoExit
+    End([終了]):::endNode
 
-  %%───── フロー ─────
-  Start --> 選択
-  選択 -- 作成 --> 入力作成 --> ルーム名入力 --> チャット中
-  選択 -- 参加 --> 入力参加 --> ルーム一覧 --> チャット中
-  チャット中 --> 自動退出 --> End
+    %%─── フロー定義 ───
+    Start --> 選択
+    選択 -- 作成 --> 入力作成
+    入力作成 --> ルーム名入力
+    ルーム名入力 --> チャット中
+    選択 -- 参加 --> 入力参加
+    入力参加 --> ルーム一覧
+    ルーム一覧 --> チャット中
+    チャット中 --> 自動退出
+    自動退出 --> End
+
 
 
 ```
