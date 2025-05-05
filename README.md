@@ -1,3 +1,40 @@
+
+```mermaid
+flowchart TD
+    %%─── クラス定義 ───
+    classDef startend  fill:#E0F7FF,stroke:#0099CC,stroke-width:2px,font-weight:bold;
+    classDef decision  fill:#B3ECFF,stroke:#0099CC,stroke-width:1px;
+    classDef process   fill:#B3EFFF,stroke:#0099CC,stroke-width:1px;
+    classDef autoExit  fill:#80E1FF,stroke:#0099CC,stroke-width:1px;
+    classDef endNode   fill:#4DD6FF,stroke:#0099CC,stroke-width:2px,font-weight:bold;
+
+    %%─── ノード定義 ───
+    Start([スタート]):::startend
+    選択["「作成」または「参加」"]:::decision
+
+    入力作成[ユーザー名を入力]:::process
+    ルーム名入力[ルーム名を入力]:::process
+
+    入力参加[ユーザー名を入力]:::process
+    ルーム一覧[ルーム一覧から選択]:::process
+
+    チャット中[チャット中]:::process
+    自動退出[自動退出]:::autoExit
+    End([終了]):::endNode
+
+    %%─── フロー定義 ───
+    Start --> 選択
+    選択 -- 作成 --> 入力作成
+    入力作成 --> ルーム名入力
+    ルーム名入力 --> チャット中
+    選択 -- 参加 --> 入力参加
+    入力参加 --> ルーム一覧
+    ルーム一覧 --> チャット中
+    チャット中 --> 自動退出
+    自動退出 --> End
+
+```
+
 ```mermaid
 flowchart TD
     %%─── クラス定義 ───
