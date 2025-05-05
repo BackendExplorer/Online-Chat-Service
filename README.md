@@ -1,4 +1,38 @@
 
+```mermaid
+%%{ init: { "theme": "neutral", "themeVariables": { "primaryColor": "#1f77b4", "secondaryColor": "#ff7f0e", "tertiaryColor": "#2ca02c" } } }%%
+flowchart TD
+
+  %% ノードスタイル定義
+  classDef startend fill:#FFD700,stroke:#333,stroke-width:2px,font-weight:bold,font-family:Arial;
+  classDef process  fill:#ADD8E6,stroke:#333,stroke-width:1px,font-family:Arial;
+  classDef decision fill:#FFA07A,stroke:#333,stroke-width:1px,stroke-dasharray:5 5,font-family:Arial;
+
+  %% サブグラフでフェーズ分け
+  subgraph 入力フェーズ
+    Start("🏁 スタート"):::startend
+    入力["👤 ユーザー名を入力"]:::process
+    選択["❓ 作成または参加を選択"]:::decision
+  end
+
+  subgraph 作成フロー
+    選択 -->|作成| 作成1["➕ 作成を選択"]:::process
+    作成1 --> ルーム名入力["💬 ルーム名を入力"]:::process
+  end
+
+  subgraph 参加フロー
+    選択 -->|参加| 参加2["🔍 参加を選択"]:::process
+    参加2 --> ルーム一覧["📃 ルーム一覧から選択"]:::process
+  end
+
+  subgraph チャットフェーズ
+    ルーム名入力 --> チャット中["💬 チャット中"]:::process
+    ルーム一覧   --> チャット中
+    チャット中   --> End("🏁 終了"):::startend
+  end
+
+```
+
 <img width="1010" alt="スクリーンショット 2025-05-05 22 49 48" src="https://github.com/user-attachments/assets/f2a6b2f0-e34b-4719-9564-70043652376e" />
 
 # 🌐 Online Chat Service 💬  
