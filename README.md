@@ -1,56 +1,51 @@
 
 ```mermaid
 %%{ 
-  init: { 
-    "theme": "neutral", 
-    "flowchart": { "nodeSpacing": 50, "rankSpacing": 75 }, 
-    "themeVariables": { 
-      "primaryColor": "#1f77b4", 
-      "secondaryColor": "#ff7f0e", 
-      "tertiaryColor": "#2ca02c" 
-    } 
-  } 
+  init: {
+    "theme": "neutral",
+    "flowchart": { "nodeSpacing": 20, "rankSpacing": 30 },
+    "themeVariables": {
+      "primaryColor": "#1f77b4",
+      "secondaryColor": "#ff7f0e",
+      "tertiaryColor": "#2ca02c"
+    }
+  }
 }%%
-flowchart LR
-  %%─── クラス定義 ───
+flowchart TB
+  %%────────── クラス定義 ──────────
   classDef startend fill:#FFD700,stroke:#333,stroke-width:2px,font-weight:bold,font-family:Arial;
-  classDef process  fill:#ADD8E6, stroke:#333,stroke-width:1px,font-family:Arial;
-  classDef decision fill:#FFA07A, stroke:#333,stroke-width:1px,stroke-dasharray:5 5,font-family:Arial;
+  classDef process  fill:#ADD8E6,stroke:#333,stroke-width:1px,font-family:Arial;
+  classDef decision fill:#FFA07A,stroke:#333,stroke-width:1px,stroke-dasharray:5 5,font-family:Arial;
 
-  %%─── 入力フェーズ ───
+  %%────────── 入力フェーズ ──────────
   subgraph 入力フェーズ
     direction LR
-    S("🏁 スタート"):::startend --> 
-    A["👤 ユーザー名を入力"]:::process --> 
-    B{"❓ 作成 or 参加"}:::decision
+    S("🏁 スタート"):::startend --> A["👤 ユーザー名を入力"]:::process --> B{"❓ 作成 or 参加"}:::decision
   end
 
-  %%─── 作成フロー ───
-  subgraph 作成フロー
+  %%────────── 詳細フロー（縦積み） ──────────
+  subgraph 詳細フロー
     direction TB
-    C["➕ 作成を選択"]:::process --> 
-    D["💬 ルーム名を入力"]:::process
+
+    subgraph 作成フロー
+      C["➕ 作成を選択"]:::process --> D["💬 ルーム名を入力"]:::process
+    end
+
+    subgraph 参加フロー
+      E["🔍 参加を選択"]:::process --> F["📃 ルーム一覧を選択"]:::process
+    end
   end
 
-  %%─── 参加フロー ───
-  subgraph 参加フロー
-    direction TB
-    E["🔍 参加を選択"]:::process --> 
-    F["📃 ルーム一覧から選択"]:::process
-  end
-
-  %%─── チャットフェーズ ───
+  %%────────── チャットフェーズ ──────────
   subgraph チャットフェーズ
     direction TB
-    G["💬 チャット中"]:::process --> 
-    H("🏁 終了"):::startend
+    D --> G["💬 チャット中"]:::process --> H("🏁 終了"):::startend
+    F --> G
   end
 
-  %%─── フローの接続 ───
-  B -->|作成| C
-  B -->|参加| E
-  D --> G
-  F --> G
+  %%────────── 分岐ラベル ──────────
+  B --|作成| C
+  B --|参加| E
 
 ```
 
