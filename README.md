@@ -1,32 +1,33 @@
 ```mermaid
 flowchart TD
-  %%─── 色彩豊かなクラス定義 ───
-  classDef startend  fill:#6A1B9A,stroke:#4A148C,stroke-width:3px,color:#fff;
-  classDef decision  fill:#FFD600,stroke:#FFA000,stroke-width:3px,stroke-dasharray:4 4,color:#000;
-  classDef process   fill:#1E88E5,stroke:#1565C0,stroke-width:2px,color:#fff;
-  classDef autoExit  fill:#D81B60,stroke:#880E4F,stroke-width:3px,color:#fff;
-  classDef endnode   fill:#43A047,stroke:#1B5E20,stroke-width:3px,color:#fff;
+    %%─── 色彩豊かなクラス定義 ───
+    classDef startend  fill:#6A1B9A,stroke:#4A148C,stroke-width:3px,color:#fff;
+    classDef decision  fill:#FFD600,stroke:#FFA000,stroke-width:3px,stroke-dasharray:4 4,color:#000;
+    classDef process   fill:#1E88E5,stroke:#1565C0,stroke-width:2px,color:#fff;
+    classDef autoExit  fill:#D81B60,stroke:#880E4F,stroke-width:3px,color:#fff;
+    classDef endNode   fill:#43A047,stroke:#1B5E20,stroke-width:3px,color:#fff;
 
-  %%─── ノード定義 ───
-  Start([スタート])                     :::startend
-  選択["「作成」または「参加」"]         :::decision
+    %%─── ノード定義 ───
+    Start([スタート])                       :::startend
+    選択["「作成」または「参加」"]           :::decision
+    入力作成[ユーザー名を入力]               :::process
+    ルーム名入力[ルーム名を入力]             :::process
+    入力参加[ユーザー名を入力]               :::process
+    ルーム一覧[ルーム一覧から選択]           :::process
+    チャット中[チャット中]                   :::process
+    自動退出[自動退出]                       :::autoExit
+    End([終了])                              :::endNode
 
-  入力作成[ユーザー名を入力]             :::process
-  ルーム名入力[ルーム名を入力]           :::process
-
-  入力参加[ユーザー名を入力]             :::process
-  ルーム一覧[ルーム一覧から選択]         :::process
-
-  チャット中[チャット中]                 :::process
-  自動退出[自動退出]                     :::autoExit
-  End([終了])                            :::endnode
-
-  %%─── フロー定義 ───
-  Start --> 選択
-  選択 -- 作成 --> 入力作成 --> ルーム名入力 --> チャット中
-  選択 -- 参加 --> 入力参加 --> ルーム一覧 --> チャット中
-  チャット中 --> 自動退出 --> End
-
+    %%─── フロー定義 ───
+    Start --> 選択
+    選択 -- 作成 --> 入力作成
+    入力作成 --> ルーム名入力
+    ルーム名入力 --> チャット中
+    選択 -- 参加 --> 入力参加
+    入力参加 --> ルーム一覧
+    ルーム一覧 --> チャット中
+    チャット中 --> 自動退出
+    自動退出 --> End
 
 ```
 
