@@ -178,8 +178,6 @@ streamlit run gui.py
 flowchart TD
     Start([スタート])
 
-    選択[作成または参加を選択]
-
     作成1[「作成」を選択]
     ルーム名入力[ルーム名を入力]
 
