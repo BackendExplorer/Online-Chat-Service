@@ -105,8 +105,8 @@ class UDPServer:
 
     def decode_message(self, data):
         header = data[:2]
-        room_name_size, token_size = header[0], header[1]
-
+        room_name_size, token_size = header[:2]
+        
         body = data[2:]
         room_name = body[:room_name_size].decode("utf-8")
         token     = body[room_name_size:room_name_size + token_size]
