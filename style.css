@@ -4,8 +4,8 @@
   --accent-hover:#197b9b;
   --fg:#1e2a38;
   --card-bg:#fff;
-  --bg-grad-start:#f5faff;
-  --bg-grad-end:#e9f2ff;
+  --bg-grad-start:    #e0f2ff;  /* 旧: #f5faff */
+  --bg-grad-end:      #c2e0ff;  /* 旧: #e9f2ff */
 
   /* チャットバブル用 */
   --mine-start:#a0d8f1;
@@ -45,10 +45,11 @@ button[kind="secondary"]:hover{
 }
 
 /* ---------- 入力欄 ---------- */
-[data-baseweb="input"][aria-invalid="true"],
-input:invalid{border:2px solid #e6e6e6!important;box-shadow:none!important;}
+/* ---------- 入力欄 ---------- */
 div[data-baseweb="input"]{
-  border:2px solid #e6e6e6!important;border-radius:10px!important;
+  background-color: #fff !important;        /* 白背景に */
+  border:2px solid #cccccc!important;       /* 薄めのグレー → 中間くらいのグレーに */
+  border-radius:10px!important;
 }
 div[data-baseweb="input"]:hover{
   border:2px solid var(--accent)!important;
@@ -58,7 +59,20 @@ div[data-baseweb="input"]:focus-within{
   border:2px solid var(--accent)!important;
   box-shadow:0 0 0 3px rgba(33,158,188,.3)!important;
 }
-div[data-baseweb="input"] input{padding:.8rem 1rem;font-size:1rem;border:none;background-color: white;}
+
+/* div[data-baseweb="input"] input{padding:.8rem 1rem;font-size:1rem;border:none;background-color: white;} */
+
+/* 入力欄の縦幅をまるごと広げる */
+div[data-baseweb="input"] {
+  height: 4rem !important;            /* ラッパー自体の高さ */
+}
+
+div[data-baseweb="input"] input {
+  height: 100% !important;            /* 中の input をラッパーいっぱいに */
+  line-height: 3rem !important;       /* テキストの縦位置を中央寄せ */
+  box-sizing: border-box !important;  /* padding を含めてサイズ計算 */
+}
+
 
 /* ---------- ホーム ---------- */
 .home-card{
@@ -109,8 +123,11 @@ div.block-container {
 .room-header{
   text-align:center;font-size:1.2rem;font-weight:700;
   padding:.9rem 1.2rem;color:var(--fg);
-  background: linear-gradient(135deg, #e3f2fd, #90caf9);
+  /* background: linear-gradient(135deg, #e3f2fd, #90caf9); */
   border-bottom:1px solid #dbe5ef;
+  
+  background: #42A5F5;
+  color: #fff;          /
 }
 
 .chat-box{
@@ -146,5 +163,74 @@ div.block-container {
 }
 
 
+/* ─── Streamlit フォーム全体コンテナの枠／影を消す ─── */
+section[data-testid="stFormViewContainer"],
+div[data-testid="stFormContainer"],
+div[data-testid="stForm"] {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
 
+/* ─── フォーム内部の直接の <div> も念のため消す ─── */
+section[data-testid="stFormViewContainer"] > div,
+div[data-testid="stFormContainer"] > div,
+div[data-testid="stForm"] > div {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* ─── 念のため <hr> 要素も全消去 ─── */
+hr[data-testid="stHorizontalRule"],
+section[data-testid="stFormViewContainer"] hr,
+div[data-testid="stFormContainer"] hr,
+div[data-testid="stForm"] hr {
+  display: none !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+
+
+/* ─── チャット欄を包んでいるブロックコンテナを背景と同化 ─── */
+div.block-container,
+section[data-testid="stBlock"],
+div[data-testid="stBlock"] {
+  background: transparent !important;      /* 背景を透過 */
+  border: none !important;               /* 枠線を削除 */
+  box-shadow: none !important;           /* 影を削除 */
+  padding: 0 !important;                 /* 余白調整（必要に応じて） */
+  margin: 0 !important;                  /* 余白調整（必要に応じて） */
+}
+
+
+
+
+
+.chat-wrapper {
+  /* 固定ピクセルで増やすなら */
+  height: 763px !important;   /* ← 750px → 900px に変更 */
+
+  /* またはビューポート比率で指定するなら */
+  /* height: 70vh !important; */  /* 画面高の70% を使う */
+}
+
+
+/* メッセージ入力欄を真っ白に */
+div[data-baseweb="input"] input {
+  background-color: #ffffff !important;
+}
+
+
+/* ─── 送信ボタンを非表示に ─── */
+section[data-testid="stFormViewContainer"] form.stForm div.stButton,
+section[data-testid="stFormViewContainer"] form.stForm div.stButton > button,
+.stButton > button[type="submit"],
+button[kind="primary"] {
+  display: none !important;
+}
 
