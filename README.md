@@ -1,5 +1,5 @@
-<img width="1387" alt="スクリーンショット 2025-05-05 22 32 50" src="https://github.com/user-attachments/assets/cbc1a3fa-3f7e-42c8-94c8-ac2b7d970590" />
 
+<img width="1010" alt="スクリーンショット 2025-05-05 22 49 48" src="https://github.com/user-attachments/assets/f2a6b2f0-e34b-4719-9564-70043652376e" />
 
 # 🌐 Online Chat Service 💬  
 
