@@ -69,13 +69,10 @@ class TCPServer:
     def join_room(self, connection, token):
         connection.send(str(list(self.room_members_map.keys())).encode("utf-8"))
         room_name = connection.recv(4096).decode("utf-8")
+        self.room_members_map[room_name].append(token)
+        self.clients_map[token][1] = room_name
+        connection.send(token)
 
-        if room_name in self.room_members_map:
-            self.room_members_map[room_name].append(token)
-            self.clients_map[token][1] = room_name
-            connection.send(token)
-        else:
-            connection.send(b"ERROR: Room does not exist")
 
 
 class UDPServer:
