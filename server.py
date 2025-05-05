@@ -10,8 +10,8 @@ class TCPServer:
     HEADER_MAX_BYTE = 32    # ヘッダーサイズ（バイト）
     TOKEN_MAX_BYTE = 255    # クライアントトークンの最大バイト数
 
-    room_members_map = {}  # {room_name : [token, token, ...]}
-    clients_map = {}       # {token : [client_address, room_name, username, is_host, last_active_time]}
+    room_tokens = {}  # {room_name : [token, token, ...]}
+    client_data = {}       # {token : [client_address, room_name, username, is_host, last_active_time]}
 
     def __init__(self, server_address, server_port):
         self.server_address = server_address
@@ -51,7 +51,7 @@ class TCPServer:
 
     def register_client(self, client_address, room_name, payload, operation):
         token = secrets.token_bytes(self.TOKEN_MAX_BYTE)
-        self.clients_map[token] = [
+        self.client_data[token] = [
             client_address,
             room_name,
             payload,
@@ -62,13 +62,13 @@ class TCPServer:
 
     def create_room(self, connection, room_name, token):
         connection.send(token)
-        self.room_members_map[room_name] = [token]
+        self.room_tokens[room_name] = [token]
 
     def join_room(self, connection, token):
-        connection.send(str(list(self.room_members_map.keys())).encode())
+        connection.send(str(list(self.room_tokens.keys())).encode())
         room_name = connection.recv(4096).decode()
-        self.room_members_map[room_name].append(token)
-        self.clients_map[token][1] = room_name
+        self.room_tokens[room_name].append(token)
+        self.client_data[token][1] = room_name
         connection.send(token)
 
 
@@ -78,8 +78,8 @@ class UDPServer:
     def __init__(self, server_address, server_port):
         self.server_address    = server_address
         self.server_port       = server_port
-        self.room_members_map  = TCPServer.room_members_map
-        self.clients_map       = TCPServer.clients_map
+        self.room_tokens  = TCPServer.room_tokens
+        self.client_data       = TCPServer.client_data
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind((self.server_address, self.server_port))
 
@@ -98,8 +98,8 @@ class UDPServer:
             data, client_address = self.sock.recvfrom(4096)
             room_name, token, message = self.decode_message(data)
             
-            self.clients_map[token][0]  = client_address
-            self.clients_map[token][-1] = time.time()
+            self.client_data[token][0]  = client_address
+            self.client_data[token][-1] = time.time()
             
             self.broadcast_to_room(room_name, message)
 
@@ -117,8 +117,8 @@ class UDPServer:
     def broadcast_to_room(self, room_name, message):
         encoded_message = message.encode()
 
-        for token in self.room_members_map.get(room_name, []):
-            client_info = self.clients_map.get(token)
+        for token in self.room_tokens.get(room_name, []):
+            client_info = self.client_data.get(token)
             if client_info and client_info[0]:
                 try:
                     self.sock.sendto(encoded_message, client_info[0])
@@ -128,7 +128,7 @@ class UDPServer:
     def remove_inactive_clients(self):
         while True:
             cutoff = time.time() - 100
-            for token, info in list(self.clients_map.items()):
+            for token, info in list(self.client_data.items()):
                 if info[-1] < cutoff:
                     try:
                         self.disconnect_inactive_client(token, info)
@@ -138,18 +138,18 @@ class UDPServer:
     
     def disconnect_inactive_client(self, client_token, client_info):
         client_address, room_id, username, is_host = client_info[:4]
-        members = self.room_members_map[room_id]
+        members = self.room_tokens[room_id]
         
         if is_host == 1:
             self.broadcast_to_room(room_id, f"System: ホストの{username}がルームを退出したので、ルームは終了します")
             self.broadcast_to_room(room_id, "exit!")
-            del self.room_members_map[room_id]
+            del self.room_tokens[room_id]
         
         else:
             self.broadcast_to_room(room_id, f"System: {username}がタイムアウトにより退出しました。")
             self.sock.sendto("Timeout!".encode(), client_address)
             members.remove(client_token)
-            del self.clients_map[client_token]
+            del self.client_data[client_token]
     
 
 if __name__ == "__main__":
