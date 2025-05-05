@@ -169,11 +169,8 @@ streamlit run gui.py
 
 ```mermaid
 flowchart TD
-    %%─── クラス定義 ───
-    classDef startNode fill:#E0DEFF,stroke:#7C4DFF,stroke-width:2px,rx:20px,ry:20px;
-
     %%─── ノード定義 ───
-    Start("スタート"):::startNode
+    Start([スタート])
     選択["「作成」または「参加」"]
 
     入力作成[ユーザー名を入力]
