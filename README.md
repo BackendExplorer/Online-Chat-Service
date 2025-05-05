@@ -12,38 +12,41 @@
   }
 }%%
 flowchart TB
-  %%────────── クラス定義 ──────────
+  %%─── クラス定義 ───
   classDef startend fill:#FFD700,stroke:#333,stroke-width:2px,font-weight:bold,font-family:Arial;
   classDef process  fill:#ADD8E6,stroke:#333,stroke-width:1px,font-family:Arial;
   classDef decision fill:#FFA07A,stroke:#333,stroke-width:1px,stroke-dasharray:5 5,font-family:Arial;
 
-  %%────────── 入力フェーズ ──────────
+  %%─── 入力フェーズ ───
   subgraph 入力フェーズ
     direction LR
-    S("🏁 スタート"):::startend --> A["👤 ユーザー名を入力"]:::process --> B{"❓ 作成 or 参加"}:::decision
+    S("🏁 スタート"):::startend --> 
+    A["👤 ユーザー名を入力"]:::process --> 
+    B{"❓ 作成 or 参加"}:::decision
   end
 
-  %%────────── 詳細フロー（縦積み） ──────────
+  %%─── 詳細フロー（縦積み） ───
   subgraph 詳細フロー
     direction TB
-
     subgraph 作成フロー
-      C["➕ 作成を選択"]:::process --> D["💬 ルーム名を入力"]:::process
+      C["➕ 作成を選択"]:::process --> 
+      D["💬 ルーム名を入力"]:::process
     end
 
     subgraph 参加フロー
-      E["🔍 参加を選択"]:::process --> F["📃 ルーム一覧を選択"]:::process
+      E["🔍 参加を選択"]:::process --> 
+      F["📃 ルーム一覧を選択"]:::process
     end
   end
 
-  %%────────── チャットフェーズ ──────────
+  %%─── チャットフェーズ ───
   subgraph チャットフェーズ
     direction TB
     D --> G["💬 チャット中"]:::process --> H("🏁 終了"):::startend
     F --> G
   end
 
-  %%────────── 分岐ラベル ──────────
+  %%─── 分岐ラベル ───
   B --|作成| C
   B --|参加| E
 
