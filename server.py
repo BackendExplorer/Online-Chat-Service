@@ -23,11 +23,10 @@ class TCPServer:
     def accept_tcp_connections(self):
         while True:
             conn, addr = self.sock.accept()
-            with conn:
-                try:
-                    self.handle_client_request(conn, addr)
-                except Exception:
-                    pass 
+            try:
+                self.handle_client_request(conn, addr)
+            except Exception:
+                pass
 
     def handle_client_request(self, connection, client_address):
         data = connection.recv(4096)
@@ -41,14 +40,14 @@ class TCPServer:
 
     def decode_message(self, data):
         header = data[:self.HEADER_MAX_BYTE]
-        room_name_size = int.from_bytes(header[:1], "big")
-        operation      = int.from_bytes(header[1:2], "big")
-        state          = int.from_bytes(header[2:3], "big")
-        payload_size   = int.from_bytes(header[3:self.HEADER_MAX_BYTE], "big")
+        room_name_size = header[0]
+        operation = header[1]
+        state = header[2]
+        payload_size = int.from_bytes(header[3:], "big")
 
         body = data[self.HEADER_MAX_BYTE:]
-        room_name = body[:room_name_size].decode("utf-8")
-        payload   = body[room_name_size:room_name_size + payload_size].decode("utf-8")
+        room_name = body[:room_name_size].decode()
+        payload   = body[room_name_size:room_name_size + payload_size].decode()
         
         return room_name_size, operation, state, payload_size, room_name, payload
 
@@ -68,8 +67,8 @@ class TCPServer:
         self.room_members_map[room_name] = [token]
 
     def join_room(self, connection, token):
-        connection.send(str(list(self.room_members_map.keys())).encode("utf-8"))
-        room_name = connection.recv(4096).decode("utf-8")
+        connection.send(str(list(self.room_members_map.keys())).encode())
+        room_name = connection.recv(4096).decode()
         self.room_members_map[room_name].append(token)
         self.clients_map[token][1] = room_name
         connection.send(token)
