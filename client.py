@@ -58,11 +58,9 @@ class ChatTCPClient:
     def request_join_room(self, username: str, room: str) -> dict[bytes, list[str]]:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             sock.connect((self.server_address, self.server_port))
-            # まずルーム一覧取得リクエストと同じ操作
             pkt1 = self.make_packet("", 2, 0, username)
             sock.send(pkt1)
             _ = sock.recv(4096)
-            # 参加するルーム名を送信
             sock.send(room.encode("utf-8"))
             token = sock.recv(self.TOKEN_MAX_BYTES)
         return {token: [room, username]}
@@ -124,7 +122,7 @@ class ChatUIManager:
         st.set_page_config(
             page_title="💬 リアルタイムチャット",
             page_icon="💬",
-            layout="centered",
+            layout="wide",
         )
         self._load_local_css()
         st.markdown("<div class='app-scale'>", unsafe_allow_html=True)
@@ -183,7 +181,6 @@ class ChatUIManager:
             except Exception as e:
                 st.error(f"接続失敗: {e}")
                 st.stop()
-
             state.client_info = info
             state.username = user
             state.room_name = room
@@ -213,7 +210,6 @@ class ChatUIManager:
                 except Exception as e:
                     st.error(f"参加失敗: {e}")
                     st.stop()
-
                 state.client_info = info
                 state.username = user
                 state.room_name = sel
@@ -267,11 +263,25 @@ class ChatUIManager:
             """
         components.html(css + html, height=780, scrolling=False)
 
-        # メッセージ送信フォーム
-        with st.form("chat-form", clear_on_submit=True):
-            msg = st.text_input("", key="chat-input", placeholder="メッセージを入力")
-            if st.form_submit_button("送信", type="primary") and msg:
-                udp.send_chat_message(msg)
+        # エンター送信用コールバック
+        def _on_enter():
+            msg = st.session_state.chat_input
+            if msg:
+                try:
+                    udp.send_chat_message(msg)
+                except Exception as e:
+                    st.error(f"送信失敗: {e}")
+                state.messages.append(f"{state.username}: {msg}")
+            st.session_state.chat_input = ""
+
+        # メッセージ入力（Enterで送信）
+        st.text_input(
+            "",
+            key="chat_input",
+            placeholder="メッセージを入力して Enter",
+            on_change=_on_enter,
+            label_visibility="collapsed",
+        )
 
 
 # =========================================================
@@ -294,6 +304,8 @@ class ChatAppController:
             "messages": [],
             "rooms": [],
             "udp_client": None,
+            # chat_input キーも初期化
+            "chat_input": "",
         }
         for k, v in defaults.items():
             if k not in self.state:
