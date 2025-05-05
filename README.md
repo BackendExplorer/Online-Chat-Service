@@ -1,22 +1,25 @@
 ```mermaid
 flowchart TD
-    %%─── 色彩豊かなクラス定義 ───
-    classDef startend  fill:#6A1B9A,stroke:#4A148C,stroke-width:3px,color:#fff;
-    classDef decision  fill:#FFD600,stroke:#FFA000,stroke-width:3px,stroke-dasharray:4 4,color:#000;
-    classDef process   fill:#1E88E5,stroke:#1565C0,stroke-width:2px,color:#fff;
-    classDef autoExit  fill:#D81B60,stroke:#880E4F,stroke-width:3px,color:#fff;
-    classDef endNode   fill:#43A047,stroke:#1B5E20,stroke-width:3px,color:#fff;
+    %%─── クラス定義 ───
+    classDef startend  fill:#FFE699,stroke:#333,stroke-width:2px,font-weight:bold;
+    classDef decision  fill:#F7C6C7,stroke:#333,stroke-width:1px;
+    classDef process   fill:#C9DAF8,stroke:#333,stroke-width:1px;
+    classDef autoExit  fill:#F4B084,stroke:#333,stroke-width:1px;
+    classDef endNode   fill:#B6D7A8,stroke:#333,stroke-width:2px,font-weight:bold;
 
     %%─── ノード定義 ───
-    Start([スタート])                       :::startend
-    選択["「作成」または「参加」"]           :::decision
-    入力作成[ユーザー名を入力]               :::process
-    ルーム名入力[ルーム名を入力]             :::process
-    入力参加[ユーザー名を入力]               :::process
-    ルーム一覧[ルーム一覧から選択]           :::process
-    チャット中[チャット中]                   :::process
-    自動退出[自動退出]                       :::autoExit
-    End([終了])                              :::endNode
+    Start([スタート]):::startend
+    選択["「作成」または「参加」"]:::decision
+
+    入力作成[ユーザー名を入力]:::process
+    ルーム名入力[ルーム名を入力]:::process
+
+    入力参加[ユーザー名を入力]:::process
+    ルーム一覧[ルーム一覧から選択]:::process
+
+    チャット中[チャット中]:::process
+    自動退出[自動退出]:::autoExit
+    End([終了]):::endNode
 
     %%─── フロー定義 ───
     Start --> 選択
@@ -28,6 +31,7 @@ flowchart TD
     ルーム一覧 --> チャット中
     チャット中 --> 自動退出
     自動退出 --> End
+
 
 ```
 
