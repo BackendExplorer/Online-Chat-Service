@@ -32,8 +32,7 @@ class TCPServer:
     def handle_client_request(self, connection, client_address):
         data = connection.recv(4096)
         room_name_size, operation, state, payload_size, room_name, payload = self.decode_message(data)
-        token = secrets.token_bytes(self.TOKEN_MAX_BYTE)
-        self.register_client(token, client_address, room_name, payload, operation)
+        token = self.register_client(client_address, room_name, payload, operation)
 
         if operation == 1:
             self.create_room(connection, room_name, token)    
@@ -53,7 +52,8 @@ class TCPServer:
         
         return room_name_size, operation, state, payload_size, room_name, payload
 
-    def register_client(self, token, client_address, room_name, payload, operation):
+    def register_client(self, client_address, room_name, payload, operation):
+        token = secrets.token_bytes(self.TOKEN_MAX_BYTE)
         self.clients_map[token] = [
             client_address,
             room_name,
@@ -61,6 +61,7 @@ class TCPServer:
             1 if operation == 1 else 0,
             time.time(),
         ]
+        return token
 
     def create_room(self, connection, room_name, token):
         connection.send(token)
