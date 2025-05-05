@@ -177,7 +177,7 @@ streamlit run gui.py
 ```mermaid
 flowchart TD
     Start([スタート])
-    入力[ユーザー名を入力]
+
     選択[作成または参加を選択]
 
     作成1[「作成」を選択]
