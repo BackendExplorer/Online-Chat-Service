@@ -40,9 +40,7 @@ class TCPServer:
 
     def decode_message(self, data):
         header = data[:self.HEADER_MAX_BYTE]
-        room_name_size = header[0]
-        operation = header[1]
-        state = header[2]
+        room_name_size, operation, state = header[:3]
         payload_size = int.from_bytes(header[3:], "big")
 
         body = data[self.HEADER_MAX_BYTE:]
@@ -107,9 +105,8 @@ class UDPServer:
 
     def decode_message(self, data):
         header = data[:2]
-        room_name_size = int.from_bytes(header[:1], "big")
-        token_size     = int.from_bytes(header[1:2], "big")
-        
+        room_name_size, token_size = header[0], header[1]
+
         body = data[2:]
         room_name = body[:room_name_size].decode("utf-8")
         token     = body[room_name_size:room_name_size + token_size]
