@@ -1,35 +1,56 @@
 
 ```mermaid
-%%{ init: { "theme": "neutral", "themeVariables": { "primaryColor": "#1f77b4", "secondaryColor": "#ff7f0e", "tertiaryColor": "#2ca02c" } } }%%
-flowchart TD
-
-  %% ノードスタイル定義
+%%{ 
+  init: { 
+    "theme": "neutral", 
+    "flowchart": { "nodeSpacing": 50, "rankSpacing": 75 }, 
+    "themeVariables": { 
+      "primaryColor": "#1f77b4", 
+      "secondaryColor": "#ff7f0e", 
+      "tertiaryColor": "#2ca02c" 
+    } 
+  } 
+}%%
+flowchart LR
+  %%─── クラス定義 ───
   classDef startend fill:#FFD700,stroke:#333,stroke-width:2px,font-weight:bold,font-family:Arial;
-  classDef process  fill:#ADD8E6,stroke:#333,stroke-width:1px,font-family:Arial;
-  classDef decision fill:#FFA07A,stroke:#333,stroke-width:1px,stroke-dasharray:5 5,font-family:Arial;
+  classDef process  fill:#ADD8E6, stroke:#333,stroke-width:1px,font-family:Arial;
+  classDef decision fill:#FFA07A, stroke:#333,stroke-width:1px,stroke-dasharray:5 5,font-family:Arial;
 
-  %% サブグラフでフェーズ分け
+  %%─── 入力フェーズ ───
   subgraph 入力フェーズ
-    Start("🏁 スタート"):::startend
-    入力["👤 ユーザー名を入力"]:::process
-    選択["❓ 作成または参加を選択"]:::decision
+    direction LR
+    S("🏁 スタート"):::startend --> 
+    A["👤 ユーザー名を入力"]:::process --> 
+    B{"❓ 作成 or 参加"}:::decision
   end
 
+  %%─── 作成フロー ───
   subgraph 作成フロー
-    選択 -->|作成| 作成1["➕ 作成を選択"]:::process
-    作成1 --> ルーム名入力["💬 ルーム名を入力"]:::process
+    direction TB
+    C["➕ 作成を選択"]:::process --> 
+    D["💬 ルーム名を入力"]:::process
   end
 
+  %%─── 参加フロー ───
   subgraph 参加フロー
-    選択 -->|参加| 参加2["🔍 参加を選択"]:::process
-    参加2 --> ルーム一覧["📃 ルーム一覧から選択"]:::process
+    direction TB
+    E["🔍 参加を選択"]:::process --> 
+    F["📃 ルーム一覧から選択"]:::process
   end
 
+  %%─── チャットフェーズ ───
   subgraph チャットフェーズ
-    ルーム名入力 --> チャット中["💬 チャット中"]:::process
-    ルーム一覧   --> チャット中
-    チャット中   --> End("🏁 終了"):::startend
+    direction TB
+    G["💬 チャット中"]:::process --> 
+    H("🏁 終了"):::startend
   end
+
+  %%─── フローの接続 ───
+  B -->|作成| C
+  B -->|参加| E
+  D --> G
+  F --> G
 
 ```
 
