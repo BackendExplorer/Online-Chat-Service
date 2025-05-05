@@ -1,105 +1,3 @@
-
-```mermaid
-flowchart TD
-    %%─── クラス定義 ───
-    classDef startend  fill:#E0F7FF,stroke:#0099CC,stroke-width:2px,font-weight:bold;
-    classDef decision  fill:#B3ECFF,stroke:#0099CC,stroke-width:1px;
-    classDef process   fill:#B3EFFF,stroke:#0099CC,stroke-width:1px;
-    classDef autoExit  fill:#80E1FF,stroke:#0099CC,stroke-width:1px;
-    classDef endNode   fill:#4DD6FF,stroke:#0099CC,stroke-width:2px,font-weight:bold;
-
-    %%─── ノード定義 ───
-    Start([スタート]):::startend
-    選択["「作成」または「参加」"]:::decision
-
-    入力作成[ユーザー名を入力]:::process
-    ルーム名入力[ルーム名を入力]:::process
-
-    入力参加[ユーザー名を入力]:::process
-    ルーム一覧[ルーム一覧から選択]:::process
-
-    チャット中[チャット中]:::process
-    自動退出[自動退出]:::autoExit
-    End([終了]):::endNode
-
-    %%─── フロー定義 ───
-    Start --> 選択
-    選択 -- 作成 --> 入力作成
-    入力作成 --> ルーム名入力
-    ルーム名入力 --> チャット中
-    選択 -- 参加 --> 入力参加
-    入力参加 --> ルーム一覧
-    ルーム一覧 --> チャット中
-    チャット中 --> 自動退出
-    自動退出 --> End
-
-```
-
-```mermaid
-flowchart TD
-    %%─── クラス定義 ───
-    classDef startend  fill:#FFE699,stroke:#333,stroke-width:2px,font-weight:bold;
-    classDef decision  fill:#F7C6C7,stroke:#333,stroke-width:1px;
-    classDef process   fill:#C9DAF8,stroke:#333,stroke-width:1px;
-    classDef autoExit  fill:#F4B084,stroke:#333,stroke-width:1px;
-    classDef endNode   fill:#B6D7A8,stroke:#333,stroke-width:2px,font-weight:bold;
-
-    %%─── ノード定義 ───
-    Start([スタート]):::startend
-    選択["「作成」または「参加」"]:::decision
-
-    入力作成[ユーザー名を入力]:::process
-    ルーム名入力[ルーム名を入力]:::process
-
-    入力参加[ユーザー名を入力]:::process
-    ルーム一覧[ルーム一覧から選択]:::process
-
-    チャット中[チャット中]:::process
-    自動退出[自動退出]:::autoExit
-    End([終了]):::endNode
-
-    %%─── フロー定義 ───
-    Start --> 選択
-    選択 -- 作成 --> 入力作成
-    入力作成 --> ルーム名入力
-    ルーム名入力 --> チャット中
-    選択 -- 参加 --> 入力参加
-    入力参加 --> ルーム一覧
-    ルーム一覧 --> チャット中
-    チャット中 --> 自動退出
-    自動退出 --> End
-
-
-```
-
-
-
-```mermaid
-flowchart TD
-    Start([スタート])
-    選択["「作成」または「参加」"]
-
-    入力作成[ユーザー名を入力]
-    ルーム名入力[ルーム名を入力]
-
-    入力参加[ユーザー名を入力]
-    ルーム一覧[ルーム一覧から選択]
-
-    チャット中[チャット中]
-    自動退出[自動退出]
-    End([終了])
-
-    Start --> 選択
-    選択 -- 作成 --> 入力作成 --> ルーム名入力 --> チャット中
-    選択 -- 参加 --> 入力参加 --> ルーム一覧 --> チャット中
-    チャット中 --> 自動退出 --> End
-
-```
-
-
-
-
-
 <img width="1010" alt="スクリーンショット 2025-05-05 22 49 48" src="https://github.com/user-attachments/assets/f2a6b2f0-e34b-4719-9564-70043652376e" />
 
 
@@ -279,25 +177,22 @@ streamlit run gui.py
 ```mermaid
 flowchart TD
     Start([スタート])
-    入力[ユーザー名を入力]
-    選択[作成または参加を選択]
+    選択["「作成」または「参加」"]
 
-    作成1[「作成」を選択]
+    入力作成[ユーザー名を入力]
     ルーム名入力[ルーム名を入力]
 
-    参加2[「参加」を選択]
-    ルーム一覧[ルーム名を選択]
+    入力参加[ユーザー名を入力]
+    ルーム一覧[ルーム一覧から選択]
 
     チャット中[チャット中]
+    自動退出[自動退出]
     End([終了])
 
-    Start --> 入力 --> 選択
-
-    選択 --> 作成1 --> ルーム名入力 --> チャット中
-    選択 --> 参加2 --> ルーム一覧 --> チャット中
-
-    チャット中 --> End
-
+    Start --> 選択
+    選択 -- 作成 --> 入力作成 --> ルーム名入力 --> チャット中
+    選択 -- 参加 --> 入力参加 --> ルーム一覧 --> チャット中
+    チャット中 --> 自動退出 --> End
 ```
 
 <br>
