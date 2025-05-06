@@ -1,6 +1,36 @@
 ```mermaid
 graph TD
 
+  %% クライアント側
+  UI["main.py"]
+  Application["TCPClient / UDPClient"]
+  Domain["RoomManager"]
+  Infra["CryptoHandler"]
+  Packet["PacketBuilder"]
+
+  UI --> Application
+  Application --> Domain
+  Application --> Infra
+  Application --> Packet
+
+  %% サーバ側
+  ServerApp["TCPServer / UDPServer"]
+  ServerInfra["(RSA鍵生成・PKCS1_OAEP で暗号/復号)"]
+  ServerPacket["(ヘッダー/ボディ解析)"]
+
+  ServerApp --> ServerInfra
+  ServerApp --> ServerPacket
+
+  %% 共通モジュール（再利用可能）
+  Infra --- ServerInfra
+  Packet --- ServerPacket
+
+```
+
+
+```mermaid
+graph TD
+
   UI["main.py"]
   Application["TCPClient / UDPClient"]
   Domain["RoomManager"]
