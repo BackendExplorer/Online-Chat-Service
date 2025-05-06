@@ -1,25 +1,18 @@
 ```mermaid
 graph TD
 
-  Main[main.py]
-  TCPClient[tcp_client.py<br/>class: TCPClient]
-  UDPClient[udp_client.py<br/>class: UDPClient]
-  RoomManager[room_manager.py<br/>class: RoomManager]
-  CryptoHandler[crypto_handler.py<br/>class: CryptoHandler]
-  PacketBuilder[packet_builder.py<br/>class: PacketBuilder]
+  UI["main.py"]
+  Application["tcp_client.py / udp_client.py"]
+  Domain["RoomManager"]
+  Infra["CryptoHandler"]
+  Packet["PacketBuilder"]
 
-  Main --> TCPClient
-  Main --> UDPClient
-
-  TCPClient --> RoomManager
-  TCPClient --> CryptoHandler
-  TCPClient --> PacketBuilder
-
-  UDPClient --> CryptoHandler
-  UDPClient --> PacketBuilder
-
-  RoomManager --> CryptoHandler
-  RoomManager --> PacketBuilder
+  UI --> Application
+  Application --> Domain
+  Domain --> Infra
+  Application --> Infra
+  Application --> Packet
+  Domain --> Packet
 
 
 ```
