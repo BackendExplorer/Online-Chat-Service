@@ -2,7 +2,7 @@
 graph TD
 
   UI["main.py"]
-  Application["tcp_client.py / udp_client.py"]
+  Application["TCPClient / UDPClient"]
   Domain["RoomManager"]
   Infra["CryptoHandler"]
   Packet["PacketBuilder"]
