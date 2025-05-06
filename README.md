@@ -360,49 +360,57 @@ class UDPServer {
 <br>
 
 
-### <a id="client.py のクラス図"></a> [クライアントプログラム](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py) のクラス図
+### <a id="client.py のクラス図"></a> [クライアント](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py) のモジュール設計
 
 <br>
 
 
 ```mermaid
-%%{init: {'themeVariables': {'scale': 0.05}}}%%
-classDiagram
-direction LR
+graph TD
 
-TCPClient -- UDPClient
+%% スタイル定義
+classDef ui fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+classDef domain fill:#ede7f6,stroke:#6a1b9a,stroke-width:2px
+classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+classDef packet fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
 
-class TCPClient {
-    - server_address: str
-    - server_port: int
-    - sock: socket
-    - client_info: dict
-    + __init__(server_address: str, server_port: int)
-    + start_tcp_client(): dict
-    - connect_to_server(): None
-    - input_user_name(): str
-    - input_operation(): int
-    - create_room(username: str): tuple
-    - input_room_name(operation: int): str
-    - create_packet(room_name: str, operation: int, state: int, payload: str): bytes
-    - create_header(room_name: str, operation: int, state: int, payload: str): bytes
-    - join_room(username: str): tuple
-}
+%% UI層
+subgraph UIレイヤー\[UI]
+UI["main.py"]
+class UI ui
+end
 
-class UDPClient {
-    - server_address: str
-    - server_port: int
-    - sock: socket
-    - my_info: dict
-    - my_token: bytes
-    - room_name: str
-    + __init__(server_address: str, server_port: int, my_info: dict)
-    + start_udp_chat(): None
-    - send_username(): None
-    - send_message(): None
-    - receive_message(): None
-    - create_packet(message: bytes = b"" ): bytes
-}
+%% アプリケーション層
+subgraph アプリケーションレイヤー\[アプリケーション]
+App["TCPClient / UDPClient"]
+class App application
+end
+
+%% ドメイン層
+subgraph ドメインレイヤー\[ドメイン]
+Domain["RoomManager"]
+class Domain domain
+end
+
+%% インフラ層
+subgraph インフラレイヤー\[インフラ]
+Infra["CryptoHandler"]
+class Infra infra
+end
+
+%% パケット生成
+subgraph パケット処理\[パケット関連]
+Packet["PacketBuilder"]
+class Packet packet
+end
+
+%% 接続関係
+UI --> App
+App --> Domain
+App --> Infra
+App --> Packet
+
 ```
  
 <br>
