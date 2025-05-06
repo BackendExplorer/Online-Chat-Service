@@ -1,28 +1,32 @@
 ```mermaid
-graph TD
-    main[main.py]
-    
+flowchart TD
+    main["main.py"]
+
     subgraph TCPフェーズ
-        main --> TCPClient
-        TCPClient --> RoomManager
-        TCPClient --> CryptoHandler
-        TCPClient --> PacketBuilder
-        TCPClient --> ChatCLI
-        RoomManager --> TCPClient
-        RoomManager --> ChatCLI
-        RoomManager --> CryptoHandler
+        tcp[TCPClient]
+        room[RoomManager]
+        cli[ChatCLI]
+        crypto[CryptoHandler]
+        packet[PacketBuilder]
     end
 
     subgraph UDPフェーズ
-        main --> UDPClient
-        UDPClient --> PacketBuilder
-        UDPClient --> CryptoHandler
+        udp[UDPClient]
     end
 
-    ChatCLI -->|ユーザー入力| TCPClient
-    ChatCLI -->|ユーザー入力| RoomManager
+    main --> tcp
+    tcp --> room
+    tcp --> cli
+    tcp --> crypto
+    tcp --> packet
 
-    CryptoHandler -->|暗号化/復号| UDPClient
+    room --> cli
+    room --> crypto
+
+    udp --> packet
+    udp --> crypto
+
+    main --> udp
 
 ```
 
