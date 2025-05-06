@@ -9,6 +9,23 @@ graph TD
 
   UI --> Application
   Application --> Domain
+  Application --> Infra
+  Application --> Packet
+
+```
+
+
+```mermaid
+graph TD
+
+  UI["main.py"]
+  Application["TCPClient / UDPClient"]
+  Domain["RoomManager"]
+  Infra["CryptoHandler"]
+  Packet["PacketBuilder"]
+
+  UI --> Application
+  Application --> Domain
   Domain --> Infra
   Application --> Infra
   Application --> Packet
