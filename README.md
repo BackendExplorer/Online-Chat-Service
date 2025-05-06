@@ -1,19 +1,23 @@
 ```mermaid
 graph TD
 
+  %% 上段：UI・ドメイン・インフラ・パケット
   UI["main.py"]
-  Application["TCPClient / UDPClient"]
   Domain["RoomManager"]
   Infra["CryptoHandler"]
   Packet["PacketBuilder"]
 
+  %% 中段：サーバ側
+  Server["TCPServer / UDPServer"]
+
+  %% 下段：クライアント側
+  Application["TCPClient / UDPClient"]
+
+  %% 関係性
   UI --> Application
   Application --> Domain
   Application --> Infra
   Application --> Packet
-
-  %% サーバ側ノードを下に追加
-  Server["TCPServer / UDPServer"]
 
   Server --> Infra
   Server --> Packet
