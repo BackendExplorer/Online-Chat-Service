@@ -110,10 +110,6 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 - [Python 3.8以上](https://www.python.org/downloads/)
 
 - [Git](https://git-scm.com/)
-
-- [Streamlit 1.45.0](https://streamlit.io/)
-
-
   
 <br>
 
@@ -218,10 +214,6 @@ flowchart TD
 
   クライアントごとの並行処理を軽量に行うため
 
-- **`Streamlit`**
-
-  Pythonのみで手軽にWeb UIを構築できるため、開発効率を重視して採用
-
 <br><br>
 
 
@@ -230,7 +222,6 @@ flowchart TD
 | 開発言語       | ![Python](https://img.shields.io/badge/Python-3.13.2-blue) <br>標準ライブラリ使用：`socket`, `threading`, `logging`, `time`, `sys` |
 | 通信技術       | ![TCP](https://img.shields.io/badge/Protocol-TCP-blue) ![UDP](https://img.shields.io/badge/Protocol-UDP-blue) <br>独自プロトコルTCRP（Talk Chat Room Protocol）を用いた通信設計 |
 | 並列処理       | ![Threading](https://img.shields.io/badge/Concurrency-Threading-yellow) <br>マルチスレッドによる並列処理                      |
-| UIフレームワーク| ![Streamlit](https://img.shields.io/badge/UI-Streamlit-ff4b4b) <br>バージョン: 1.45.0 ／ Webアプリとして動作                     |
 | 開発環境       | ![macOS](https://img.shields.io/badge/OS-macOS-lightgrey)&nbsp;&nbsp;&nbsp;&nbsp;![VSCode](https://img.shields.io/badge/Editor-VSCode-blue) |
 | バージョン管理 | ![Git](https://img.shields.io/badge/VersionControl-Git-orange)&nbsp;&nbsp;&nbsp;&nbsp;![GitHub](https://img.shields.io/badge/Repo-GitHub-black) |
 | 描画ツール     | ![Mermaid](https://img.shields.io/badge/Diagram-Mermaid-green)&nbsp;&nbsp;&nbsp;&nbsp;![LaTeX](https://img.shields.io/badge/Doc-LaTeX-9cf) |
