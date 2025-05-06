@@ -145,7 +145,8 @@ python3 server.py
 ```
 <img width="618" alt="スクリーンショット 2025-05-06 13 04 39" src="https://github.com/user-attachments/assets/1c9462cc-662c-4196-ad89-158c1c2f0ebc" />
 
-<br>
+
+<br><br>
 
 
 ### 2. クライアント起動
