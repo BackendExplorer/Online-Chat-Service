@@ -17,20 +17,30 @@ graph TD
 
 ```mermaid
 graph TD
+  %% UI 層
+  UI_main["main.py"]
+  UI_CLI["ChatCLI (cli.py)"]
 
-  UI["main.py"]
-  Application["TCPClient / UDPClient"]
-  Domain["RoomManager"]
-  Infra["CryptoHandler"]
-  Packet["PacketBuilder"]
+  %% アプリケーション層
+  App_TCP["TCPClient (tcp_client.py)"]
+  App_UDP["UDPClient (udp_client.py)"]
 
-  UI --> Application
-  Application --> Domain
-  Domain --> Infra
-  Application --> Infra
-  Application --> Packet
-  Domain --> Packet
+  %% ドメイン層
+  Domain_RM["RoomManager (room_manager.py)"]
 
+  %% インフラ層
+  Infra_CH["CryptoHandler (crypto_handler.py)"]
+  Packet_PB["PacketBuilder (packet_builder.py)"]
+
+  %% 関係矢印
+  UI_main --> UI_CLI
+  UI_main --> App_TCP
+  App_TCP --> UI_CLI
+  App_TCP --> Domain_RM
+  App_TCP --> Infra_CH
+  App_TCP --> Packet_PB
+  App_UDP --> Infra_CH
+  App_UDP --> Packet_PB
 
 ```
 
