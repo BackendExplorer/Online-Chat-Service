@@ -414,6 +414,22 @@ class UDPClient {
 
 <br>
 
+
+## <a id="さらに追加したい機能"></a> 🔥 さらに追加したい機能
+
+<ul>
+  <li>
+    <h3>GUI クライアントの実装（Electron）</h3>
+    <p>
+      Electron を用いてチャットクライアントを GUI 化し、ユーザー名・ルーム名・パスワードの入力や
+      チャット表示、通知などを直感的に操作可能なウィンドウで提供します。
+    </p>
+    <p>
+      サーバー（server.py）はそのまま使用し、クライアント（client.py）のみを Electron（Node.js）で置き換えます。
+    </p>
+  </li>
+</ul>
+
 ---
 ## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ 開発ストーリー （Qiita記事)
 
