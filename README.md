@@ -22,26 +22,48 @@ graph TD
 ```mermaid
 graph TD
 
-  UI["main.py"]
-  Application["TCPClient / UDPClient"]
-  Domain["RoomManager"]
-  Infra["CryptoHandler"]
-  Packet["PacketBuilder"]
-  Server["TCPServer / UDPServer"]
+  %% スタイル定義
+  classDef ui       fill:#fff3e0,stroke:#fb8c00,stroke-width:2px
+  classDef server   fill:#e3f2fd,stroke:#1e88e5,stroke-width:2px
+  classDef client   fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+  classDef domain   fill:#ede7f6,stroke:#6a1b9a,stroke-width:2px
 
-  UI --> Application
-  UI --> Server
+  %% メインUI
+  subgraph UI処理[UI処理]
+    UI["main.py"]
+  end
+
+  %% サーバーコンポーネント
+  subgraph サーバー[サーバー]
+    Server["TCPServer / UDPServer"]
+  end
+
+  %% クライアントコンポーネント
+  subgraph クライアント[クライアント]
+    Application["TCPClient / UDPClient"]
+  end
+
+  %% ドメイン＆インフラ＆パケット処理
+  subgraph 裏側処理[ドメイン・インフラ・パケット]
+    Domain["RoomManager"]
+    Infra["CryptoHandler"]
+    Packet["PacketBuilder"]
+  end
+
+  %% 接続フロー
+  UI       --> Application
+  UI       --> Server
   Application --> Domain
   Application --> Infra
   Application --> Packet
 
-  %% スタイル定義
-  classDef blueNode fill:#FFFFCC,stroke:#0000FF,stroke-width:2px;
-  classDef greenNode fill:#FFFFCC,stroke:#008000,stroke-width:2px;
-
-  %% クラス割り当て
-  class UI,Application,Domain,Infra,Packet blueNode;
-  class Server greenNode;
+  %% クラス割当
+  class UI       ui
+  class Server   server
+  class Application client
+  class Domain   domain
+  class Infra    domain
+  class Packet   domain
 
 ```
 
