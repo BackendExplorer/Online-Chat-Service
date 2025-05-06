@@ -1,52 +1,3 @@
-```mermaid
-classDiagram
-
-%% TCPServer クラス
-class TCPServer {
-    +int HEADER_MAX_BYTE
-    +int TOKEN_MAX_BYTE
-    +dict room_members_map
-    +dict room_password_map
-    +dict clients_map
-    -str server_address
-    -int server_port
-    -RSAKey server_public_key
-    -socket sock
-    +__init__(server_address, server_port, server_public_key)
-    +start_tcp_server()
-    +accept_tcp_connections()
-    +handle_client_request(connection, client_address)
-    +decode_message(data)
-    +register_client(token, client_address, room_name, username, operation, pub_key_pem)
-    +create_room(connection, room_name, username, token, password)
-    +join_room(connection, username, token)
-    +get_room_members(room_name)
-    +get_client_info(token)
-    +remove_client(token)
-}
-
-%% UDPServer クラス
-class UDPServer {
-    -str server_address
-    -int server_port
-    -RSAKey server_private_key
-    -dict room_members_map
-    -dict clients_map
-    -socket sock
-    +__init__(server_address, server_port, server_private_key)
-    +start_udp_server()
-    +handle_messages()
-    +decode_message(data)
-    +broadcast_message(room_name, message_raw)
-    +remove_inactive_clients()
-    +disconnect_inactive_client(client_token, client_info)
-}
-
-TCPServer <.. UDPServer : uses room_members_map / clients_map
-
-
-```
-
 
 ```mermaid
 graph TD
@@ -57,7 +8,6 @@ classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
 classDef domain fill:#ede7f6,stroke:#6a1b9a,stroke-width:2px
 classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:2px
 classDef packet fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-classDef server fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px
 
 %% UI層
 subgraph UIレイヤー\[UI]
@@ -89,15 +39,8 @@ Packet["PacketBuilder"]
 class Packet packet
 end
 
-%% サーバー層
-subgraph サーバー処理\[サーバー]
-Server["TCPServer / UDPServer"]
-class Server server
-end
-
 %% 接続関係
 UI --> App
-UI --> Server
 App --> Domain
 App --> Infra
 App --> Packet
