@@ -28,7 +28,7 @@ graph TD
   classDef client   fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
   classDef domain   fill:#ede7f6,stroke:#6a1b9a,stroke-width:2px
 
-  %% メインUI
+  %% UI処理
   subgraph UI処理[UI処理]
     UI["main.py"]
   end
@@ -43,27 +43,27 @@ graph TD
     Application["TCPClient / UDPClient"]
   end
 
-  %% ドメイン＆インフラ＆パケット処理
+  %% ドメイン・インフラ・パケット処理
   subgraph 裏側処理[ドメイン・インフラ・パケット]
     Domain["RoomManager"]
     Infra["CryptoHandler"]
     Packet["PacketBuilder"]
   end
 
-  %% 接続フロー
-  UI       --> Application
-  UI       --> Server
+  %% エッジ定義（接続フロー）
+  UI --> Application
+  UI --> Server
   Application --> Domain
   Application --> Infra
   Application --> Packet
 
   %% クラス割当
-  class UI       ui
-  class Server   server
+  class UI          ui
+  class Server      server
   class Application client
-  class Domain   domain
-  class Infra    domain
-  class Packet   domain
+  class Domain      domain
+  class Infra       domain
+  class Packet      domain
 
 ```
 
