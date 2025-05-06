@@ -1,13 +1,13 @@
 ```mermaid
 flowchart LR
-    subgraph chat_client[パッケージ: chat_client]
-        CLI[cli.py<br/>ChatCLI]
-        CRYPTO[crypto.py<br/>CryptoHandler]
-        PACKET[packet.py<br/>PacketBuilder]
-        ROOM[room_manager.py<br/>RoomManager]
-        TCP[TCPClient<br/>(tcp_client.py)]
-        UDP[UDPClient<br/>(udp_client.py)]
-        MAIN[main.py<br/>エントリポイント]
+    subgraph chat_client["パッケージ: chat_client"]
+        CLI["cli.py\nChatCLI"]
+        CRYPTO["crypto.py\nCryptoHandler"]
+        PACKET["packet.py\nPacketBuilder"]
+        ROOM["room_manager.py\nRoomManager"]
+        TCP["tcp_client.py\nTCPClient"]
+        UDP["udp_client.py\nUDPClient"]
+        MAIN["main.py\nエントリポイント"]
     end
 
     MAIN --> CLI
