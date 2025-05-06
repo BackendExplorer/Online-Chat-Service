@@ -2,31 +2,28 @@
 flowchart TD
     main["main.py"]
 
-    subgraph TCPフェーズ
-        tcp[TCPClient]
-        room[RoomManager]
-        cli[ChatCLI]
-        crypto[CryptoHandler]
-        packet[PacketBuilder]
+    subgraph TCP Phase
+        tcp["TCP Communication\n(TCPClient + RoomManager)"]
+        cli["User CLI (ChatCLI)"]
     end
 
-    subgraph UDPフェーズ
-        udp[UDPClient]
+    subgraph UDP Phase
+        udp["UDP Chat\n(UDPClient)"]
+    end
+
+    subgraph Shared
+        crypto["Crypto Module\n(CryptoHandler)"]
+        packet["Packet Builder\n(PacketBuilder)"]
     end
 
     main --> tcp
-    tcp --> room
+    main --> udp
     tcp --> cli
     tcp --> crypto
     tcp --> packet
-
-    room --> cli
-    room --> crypto
-
-    udp --> packet
     udp --> crypto
+    udp --> packet
 
-    main --> udp
 
 ```
 
