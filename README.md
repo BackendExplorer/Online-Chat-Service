@@ -1,17 +1,25 @@
 ```mermaid
 graph TD
-  main --> tcp_client
-  main --> udp_client
 
-  tcp_client --> crypto_handler
-  tcp_client --> packet_builder
-  tcp_client --> room_manager
+  main[main.py]
+  tcp[tcp_client.py]
+  udp[udp_client.py]
+  room[room_manager.py]
+  crypto[crypto_handler.py]
+  packet[packet_builder.py]
 
-  room_manager --> packet_builder
-  room_manager --> crypto_handler
+  main --> tcp
+  main --> udp
 
-  udp_client --> crypto_handler
-  udp_client --> packet_builder
+  tcp --> room
+  tcp --> crypto
+  tcp --> packet
+
+  udp --> crypto
+  udp --> packet
+
+  room --> crypto
+  room --> packet
 
 ```
 
