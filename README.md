@@ -1,7 +1,6 @@
 ```mermaid
 graph TD
 
-  %% クライアント側
   UI["main.py"]
   Application["TCPClient / UDPClient"]
   Domain["RoomManager"]
@@ -13,17 +12,12 @@ graph TD
   Application --> Infra
   Application --> Packet
 
-  %% サーバ側
-  ServerApp["TCPServer / UDPServer"]
-  ServerInfra["(RSA鍵生成・PKCS1_OAEP で暗号/復号)"]
-  ServerPacket["(ヘッダー/ボディ解析)"]
+  %% サーバ側ノードを下に追加
+  Server["TCPServer / UDPServer"]
 
-  ServerApp --> ServerInfra
-  ServerApp --> ServerPacket
+  Server --> Infra
+  Server --> Packet
 
-  %% 共通モジュール（再利用可能）
-  Infra --- ServerInfra
-  Packet --- ServerPacket
 
 ```
 
