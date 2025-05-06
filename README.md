@@ -22,48 +22,56 @@ graph TD
 ```mermaid
 graph TD
 
-  %% スタイル定義
-  classDef ui       fill:#fff3e0,stroke:#fb8c00,stroke-width:2px
-  classDef server   fill:#e3f2fd,stroke:#1e88e5,stroke-width:2px
-  classDef client   fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-  classDef domain   fill:#ede7f6,stroke:#6a1b9a,stroke-width:2px
+%% スタイル定義
+classDef ui fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+classDef domain fill:#ede7f6,stroke:#6a1b9a,stroke-width:2px
+classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+classDef packet fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+classDef server fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px
 
-  %% UI処理
-  subgraph UI処理[UI処理]
-    UI["main.py"]
-  end
+%% UI層
+subgraph UIレイヤー\[UI]
+UI["main.py"]
+class UI ui
+end
 
-  %% サーバーコンポーネント
-  subgraph サーバー[サーバー]
-    Server["TCPServer / UDPServer"]
-  end
+%% アプリケーション層
+subgraph アプリケーションレイヤー\[アプリケーション]
+App["TCPClient / UDPClient"]
+class App application
+end
 
-  %% クライアントコンポーネント
-  subgraph クライアント[クライアント]
-    Application["TCPClient / UDPClient"]
-  end
+%% ドメイン層
+subgraph ドメインレイヤー\[ドメイン]
+Domain["RoomManager"]
+class Domain domain
+end
 
-  %% ドメイン・インフラ・パケット処理
-  subgraph 裏側処理[ドメイン・インフラ・パケット]
-    Domain["RoomManager"]
-    Infra["CryptoHandler"]
-    Packet["PacketBuilder"]
-  end
+%% インフラ層
+subgraph インフラレイヤー\[インフラ]
+Infra["CryptoHandler"]
+class Infra infra
+end
 
-  %% エッジ定義（接続フロー）
-  UI --> Application
-  UI --> Server
-  Application --> Domain
-  Application --> Infra
-  Application --> Packet
+%% パケット生成
+subgraph パケット処理\[パケット関連]
+Packet["PacketBuilder"]
+class Packet packet
+end
 
-  %% クラス割当
-  class UI          ui
-  class Server      server
-  class Application client
-  class Domain      domain
-  class Infra       domain
-  class Packet      domain
+%% サーバー層
+subgraph サーバー処理\[サーバー]
+Server["TCPServer / UDPServer"]
+class Server server
+end
+
+%% 接続関係
+UI --> App
+UI --> Server
+App --> Domain
+App --> Infra
+App --> Packet
 
 ```
 
