@@ -1,5 +1,5 @@
 ```mermaid
-graph TD
+graph LR
 
 %% スタイル定義
 classDef ui fill:#fff8e1,stroke:#f9a825,stroke-width:2px
@@ -8,38 +8,44 @@ classDef domain fill:#ede7f6,stroke:#6a1b9a,stroke-width:2px
 classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:2px
 classDef packet fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
 
-%% UI層
-subgraph UIレイヤー\[UI]
-    UI["main.py"]
-    class UI ui
+%% ノード定義
+UI["main.py"]
+App["TCPClient / UDPClient"]
+Server["TCPServer / UDPServer"]
+Domain["RoomManager"]
+Infra["CryptoHandler"]
+Packet["PacketBuilder"]
+
+%% レイヤーごとのグループ
+subgraph UIレイヤー
+  UI
 end
 
-%% アプリケーション層（クライアント・サーバー両方）
-subgraph アプリケーションレイヤー\[アプリケーション]
-    App["TCPClient / UDPClient"]
-    Server["TCPServer / UDPServer"]
-    class App,Server application
+subgraph アプリケーションレイヤー
+  App
+  Server
 end
 
-%% ドメイン層
-subgraph ドメインレイヤー\[ドメイン]
-    Domain["RoomManager"]
-    class Domain domain
+subgraph ドメインレイヤー
+  Domain
 end
 
-%% インフラ層
-subgraph インフラレイヤー\[インフラ]
-    Infra["CryptoHandler"]
-    class Infra infra
+subgraph インフラレイヤー
+  Infra
 end
 
-%% パケット処理
-subgraph パケット処理\[パケット関連]
-    Packet["PacketBuilder"]
-    class Packet packet
+subgraph パケットレイヤー
+  Packet
 end
 
-%% 接続関係
+%% スタイル割当
+class UI ui
+class App,Server application
+class Domain domain
+class Infra infra
+class Packet packet
+
+%% 接続関係（矢印はなるべく水平に）
 UI --> App
 App --> Domain
 App --> Infra
