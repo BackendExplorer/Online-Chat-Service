@@ -1,34 +1,17 @@
 ```mermaid
-flowchart LR
-    subgraph chat_client["パッケージ: chat_client"]
-        CLI["cli.py\nChatCLI"]
-        CRYPTO["crypto.py\nCryptoHandler"]
-        PACKET["packet.py\nPacketBuilder"]
-        ROOM["room_manager.py\nRoomManager"]
-        TCP["tcp_client.py\nTCPClient"]
-        UDP["udp_client.py\nUDPClient"]
-        MAIN["main.py\nエントリポイント"]
-    end
+graph TD
+  main --> tcp_client
+  main --> udp_client
 
-    MAIN --> CLI
-    MAIN --> TCP
-    MAIN --> UDP
+  tcp_client --> crypto_handler
+  tcp_client --> packet_builder
+  tcp_client --> room_manager
 
-    TCP --> CLI
-    TCP --> CRYPTO
-    TCP --> PACKET
-    TCP --> ROOM
+  room_manager --> packet_builder
+  room_manager --> crypto_handler
 
-    ROOM --> TCP
-    ROOM --> PACKET
-
-    UDP --> CRYPTO
-    UDP --> PACKET
-
-    %% 説明ノート
-    classDef note fill:#f9f,stroke:#333,stroke-width:1px;
-    note1["※各コンポーネントは\n必要なモジュールをimportして利用"]:::note
-    MAIN --- note1
+  udp_client --> crypto_handler
+  udp_client --> packet_builder
 
 ```
 
