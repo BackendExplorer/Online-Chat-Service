@@ -1,25 +1,19 @@
 ```mermaid
 graph TD
-  %% ノード定義
+
   UI["main.py"]
+  Application["TCPClient / UDPClient"]
   Domain["RoomManager"]
   Infra["CryptoHandler"]
   Packet["PacketBuilder"]
   Server["TCPServer / UDPServer"]
-  Client["TCPClient / UDPClient"]
 
-  %% 関係性
-  UI --> Client
-  UI --> Domain
-  UI --> Infra
-  UI --> Packet
+  UI --> Application
+  UI --> Server
+  Application --> Domain
+  Application --> Infra
+  Application --> Packet
 
-  Client --> Domain
-  Client --> Infra
-  Client --> Packet
-
-  Server --> Infra
-  Server --> Packet
 
 
 ```
