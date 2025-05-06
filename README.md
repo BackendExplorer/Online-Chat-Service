@@ -406,9 +406,9 @@ class UDPClient {
 <ul>
   <li>
     <h3>GUI クライアントの実装（Electron）</h3>
-    <p>Electron を用いてチャットクライアントを GUI 化し、ユーザー名・ルーム名・パスワードの入力やチャット表示、</p>
+    <p>Electron でクライアントを GUI 化し、ユーザー名・ルーム名・パスワードの入力やチャット表示、</p>
     <p>通知などを直感的に操作可能なウィンドウで提供します。</p>
-    <p>サーバー（server.py）はそのまま使用し、クライアント（client.py）のみを Electron（Node.js）で置き換えます。</p>
+    <p>サーバー（server.py）はそのまま使用し、クライアント（client.py）のみを Electron（Node.js）で置換。</p>
     
   </li>
 </ul>
