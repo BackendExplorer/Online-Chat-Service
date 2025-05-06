@@ -35,11 +35,11 @@ graph TD
   Application --> Infra
   Application --> Packet
 
-  %% ノードのスタイル定義
+  %% スタイル定義
   classDef blueNode fill:#FFFFCC,stroke:#0000FF,stroke-width:2px;
   classDef greenNode fill:#FFFFCC,stroke:#008000,stroke-width:2px;
 
-  %% 各ノードにクラスを割り当て
+  %% クラス割り当て
   class UI,Application,Domain,Infra,Packet blueNode;
   class Server greenNode;
 
