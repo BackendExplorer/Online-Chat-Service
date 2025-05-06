@@ -160,7 +160,7 @@ streamlit run gui.py
 
 | ホスト | ゲスト |
 |:-------:|:--------:|
-|<br><img src="https://github.com/user-attachments/assets/2a9d5ed3-b330-4921-b019-7edc3717aca4" width="100%" /> |<br><img src="https://github.com/user-attachments/assets/9493b56c-00e7-476c-bcec-f2322f5b6ff6" width="100%" /> |
+|<br><img src="https://github.com/user-attachments/assets/d97033da-9315-41dc-996e-1c487b4581de" width="100%" /> |<br><img src="https://github.com/user-attachments/assets/523790f8-1813-44ea-a0e9-0a5922b1bc91" width="100%" /> |
 
 <br>
 
