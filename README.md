@@ -9,50 +9,53 @@ classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:2px
 classDef packet fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
 classDef server fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px
 
-%% UI層
-subgraph UIレイヤー\[UI]
-    UI["main.py"]
-    class UI ui
+%% 各ノード定義
+UI["main.py"]
+App["TCPClient / UDPClient"]
+Server["TCPServer / UDPServer"]
+Domain["RoomManager"]
+Infra["CryptoHandler"]
+Packet["PacketBuilder"]
+
+%% 親グループ
+subgraph UIグループ
+  UI
 end
 
-%% アプリケーション層
-subgraph アプリケーションレイヤー\[アプリケーション]
-    App["TCPClient / UDPClient"]
-    class App application
+subgraph アプリケーショングループ
+  App
 end
 
-%% ドメイン層
-subgraph ドメインレイヤー\[ドメイン]
-    Domain["RoomManager"]
-    class Domain domain
+subgraph サーバーグループ
+  Server
 end
 
-%% インフラ層
-subgraph インフラレイヤー\[インフラ]
-    Infra["CryptoHandler"]
-    class Infra infra
+subgraph ドメイングループ
+  Domain
 end
 
-%% パケット生成
-subgraph パケット処理\[パケット関連]
-    Packet["PacketBuilder"]
-    class Packet packet
+subgraph インフラグループ
+  Infra
 end
 
-%% サーバー層
-subgraph サーバー処理\[サーバー]
-    Server["TCPServer / UDPServer"]
-    class Server server
+subgraph パケットグループ
+  Packet
 end
 
-%% ダミーノードでレイアウト調整
-UI --> M1(( ))
-M1 --> App
-M1 --> Server
-App --> M2(( ))
-M2 --> Domain
-M2 --> Infra
-M2 --> Packet
+%% スタイル適用
+class UI ui
+class App application
+class Server server
+class Domain domain
+class Infra infra
+class Packet packet
+
+%% 接続関係
+UI --> App
+UI --> Server
+App --> Domain
+App --> Infra
+App --> Packet
 
 ```
 
