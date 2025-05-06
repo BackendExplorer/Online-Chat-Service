@@ -1,29 +1,32 @@
 ```mermaid
 flowchart TD
-    main["main.py"]
+    main[main.py]
 
     subgraph TCP Phase
-        tcp["TCP Communication\n(TCPClient + RoomManager)"]
-        cli["User CLI (ChatCLI)"]
+        tcp[TCPClient]
+        room[RoomManager]
+        cli[ChatCLI]
     end
 
     subgraph UDP Phase
-        udp["UDP Chat\n(UDPClient)"]
+        udp[UDPClient]
     end
 
     subgraph Shared
-        crypto["Crypto Module\n(CryptoHandler)"]
-        packet["Packet Builder\n(PacketBuilder)"]
+        crypto[CryptoHandler]
+        packet[PacketBuilder]
     end
 
     main --> tcp
     main --> udp
+    tcp --> room
     tcp --> cli
     tcp --> crypto
     tcp --> packet
+    room --> cli
+    room --> crypto
     udp --> crypto
     udp --> packet
-
 
 ```
 
