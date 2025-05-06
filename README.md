@@ -4,27 +4,22 @@ flowchart TD
 
     subgraph TCP Phase
         tcp[TCPClient]
-        room[RoomManager]
-        cli[ChatCLI]
     end
 
     subgraph UDP Phase
         udp[UDPClient]
     end
 
-    subgraph Shared
+    subgraph Shared Utilities
         crypto[CryptoHandler]
         packet[PacketBuilder]
     end
 
     main --> tcp
     main --> udp
-    tcp --> room
-    tcp --> cli
+
     tcp --> crypto
     tcp --> packet
-    room --> cli
-    room --> crypto
     udp --> crypto
     udp --> packet
 
