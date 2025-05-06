@@ -1,56 +1,49 @@
 ```mermaid
-graph LR
+classDiagram
 
-%% スタイル定義
-classDef ui fill:#fff8e1,stroke:#f9a825,stroke-width:2px
-classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-classDef domain fill:#ede7f6,stroke:#6a1b9a,stroke-width:2px
-classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-classDef packet fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+%% TCPServer クラス
+class TCPServer {
+    +int HEADER_MAX_BYTE
+    +int TOKEN_MAX_BYTE
+    +dict room_members_map
+    +dict room_password_map
+    +dict clients_map
+    -str server_address
+    -int server_port
+    -RSAKey server_public_key
+    -socket sock
+    +__init__(server_address, server_port, server_public_key)
+    +start_tcp_server()
+    +accept_tcp_connections()
+    +handle_client_request(connection, client_address)
+    +decode_message(data)
+    +register_client(token, client_address, room_name, username, operation, pub_key_pem)
+    +create_room(connection, room_name, username, token, password)
+    +join_room(connection, username, token)
+    +get_room_members(room_name)
+    +get_client_info(token)
+    +remove_client(token)
+}
 
-%% ノード定義
-UI["main.py"]
-App["TCPClient / UDPClient"]
-Server["TCPServer / UDPServer"]
-Domain["RoomManager"]
-Infra["CryptoHandler"]
-Packet["PacketBuilder"]
+%% UDPServer クラス
+class UDPServer {
+    -str server_address
+    -int server_port
+    -RSAKey server_private_key
+    -dict room_members_map
+    -dict clients_map
+    -socket sock
+    +__init__(server_address, server_port, server_private_key)
+    +start_udp_server()
+    +handle_messages()
+    +decode_message(data)
+    +broadcast_message(room_name, message_raw)
+    +remove_inactive_clients()
+    +disconnect_inactive_client(client_token, client_info)
+}
 
-%% レイヤーごとのグループ
-subgraph UIレイヤー
-  UI
-end
+TCPServer <.. UDPServer : uses room_members_map / clients_map
 
-subgraph アプリケーションレイヤー
-  App
-  Server
-end
-
-subgraph ドメインレイヤー
-  Domain
-end
-
-subgraph インフラレイヤー
-  Infra
-end
-
-subgraph パケットレイヤー
-  Packet
-end
-
-%% スタイル割当
-class UI ui
-class App,Server application
-class Domain domain
-class Infra infra
-class Packet packet
-
-%% 接続関係（矢印はなるべく水平に）
-UI --> App
-App --> Domain
-App --> Infra
-App --> Packet
-App <--> Server
 
 ```
 
