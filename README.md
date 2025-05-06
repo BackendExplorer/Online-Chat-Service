@@ -110,6 +110,8 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 - [Python 3.8以上](https://www.python.org/downloads/)
 
 - [Git](https://git-scm.com/)
+
+- [PyCryptodome](https://www.pycryptodome.org/)
   
 <br>
 
@@ -440,7 +442,7 @@ class UDPClient {
 
 - [Python](https://docs.python.org/ja/3/)
 
-- [Streamlit](https://docs.streamlit.io)
+- [PyCryptodome](https://www.pycryptodome.org/)
 
 <br>
 
