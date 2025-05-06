@@ -1,3 +1,31 @@
+```mermaid
+graph TD
+    main[main.py]
+    
+    subgraph TCPフェーズ
+        main --> TCPClient
+        TCPClient --> RoomManager
+        TCPClient --> CryptoHandler
+        TCPClient --> PacketBuilder
+        TCPClient --> ChatCLI
+        RoomManager --> TCPClient
+        RoomManager --> ChatCLI
+        RoomManager --> CryptoHandler
+    end
+
+    subgraph UDPフェーズ
+        main --> UDPClient
+        UDPClient --> PacketBuilder
+        UDPClient --> CryptoHandler
+    end
+
+    ChatCLI -->|ユーザー入力| TCPClient
+    ChatCLI -->|ユーザー入力| RoomManager
+
+    CryptoHandler -->|暗号化/復号| UDPClient
+
+```
+
 # 🌐 Online Chat Service 💬  
 
 ### 独自プロトコル・暗号通信・マルチスレッド・ソケット通信によるグループチャットアプリ
