@@ -1,20 +1,58 @@
 ```mermaid
 graph TD
 
-  UI["main.py"]
-  Application["TCPClient / UDPClient"]
-  Domain["RoomManager"]
-  Infra["CryptoHandler"]
-  Packet["PacketBuilder"]
-  Server["TCPServer / UDPServer"]
+%% スタイル定義
+classDef ui fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+classDef domain fill:#ede7f6,stroke:#6a1b9a,stroke-width:2px
+classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+classDef packet fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+classDef server fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px
 
-  UI --> Application
-  UI --> Server
-  Application --> Domain
-  Application --> Infra
-  Application --> Packet
+%% UI層
+subgraph UIレイヤー\[UI]
+    UI["main.py"]
+    class UI ui
+end
 
+%% アプリケーション層
+subgraph アプリケーションレイヤー\[アプリケーション]
+    App["TCPClient / UDPClient"]
+    class App application
+end
 
+%% ドメイン層
+subgraph ドメインレイヤー\[ドメイン]
+    Domain["RoomManager"]
+    class Domain domain
+end
+
+%% インフラ層
+subgraph インフラレイヤー\[インフラ]
+    Infra["CryptoHandler"]
+    class Infra infra
+end
+
+%% パケット生成
+subgraph パケット処理\[パケット関連]
+    Packet["PacketBuilder"]
+    class Packet packet
+end
+
+%% サーバー層
+subgraph サーバー処理\[サーバー]
+    Server["TCPServer / UDPServer"]
+    class Server server
+end
+
+%% ダミーノードでレイアウト調整
+UI --> M1(( ))
+M1 --> App
+M1 --> Server
+App --> M2(( ))
+M2 --> Domain
+M2 --> Infra
+M2 --> Packet
 
 ```
 
