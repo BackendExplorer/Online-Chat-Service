@@ -1,27 +1,34 @@
 ```mermaid
-flowchart TD
-    main[main.py]
-
-    subgraph TCP Phase
-        tcp[TCPClient]
+flowchart LR
+    subgraph chat_client[パッケージ: chat_client]
+        CLI[cli.py<br/>ChatCLI]
+        CRYPTO[crypto.py<br/>CryptoHandler]
+        PACKET[packet.py<br/>PacketBuilder]
+        ROOM[room_manager.py<br/>RoomManager]
+        TCP[TCPClient<br/>(tcp_client.py)]
+        UDP[UDPClient<br/>(udp_client.py)]
+        MAIN[main.py<br/>エントリポイント]
     end
 
-    subgraph UDP Phase
-        udp[UDPClient]
-    end
+    MAIN --> CLI
+    MAIN --> TCP
+    MAIN --> UDP
 
-    subgraph Shared Utilities
-        crypto[CryptoHandler]
-        packet[PacketBuilder]
-    end
+    TCP --> CLI
+    TCP --> CRYPTO
+    TCP --> PACKET
+    TCP --> ROOM
 
-    main --> tcp
-    main --> udp
+    ROOM --> TCP
+    ROOM --> PACKET
 
-    tcp --> crypto
-    tcp --> packet
-    udp --> crypto
-    udp --> packet
+    UDP --> CRYPTO
+    UDP --> PACKET
+
+    %% 説明ノート
+    classDef note fill:#f9f,stroke:#333,stroke-width:1px;
+    note1["※各コンポーネントは\n必要なモジュールをimportして利用"]:::note
+    MAIN --- note1
 
 ```
 
