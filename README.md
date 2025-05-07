@@ -23,7 +23,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 ## **📝 概要**
 
-- [説明](#説明)
+- [サービスの特徴 と 開発の目的](#サービスの特徴と開発の目的)
 
 - [セットアップ](#セットアップ)
 
@@ -65,7 +65,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 ---
 
-## <a id="説明"></a> 📝 説明
+## <a id="サービスの特徴と開発の目的"></a> 📝 サービスの特徴 と 開発の目的
 
 <br>
 
