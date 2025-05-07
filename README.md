@@ -1,5 +1,7 @@
 # 🌐 Online Chat Service 💬  
 
+<br>
+
 ### 独自プロトコル・暗号通信・マルチスレッド・ソケット通信によるグループチャットアプリ
 
 ### システム設計から実装、GitHub Actions × Docker による自動デプロイ、Qittaでの発信まで
