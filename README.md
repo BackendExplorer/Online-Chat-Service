@@ -27,7 +27,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 - [事前準備](#事前準備)
 
-- [使い方](#使い方)
+- [利用方法](#利用方法)
 
 <br>
 
@@ -144,7 +144,7 @@ cd your-repo-name
 
 ---
 
-## <a id="使い方"></a>🧑‍💻 使い方
+## <a id="利用方法"></a>🧑‍💻 利用方法
 
 <br>
 
