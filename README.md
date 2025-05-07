@@ -322,45 +322,36 @@ graph TD
 %% スタイル定義
 classDef ui fill:#fff8e1,stroke:#f9a825,stroke-width:2px
 classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-classDef domain fill:#ede7f6,stroke:#6a1b9a,stroke-width:2px
 classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:2px
 classDef packet fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
 
-%% UI層
-subgraph UIレイヤー\[UI]
-UI["main.py"]
-class UI ui
+subgraph Entry Point
+  main["main.py"]
+  class main ui
 end
 
-%% アプリケーション層
-subgraph アプリケーションレイヤー\[アプリケーション]
-App["TCPClient / UDPClient"]
-class App application
+subgraph Application
+  app["TCPClient / UDPClient"]
+  class app application
 end
 
-%% ドメイン層
-subgraph ドメインレイヤー\[ドメイン]
-Domain["RoomManager"]
-class Domain domain
+subgraph Crypto
+  enc["Encryption"]
+  sock["EncryptedSocket"]
+  class enc,sock infra
 end
 
-%% インフラ層
-subgraph インフラレイヤー\[インフラ]
-Infra["CryptoHandler"]
-class Infra infra
+subgraph Input Handling
+  handler["InputHandler"]
+  class handler packet
 end
 
-%% パケット生成
-subgraph パケット処理\[パケット関連]
-Packet["PacketBuilder"]
-class Packet packet
-end
+main --> app
+app  --> enc
+app  --> sock
+app  --> handler
 
-%% 接続関係
-UI --> App
-App --> Domain
-App --> Infra
-App --> Packet
+
 
 ```
  
