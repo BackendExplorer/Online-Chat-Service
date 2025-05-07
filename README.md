@@ -71,6 +71,8 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 ### サービスの全体像
 
+<br>
+
 - このプロジェクトは、**グループチャットができるサービス**です。
 
 - ホストユーザがチャットルームを作成し、ゲストユーザが入室することでグループチャットができます。
@@ -79,6 +81,8 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 <br>
 
 ###  できること
+
+<br>
 
 - **ルーム作成・参加**  
 
@@ -96,6 +100,8 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 <br>
 
 ### 作成のきっかけ
+
+<br>
 
 1. **課題意識**
 
