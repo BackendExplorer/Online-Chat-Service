@@ -33,9 +33,9 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 ## **🛠️ 技術構成**
 
-- [使用技術](#使用技術)
-
 - [システム全体の構成図](#システム全体の構成図)
+
+- [使用技術](#使用技術)
 
 - [クラス構成 と モジュール設計](#クラス構成とモジュール設計)
 
@@ -206,6 +206,39 @@ Start --> 選択
 ---
 
 
+<div style="font-size:120%; line-height:1.6;">
+  
+## <a id="システム全体の構成図"></a>🔄 システム全体の構成図
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Dev  as 開発者（Dev）
+    participant GH   as CI/CD（GitHub Actions）
+    participant EC2  as サーバー（EC2・Docker）
+    participant CLI  as クライアント（ローカル）
+
+    Dev ->> GH: コードを push
+    GH ->> GH: ビルド・テスト (CI)
+    GH ->> EC2: デプロイ（SSH + Docker Compose）
+    EC2 ->> EC2: サーバ起動（ポート 9001 / 9002）
+
+    CLI ->> CLI: Streamlit クライアント起動
+    CLI ->> EC2: TCP 接続
+    EC2 -->> CLI: トークン & ルーム応答
+    CLI ->> EC2: UDP 通信開始
+    EC2 -->> CLI: メッセージブロードキャスト
+
+    note right of EC2: Docker上で常時稼働（ルーム管理・タイムアウト監視）
+    note right of GH: GitHubリポジトリ更新時に自動CI/CD
+
+```
+<img width="792" alt="スクリーンショット 2025-05-01 2 00 56" src="https://github.com/user-attachments/assets/932fc12d-0a3c-42d2-8afa-e66f6eb2328e" />
+<br>
+
+---
+
+
 ## <a id="使用技術"></a>🧰 使用技術
 
 <br>
@@ -253,37 +286,6 @@ Start --> 選択
 
 ---
 
-<div style="font-size:120%; line-height:1.6;">
-  
-## <a id="システム全体の構成図"></a>🔄 システム全体の構成図
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant Dev  as 開発者（Dev）
-    participant GH   as CI/CD（GitHub Actions）
-    participant EC2  as サーバー（EC2・Docker）
-    participant CLI  as クライアント（ローカル）
-
-    Dev ->> GH: コードを push
-    GH ->> GH: ビルド・テスト (CI)
-    GH ->> EC2: デプロイ（SSH + Docker Compose）
-    EC2 ->> EC2: サーバ起動（ポート 9001 / 9002）
-
-    CLI ->> CLI: Streamlit クライアント起動
-    CLI ->> EC2: TCP 接続
-    EC2 -->> CLI: トークン & ルーム応答
-    CLI ->> EC2: UDP 通信開始
-    EC2 -->> CLI: メッセージブロードキャスト
-
-    note right of EC2: Docker上で常時稼働（ルーム管理・タイムアウト監視）
-    note right of GH: GitHubリポジトリ更新時に自動CI/CD
-
-```
-<img width="792" alt="スクリーンショット 2025-05-01 2 00 56" src="https://github.com/user-attachments/assets/932fc12d-0a3c-42d2-8afa-e66f6eb2328e" />
-<br>
-
----
 ## <a id="クラス構成とモジュール設計"></a>📌 クラス構成 と モジュール設計
 
 <br>
