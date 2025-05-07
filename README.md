@@ -55,7 +55,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 ## **📚 参考情報・ライセンス**
 
-- [Qittaでの発信 (開発ストーリー)](#qiita-seisaku-katei-no-kaisetsu-ki)
+- [Qittaでの発信  (開発ストーリー)](#qiita-seisaku-katei-no-kaisetsu-ki)
 
 - [参考文献](#参考文献)
 
@@ -436,7 +436,7 @@ app  --> handler
 
 
 ---
-## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ Qittaでの発信 (開発ストーリー)
+## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ Qittaでの発信  (開発ストーリー)
 
 <br>
 
