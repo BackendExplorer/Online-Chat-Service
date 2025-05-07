@@ -237,7 +237,7 @@ Start --> 選択
 
 <br>
 
-| カテゴリ       | 技術スタック                                                                                                         |
+| カテゴリ       | 採用技術と使用ツール                                                                                     |
 |----------------|----------------------------------------------------------------------------------------------------------------------|
 | 開発言語       | ![Python](https://img.shields.io/badge/Python-3.13.2-blue) <br>標準ライブラリ使用：`socket`, `threading`, `logging`, `time`, `sys` |
 | 通信技術       | ![TCP](https://img.shields.io/badge/Protocol-TCP-blue) ![UDP](https://img.shields.io/badge/Protocol-UDP-blue) <br>独自プロトコルTCRP（Talk Chat Room Protocol）を用いた通信設計 |
