@@ -1,8 +1,4 @@
-<span style="text-decoration: underline;">アンダーラインを引きたい文字</span>
-<ins>アンダーラインを引きたい文字</ins>
-
-<u>アンダーラインを引きたい文字</u>
-
+## **__サービスの全体像__**
 
 # 🌐 Online Chat Service 💬  
 
@@ -75,7 +71,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 <br>
 
-### <ins>サービスの全体像</ins>
+### サービスの全体像
 
 - このプロジェクトは、**グループチャットができるサービス**です。
 
