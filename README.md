@@ -78,11 +78,11 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 <br>
 
-###  🔹 できること
+###  ⚫ できること
 
 <div style="height:8px;"></div>
 
-∘ **ルーム作成・参加**  
+- **ルーム作成・参加**  
 
   ホストが新規ルームを作成、ゲストは既存ルームに参加
 
