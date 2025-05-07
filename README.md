@@ -436,7 +436,7 @@ app  --> handler
 
 
 ---
-## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ Qittaでの発信  (開発ストーリー)
+## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ Qittaでの発信 → 開発ストーリー
 
 <br>
 
