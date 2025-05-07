@@ -1,6 +1,3 @@
-> ## 🚀 **<mark>サービスの全体像</mark>**
-
-
 # 🌐 Online Chat Service 💬  
 
 <br>
