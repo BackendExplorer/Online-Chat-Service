@@ -1,5 +1,3 @@
-◊
-
 # 🌐 Online Chat Service 💬  
 
 <br>
