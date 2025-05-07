@@ -1,6 +1,15 @@
 <span style="text-decoration: underline;">アンダーラインを引きたい文字</span>
 <ins>アンダーラインを引きたい文字</ins>
-<u>アンダーラインを引きたい文字</u>
+
+
+<span style="
+  text-decoration: underline;
+  text-decoration-thickness: 2px;     /* 下線の太さ */
+  text-underline-offset: 4px;         /* 文字と下線の間隔 */
+">
+  アンダーラインを引きたい文字
+</span>
+
 
 
 # 🌐 Online Chat Service 💬  
