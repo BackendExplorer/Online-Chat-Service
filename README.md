@@ -69,9 +69,9 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 <br>
 
-## サービスの全体像
+### サービスの全体像
 
-<br>
+
 
 - このプロジェクトは、**グループチャットができるサービス**です。
 
@@ -80,9 +80,9 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 <br>
 
-##  できること
+###  できること
 
-<br>
+
 
 - **ルーム作成・参加**  
 
@@ -99,9 +99,9 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 <br>
 
-## 作成のきっかけ
+### 作成のきっかけ
 
-<br>
+
 
 1. **課題意識**
 
