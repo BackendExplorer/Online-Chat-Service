@@ -1,9 +1,3 @@
-テキスト1
-<div style="height:8px;"></div>
-テキスト2
-
-
-
 # 🌐 Online Chat Service 💬  
 
 <br>
@@ -77,7 +71,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 ### サービスの全体像
 
-
+<div style="height:8px;"></div>
 
 - このプロジェクトは、**グループチャットができるサービス**です。
 
@@ -88,7 +82,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 ###  できること
 
-
+<div style="height:8px;"></div>
 
 - **ルーム作成・参加**  
 
@@ -107,7 +101,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 ### 作成のきっかけ
 
-
+<div style="height:8px;"></div>
 
 1. **課題意識**
 
