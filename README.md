@@ -3,13 +3,11 @@
 
 
 <span style="
-  text-decoration: underline;
-  text-decoration-thickness: 2px;     /* 下線の太さ */
-  text-underline-offset: 4px;         /* 文字と下線の間隔 */
+  border-bottom: 2px solid currentColor;  /* 下線の太さと色 */
+  padding-bottom: 2px;                     /* 文字と線の間隔 */
 ">
   アンダーラインを引きたい文字
 </span>
-
 
 
 # 🌐 Online Chat Service 💬  
