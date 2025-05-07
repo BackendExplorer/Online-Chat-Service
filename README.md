@@ -31,7 +31,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 <br>
 
-## **🛠️ 技術関連**
+## **🛠️ 技術構成**
 
 - [使用技術](#使用技術)
 
