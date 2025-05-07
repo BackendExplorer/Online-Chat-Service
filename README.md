@@ -103,7 +103,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 - **得られた学び**
 
-  通信・暗号・並列処理を含むシステム設計と実装、およびGitHub ActionsとDockerによる自動デプロイの経験。
+  通信・暗号・並列処理を含むシステム設計と実装や、GitHub ActionsとDockerによる自動デプロイの経験。
 
 <br>
 
