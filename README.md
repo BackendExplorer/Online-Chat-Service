@@ -1,13 +1,7 @@
 <span style="text-decoration: underline;">アンダーラインを引きたい文字</span>
 <ins>アンダーラインを引きたい文字</ins>
 
-
-<span style="
-  border-bottom: 2px solid currentColor;  /* 下線の太さと色 */
-  padding-bottom: 2px;                     /* 文字と線の間隔 */
-">
-  アンダーラインを引きたい文字
-</span>
+<u>アンダーラインを引きたい文字</u>
 
 
 # 🌐 Online Chat Service 💬  
