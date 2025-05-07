@@ -35,7 +35,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 - [使用技術](#使用技術)
 
-- [チャットシステムの構成図](#チャットシステムの構成図)
+- [システム全体の構成図](#システム全体の構成図)
 
 - [クラス構成 と モジュール設計](#クラス構成とモジュール設計)
 
@@ -255,7 +255,7 @@ Start --> 選択
 
 <div style="font-size:120%; line-height:1.6;">
   
-## <a id="チャットシステムの構成図"></a>🔄 チャットシステムの構成図
+## <a id="システム全体の構成図"></a>🔄 システム全体の構成図
 
 ```mermaid
 sequenceDiagram
