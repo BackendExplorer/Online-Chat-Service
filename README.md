@@ -27,7 +27,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 - [セットアップ手順](#セットアップ手順)
 
-- [利用方法](#利用方法)
+- [基本的な使い方](#基本的な使い方)
 
 <br>
 
@@ -144,7 +144,7 @@ cd your-repo-name
 
 ---
 
-## <a id="利用方法"></a>🧑‍💻 利用方法
+## <a id="基本的な使い方"></a>🧑‍💻 基本的な使い方
 
 <br>
 
