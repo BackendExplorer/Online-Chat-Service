@@ -25,7 +25,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 - [サービスの特徴・開発の目的](#サービスの特徴・開発の目的)
 
-- [セットアップ](#セットアップ)
+- [事前準備](#事前準備)
 
 - [使い方](#使い方)
 
@@ -113,7 +113,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 ---
 
-## <a id="セットアップ"></a> 🚀 セットアップ
+## <a id="事前準備"></a> 🚀 事前準備
 
 <br>
 
