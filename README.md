@@ -59,7 +59,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 - [参考文献](#参考文献)
 
-- [ライセンス](#ライセンス)
+- [ライセンス情報](#ライセンス情報)
 
 <br>
 
@@ -469,7 +469,7 @@ app  --> handler
 
 ---
 
-## <a id="ライセンス"></a>📜 ライセンス
+## <a id="ライセンス情報"></a>📜 ライセンス情報
 このプロジェクトは [MIT License](https://opensource.org/licenses/MIT) のもとで公開されています。  
 
 自由に利用、改変、再配布が可能ですが、利用の際は本ライセンス表記を保持してください。
