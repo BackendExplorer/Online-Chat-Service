@@ -43,7 +43,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 <br>
 
-## **💡 開発上の工夫**
+## **💡 開発上の工夫と展望と展望**
 
 - [設計上のこだわり](#設計上のこだわり)
 
