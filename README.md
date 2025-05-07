@@ -43,7 +43,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 <br>
 
-## **💡 開発プロセスの振り返り と 展望**
+## **💡 開発プロセスの振り返りと展望**
 
 - [設計上のこだわり](#設計上のこだわり)
 
