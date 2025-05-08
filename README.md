@@ -23,7 +23,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 ## **📝 サービス紹介と導入ガイド**
 
-<br>
+
 
 - [サービスの特徴・開発の目的](#サービスの特徴・開発の目的)
 
@@ -35,7 +35,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 ## **🛠️ 技術構成**
 
-<br>
+
 
 - [システム全体の構成図](#システム全体の構成図)
 
@@ -49,7 +49,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 ## **💡 開発の振り返りと展望**
 
-<br>
+
 
 - [設計上のこだわり](#設計上のこだわり)
 
@@ -61,7 +61,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 ## **📚 参考情報・ライセンス**
 
-<br>
+
 
 - [Qiitaでの発信 : 開発ストーリー](#qiita-seisaku-katei-no-kaisetsu-ki)
 
