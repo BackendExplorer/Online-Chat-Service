@@ -468,9 +468,11 @@ app  --> handler
 
 ### 公式ドキュメント
 
-- [Python](https://docs.python.org/ja/3/)
+- [Python socket](https://docs.python.org/3/library/socket.html)
 
-- [PyCryptodome](https://www.pycryptodome.org/)
+- [Python RSA Encryption](https://pycryptodome.readthedocs.io/en/latest/src/cipher/oaep.html)
+
+- [Python AES Encryption](https://www.pycryptodome.org/)
 
 <br>
 
