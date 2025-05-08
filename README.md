@@ -468,12 +468,18 @@ app  --> handler
 
 ### 公式ドキュメント
 
-- [Python socket](https://docs.python.org/3/library/socket.html)
+- [Python socket - ソケット通信](https://docs.python.org/3/library/socket.html)
 
-- [Python RSA Encryption](https://pycryptodome.readthedocs.io/en/latest/src/cipher/oaep.html)
+  TCP・UDP通信の基本構文と使い方を参照
 
-- [Python AES Encryption](https://www.pycryptodome.org/)
+- [PyCryptodome — RSA (PKCS1_OAEP)](https://pycryptodome.readthedocs.io/en/latest/src/cipher/oaep.html)
 
+  RSA公開鍵暗号の暗号化・復号化の仕組みを理解するために参照
+
+- [PyCryptodome — AES (CFBモード)](https://www.pycryptodome.org/)
+
+  共通鍵暗号方式によるデータの暗号化のために参照
+  
 <br>
 
 ### 参考にしたサイト
