@@ -21,7 +21,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 <br>
 
 
-## **📝 導入と基本情報**
+## **📝 サービス紹介と導入ガイド**
 
 - [サービスの特徴・開発の目的](#サービスの特徴・開発の目的)
 
