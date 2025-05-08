@@ -53,7 +53,7 @@ https://github.com/user-attachments/assets/d55b6c0e-ad3e-4e3b-8296-aea1a0623e5c
 
 <br>
 
-## **📚 開発記録・出典・ライセンス**
+## **📚 参考情報・ライセンス**
 
 - [Qiitaでの発信 : 開発ストーリー](#qiita-seisaku-katei-no-kaisetsu-ki)
 
