@@ -455,13 +455,6 @@ app  --> handler
 
 <br>
 
-実装の背景や設計の工夫について、Qiita記事で詳しく解説しています。
-
-[TCP・UDP×マルチスレッドで作る、ゼロからのチャットアプリ開発](https://qiita.com/your-article-link)
-
-<br>
-
-
 <ul>
   <li>
     <p>実装の背景や設計の工夫について、Qiita記事で詳しく解説しています。</p>
@@ -472,6 +465,8 @@ app  --> handler
     </p>
   </li>
 </ul>
+
+<br>
 
 ---
 ## <a id="参考文献"></a>📗 参考文献
