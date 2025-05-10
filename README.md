@@ -483,19 +483,19 @@ app  --> handler
 
 - [Python socket - ソケット通信](https://docs.python.org/3/library/socket.html)
 
-  TCP・UDP通信の基本構文と使い方を参照
+  `TCP・UDP通信`の基本構文と使い方を参照
 
 - [Python threading - マルチスレッド](https://docs.python.org/3/library/threading.html)
 
-  マルチスレッド処理（Thread の生成・開始・join）を実装するために参照
+  `マルチスレッド処理`（Thread の生成・開始・join）を実装するために参照
 
 - [PyCryptodome — RSA (PKCS1_OAEP)](https://pycryptodome.readthedocs.io/en/latest/src/cipher/oaep.html)
 
-  RSA公開鍵暗号の暗号化・復号化の仕組みを理解するために参照
+  `RSA公開鍵暗号`の暗号化・復号化の仕組みを理解するために参照
 
 - [PyCryptodome — AES (CFBモード)](https://www.pycryptodome.org/)
 
-  共通鍵暗号方式によるデータの暗号化のために参照
+  `共通鍵暗号方式`によるデータの暗号化のために参照
 
 - [Streamlit](https://docs.streamlit.io/)
 
