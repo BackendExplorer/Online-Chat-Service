@@ -489,11 +489,11 @@ app  --> handler
 
   `マルチスレッド処理`（Thread の生成・開始・join）を実装するために参照
 
-- [PyCryptodome — RSA (PKCS1_OAEP)](https://pycryptodome.readthedocs.io/en/latest/src/cipher/oaep.html)
+- [PyCryptodome — RSA](https://pycryptodome.readthedocs.io/en/latest/src/cipher/oaep.html)
 
   `RSA公開鍵暗号`の暗号化・復号化の仕組みを理解するために参照
 
-- [PyCryptodome — AES (CFBモード)](https://www.pycryptodome.org/)
+- [PyCryptodome — AES](https://www.pycryptodome.org/)
 
   `共通鍵暗号方式`によるデータの暗号化のために参照
 
