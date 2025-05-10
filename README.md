@@ -497,7 +497,7 @@ app  --> handler
 
   共通鍵暗号方式によるデータの暗号化のために参照
 
-- [Streamlit (https://docs.streamlit.io/)]
+- [Streamlit] (https://docs.streamlit.io/)
 
   GUIを迅速に実装するために参照
   
