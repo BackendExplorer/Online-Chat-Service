@@ -1,334 +1,398 @@
+# ============================================================
+#  client_gui.py  ――  AES + RSA 暗号付きリアルタイムチャット
+#                     ＋ 4 画面構成 Streamlit GUI
+# ============================================================
 import socket
-import threading
-import time
-import sys
+import secrets
+import json
+import logging
 from pathlib import Path
+from typing import Dict, List
+
+from Crypto.PublicKey import RSA
+from Crypto.Cipher    import PKCS1_OAEP, AES
+
+TOKEN_MAX_BYTE          = 255
+ROOM_NAME_MAX_BYTE      = 2 ** 8
+PAYLOAD_MAX_BYTE        = 2 ** 29
+HEADER_SIZE             = 32
 
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 import streamlit.components.v1 as components
 
-# =========================================================
-# TCP 通信（ルーム作成、参加、取得など）
-# =========================================================
-class ChatTCPClient:
-    TOKEN_MAX_BYTES = 255
-    ROOM_NAME_MAX_BYTES = 2 ** 8
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 
+# ============================================================
+# 暗号ユーティリティ
+# ============================================================
+class CryptoUtil:
+    @staticmethod
+    def aes_encrypt(data: bytes, key: bytes, iv: bytes) -> bytes:
+        return AES.new(key, AES.MODE_CFB, iv=iv, segment_size=128).encrypt(data)
+
+    @staticmethod
+    def aes_decrypt(data: bytes, key: bytes, iv: bytes) -> bytes:
+        return AES.new(key, AES.MODE_CFB, iv=iv, segment_size=128).decrypt(data)
+
+    @staticmethod
+    def rsa_encrypt(data: bytes, pub_key: RSA.RsaKey) -> bytes:
+        return PKCS1_OAEP.new(pub_key).encrypt(data)
+
+    @staticmethod
+    def rsa_decrypt(data: bytes, priv_key: RSA.RsaKey) -> bytes:
+        return PKCS1_OAEP.new(priv_key).decrypt(data)
+
+
+# ============================================================
+# 鍵管理／暗号化ソケット
+# ============================================================
+class Encryption:
+    def __init__(self):
+        self.private_key = RSA.generate(2048)
+        self.public_key  = self.private_key.publickey()
+        self.peer_public_key = None
+        self.aes_key = self.iv = None
+
+    def get_public_key_bytes(self) -> bytes:
+        return self.public_key.export_key()
+
+    def load_peer_public_key(self, data: bytes):
+        self.peer_public_key = RSA.import_key(data)
+
+    def encrypt_symmetric_key(self, aes_key: bytes, iv: bytes) -> bytes:
+        return CryptoUtil.rsa_encrypt(aes_key + iv, self.peer_public_key)
+
+    def wrap_socket(self, sock: socket.socket):
+        return EncryptedSocket(sock, self.aes_key, self.iv)
+
+
+class EncryptedSocket:
+    """AES-CFB で透過暗号化するソケット"""
+    def __init__(self, sock: socket.socket, key: bytes, iv: bytes):
+        self.sock, self.key, self.iv = sock, key, iv
+
+    def _recvn(self, n: int) -> bytes:
+        data = b''
+        while len(data) < n:
+            chunk = self.sock.recv(n - len(data))
+            if not chunk:
+                break
+            data += chunk
+        return data
+
+    def sendall(self, data: bytes):
+        ct = CryptoUtil.aes_encrypt(data, self.key, self.iv)
+        self.sock.sendall(len(ct).to_bytes(4, 'big') + ct)
+    send = sendall
+
+    def recv(self, bufsize: int = 4096) -> bytes:
+        lb = self._recvn(4)
+        if not lb:
+            return b''
+        enc_payload = self._recvn(int.from_bytes(lb, 'big'))
+        return CryptoUtil.aes_decrypt(enc_payload, self.key, self.iv)
+
+    def close(self):
+        self.sock.close()
+
+
+# ============================================================
+# TCP クライアント
+# ============================================================
+class TCPClient:
     def __init__(self, server_address: str, server_port: int):
-        self.server_address = server_address
-        self.server_port = server_port
+        self.server_address, self.server_port = server_address, server_port
+        self.enc = Encryption()
+        self.sock: socket.socket | EncryptedSocket | None = None
 
-    def make_packet(self, room_name: str, operation: int, state: int, payload: str) -> bytes:
-        rn_size = len(room_name)
-        pl_size = len(payload)
+    def _connect_and_handshake(self):
+        base = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        base.connect((self.server_address, self.server_port))
+        c_pub = self.enc.get_public_key_bytes()
+        base.sendall(len(c_pub).to_bytes(4, 'big') + c_pub)
+        s_pub_len = int.from_bytes(base.recv(4), 'big')
+        self.enc.load_peer_public_key(base.recv(s_pub_len))
+        self.enc.aes_key, self.enc.iv = secrets.token_bytes(16), secrets.token_bytes(16)
+        enc_sym = self.enc.encrypt_symmetric_key(self.enc.aes_key, self.enc.iv)
+        base.sendall(len(enc_sym).to_bytes(4, 'big') + enc_sym)
+        self.sock = self.enc.wrap_socket(base)
+
+    def _make_packet(self, room: str, op: int, payload: dict) -> bytes:
+        payload_bin = json.dumps(payload).encode()
         header = (
-            rn_size.to_bytes(1, 'big') +
-            operation.to_bytes(1, 'big') +
-            state.to_bytes(1, 'big') +
-            pl_size.to_bytes(32 - 3, 'big')
+            len(room.encode()).to_bytes(1, 'big') +
+            op.to_bytes(1, 'big') +
+            (0).to_bytes(1, 'big') +
+            len(payload_bin).to_bytes(29, 'big')
         )
-        return header + room_name.encode('utf-8') + payload.encode('utf-8')
+        return header + room.encode() + payload_bin
 
-    def parse_room_list(self, data_str: str) -> list[str]:
+    def create_room(self, username: str, room: str, pwd: str) -> Dict[bytes, List[str]]:
+        self._connect_and_handshake()
+        self.sock.send(self._make_packet(room, 1, {"username": username, "password": pwd}))
+        token = self.sock.recv(TOKEN_MAX_BYTE)
+        self.sock.close()
+        return {token: [room, username]}
+
+    def get_room_list(self, username: str) -> List[str]:
+        self._connect_and_handshake()
+        self.sock.send(self._make_packet("", 2, {"username": username, "password": ""}))
+        raw = self.sock.recv(4096).decode()
+        self.sock.close()
         try:
-            trimmed = data_str.strip()
-            inner = trimmed[1:-1]
-            rooms = [room.strip().strip("'\"") for room in inner.split(',') if room.strip()]
+            inner = raw.strip()[1:-1]
+            return [r.strip().strip("'\"") for r in inner.split(',') if r.strip()]
         except Exception:
-            rooms = [data_str]
-        return rooms
+            return [raw]
 
-    def request_create_room(self, username: str, room: str) -> dict[bytes, list[str]]:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.connect((self.server_address, self.server_port))
-            pkt = self.make_packet(room, 1, 0, username)
-            sock.send(pkt)
-            token = sock.recv(self.TOKEN_MAX_BYTES)
-        return {token: [room, username]}
-
-    def request_room_list(self, username: str) -> list[str]:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.connect((self.server_address, self.server_port))
-            pkt = self.make_packet("", 2, 0, username)
-            sock.send(pkt)
-            raw = sock.recv(4096).decode("utf-8")
-        return self.parse_room_list(raw)
-
-    def request_join_room(self, username: str, room: str) -> dict[bytes, list[str]]:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.connect((self.server_address, self.server_port))
-            pkt1 = self.make_packet("", 2, 0, username)
-            sock.send(pkt1)
-            _ = sock.recv(4096)
-            sock.send(room.encode("utf-8"))
-            token = sock.recv(self.TOKEN_MAX_BYTES)
-        return {token: [room, username]}
+    def join_room(self, username: str, room: str, pwd: str) -> Dict[bytes, List[str]]:
+        self._connect_and_handshake()
+        self.sock.send(self._make_packet("", 2, {"username": username, "password": ""}))
+        _ = self.sock.recv(4096)
+        self.sock.send(self._make_packet(room, 2, {"username": username, "password": pwd}))
+        resp = self.sock.recv(TOKEN_MAX_BYTE)
+        self.sock.close()
+        if resp.startswith(b"InvalidPassword"):
+            raise ValueError("パスワードが違います。")
+        if resp.startswith(b"InvalidRoom"):
+            raise ValueError("ルームが存在しません。")
+        return {resp: [room, username]}
 
 
-# =========================================================
-# UDP 通信（チャット送受信）
-# =========================================================
-class ChatUDPClient:
-    def __init__(self, server_address: str, server_port: int, client_info: dict[bytes, list[str]]):
-        self.server_address = server_address
-        self.server_port = server_port
+# ============================================================
+# UDP クライアント
+# ============================================================
+class UDPClient:
+    def __init__(self, server_addr: str, server_port: int,
+                 info: Dict[bytes, List[str]], enc: Encryption):
+        self.server_addr, self.server_port = server_addr, server_port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.token, (self.room_name, self.username) = next(iter(client_info.items()))
+        self.enc  = enc
+        self.token, (self.room, self.username) = next(iter(info.items()))
+        self.send_system_message(f"{self.username} が参加しました。")
 
-    def make_packet(self, body: bytes) -> bytes:
-        room_bytes = self.room_name.encode('utf-8')
+    def _make_packet(self, body: bytes=b"") -> bytes:
+        enc_body = CryptoUtil.aes_encrypt(body, self.enc.aes_key, self.enc.iv)
         return (
-            len(room_bytes).to_bytes(1, 'big') +
-            len(self.token).to_bytes(1, 'big') +
-            room_bytes +
-            self.token +
-            body
+            len(self.room).to_bytes(1,'big') + len(self.token).to_bytes(1,'big') +
+            self.room.encode() + self.token + enc_body
         )
 
-    def send_system_message(self) -> None:
-        system_msg = f"System: {self.username} が参加しました。".encode('utf-8')
-        self.sock.sendto(self.make_packet(system_msg), (self.server_address, self.server_port))
+    def send_system_message(self, text: str):
+        self.sock.sendto(self._make_packet(f"System: {text}".encode()),
+                         (self.server_addr, self.server_port))
 
-    def send_chat_message(self, message: str) -> None:
-        body = f"{self.username}: {message}".encode('utf-8')
-        self.sock.sendto(self.make_packet(body), (self.server_address, self.server_port))
+    def send_chat_message(self, text: str):
+        self.sock.sendto(self._make_packet(f"{self.username}: {text}".encode()),
+                         (self.server_addr, self.server_port))
 
-    def receive_messages(self, existing: list[str]) -> list[str]:
-        self.sock.settimeout(0.1)
-        new_msgs = []
+    def fetch_messages(self, already: List[str]) -> List[str]:
+        self.sock.settimeout(0.05)
+        new = []
         try:
             while True:
-                data, _ = self.sock.recvfrom(4096)
-                msg = data.decode("utf-8")
-                if msg and msg not in ("exit!", "Timeout!") and msg not in existing:
-                    new_msgs.append(msg)
+                pkt,_ = self.sock.recvfrom(4096)
+                rl,tl = pkt[:2]
+                msg = CryptoUtil.aes_decrypt(pkt[2+rl+tl:], self.enc.aes_key, self.enc.iv).decode()
+                if msg not in {"exit!", "Timeout!"} and msg not in already and msg not in new:
+                    new.append(msg)
         except socket.timeout:
             pass
-        return new_msgs
+        return new
 
 
-# =========================================================
-# Streamlit による UI 描画
-# =========================================================
-class ChatUIManager:
+# ============================================================
+# Streamlit GUI
+# ============================================================
+class GUIManager:
     CSS_FILE = "style.css"
-
-    def __init__(self, controller: "ChatAppController", tcp_client: ChatTCPClient):
+    def __init__(self, controller:"AppController"):
         self.ctrl = controller
-        self.tcp = tcp_client
+        self.tcp  = controller.tcp_client
 
-    def setup_page(self) -> None:
-        st.set_page_config(
-            page_title="💬 リアルタイムチャット",
-            page_icon="💬",
-            layout="wide",
-        )
-        self._load_local_css()
-        st.markdown("<div class='app-scale'>", unsafe_allow_html=True)
-
-    def _load_local_css(self) -> None:
+    # ---------- 共通セットアップ ----------
+    def setup(self):
+        st.set_page_config("💬 セキュアチャット","💬",layout="centered")
         css_path = Path(self.CSS_FILE)
         if css_path.exists():
             st.markdown(f"<style>{css_path.read_text()}</style>", unsafe_allow_html=True)
+        st.markdown('<div class="app-scale">', unsafe_allow_html=True)
 
-    def render(self) -> None:
-        page = self.ctrl.state.page
-        if page == "home":
-            self._render_home()
-        elif page == "create":
-            self._render_create()
-        elif page == "join":
-            self._render_join()
-        elif page == "chat" and self.ctrl.state.client_info:
-            if "udp_client" not in self.ctrl.state:
-                self.ctrl.connect_udp()
-            self._render_chat()
-        st.markdown("</div>", unsafe_allow_html=True)
+    # ---------- ルーティング ----------
+    def render(self):
+        pg = self.ctrl.state.page
+        if pg=="home":     self.page_home()
+        elif pg=="create": self.page_create()
+        elif pg=="join":   self.page_join()
+        elif pg=="chat":   self.page_chat()
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    def _render_home(self) -> None:
+    # ---------- Home ----------
+    def page_home(self):
+        # タイトルカード
         st.markdown(
             """
             <div class="home-card">
-              <h1>💬 リアルタイムチャット</h1>
+              <h1>💬 セキュアチャット</h1>
+            </div>
             """,
             unsafe_allow_html=True,
         )
-        st.button("ルームを作成", on_click=lambda: self.ctrl.switch_page("create"))
-        st.button("ルームに参加", on_click=lambda: self.ctrl.switch_page("join"))
-        st.markdown("</div>", unsafe_allow_html=True)
 
-    def _render_create(self) -> None:
-        state = self.ctrl.state
-        st.markdown('<div class="form-card">', unsafe_allow_html=True)
-        with st.form("create_room_form"):
-            st.markdown("### ルーム作成", unsafe_allow_html=True)
-            user = st.text_input("", key="create_user", placeholder="ユーザー名を入力")
-            room = st.text_input("", key="create_room", placeholder="ルーム名を入力")
-            col1, col2 = st.columns(2)
-            with col1:
-                create_clicked = st.form_submit_button("作成", type="primary", use_container_width=True)
-            with col2:
-                back_clicked = st.form_submit_button("← 戻る", type="secondary", use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        # タイトルとボタン列の間に余白を追加
+        st.markdown("<div style='height: 3rem;'></div>", unsafe_allow_html=True)
 
+        # 画面中央に 2 つのボタンを並べる
+        left_spacer, col1, col2, right_spacer = st.columns([2, 3, 3, 2])
+
+        with col1:
+            create_clicked = st.button("ルームを作成", use_container_width=True)
+        with col2:
+            join_clicked = st.button("ルームに参加", use_container_width=True)
+
+        # ボタン押下時の遷移
         if create_clicked:
+            self.ctrl.switch_page("create")
+        if join_clicked:
+            self.ctrl.switch_page("join")
+
+    # ---------- Create ----------
+    def page_create(self):
+        # st.markdown('<div class="form-card">',unsafe_allow_html=True)
+        st.markdown("### ルームを作成",unsafe_allow_html=True)
+        with st.form("create_form"):
+            user = st.text_input("ユーザー名", key="create_user")
+            room = st.text_input("ルーム名", key="create_room")
+            pwd  = st.text_input("パスワード（任意）", type="password", key="create_pwd")
+            c1,c2 = st.columns(2)
+            create = c1.form_submit_button("作成", type="primary", use_container_width=True)
+            back   = c2.form_submit_button("← 戻る", use_container_width=True)
+        # st.markdown("</div>",unsafe_allow_html=True)
+
+        if back: self.ctrl.switch_page("home")
+        if create:
             if not user or not room:
-                st.warning("ユーザー名とルーム名を入力してください。")
-                st.stop()
+                st.warning("ユーザー名とルーム名を入力してください。"); st.stop()
             try:
-                info = self.tcp.request_create_room(user, room)
+                info = self.tcp.create_room(user, room, pwd)
             except Exception as e:
-                st.error(f"接続失敗: {e}")
-                st.stop()
-            state.client_info = info
-            state.username = user
-            state.room_name = room
-            self.ctrl.connect_udp()
+                st.error(f"作成失敗: {e}"); st.stop()
+            self.ctrl.set_connection_info(info, user, room)
             self.ctrl.switch_page("chat")
 
-        if back_clicked:
+    # ---------- Join ----------
+    def page_join(self):
+        state = self.ctrl.state
+        # st.markdown('<div class="join-card">',unsafe_allow_html=True)
+        st.markdown("### ルームに参加", unsafe_allow_html=True)
+        user = st.text_input("ユーザー名", key="join_user")
+        c1,c2 = st.columns(2)
+        fetch = c1.button("ルーム一覧取得", disabled=not user, use_container_width=True)
+        if c2.button("← 戻る", use_container_width=True):
             self.ctrl.switch_page("home")
 
-    def _render_join(self) -> None:
-        state = self.ctrl.state
-        st.markdown('<div class="join-card">', unsafe_allow_html=True)
-        st.markdown("### ルーム参加", unsafe_allow_html=True)
-        user = st.text_input("", key="join_user", placeholder="ユーザー名を入力")
-
-        if st.button("ルーム一覧取得", disabled=not user):
+        if fetch:
             try:
-                state.rooms = self.tcp.request_room_list(user)
+                rooms = self.tcp.get_room_list(user)
+                state.rooms.clear()
+                state.rooms.extend(rooms)
             except Exception as e:
                 st.error(f"取得失敗: {e}")
 
         if state.rooms:
             sel = st.selectbox("参加するルーム", state.rooms)
-            if st.button("参加", disabled=not user or not sel):
+            pwd = st.text_input("パスワード（必要な場合）",type="password", key="join_pwd")
+            if st.button("参加", disabled=not sel or not user, use_container_width=True):
                 try:
-                    info = self.tcp.request_join_room(user, sel)
+                    info = self.tcp.join_room(user, sel, pwd)
                 except Exception as e:
-                    st.error(f"参加失敗: {e}")
-                    st.stop()
-                state.client_info = info
-                state.username = user
-                state.room_name = sel
-                self.ctrl.connect_udp()
+                    st.error(f"参加失敗: {e}"); st.stop()
+                self.ctrl.set_connection_info(info, user, sel)
                 self.ctrl.switch_page("chat")
+        # st.markdown("</div>",unsafe_allow_html=True)
 
-        if st.button("← 戻る"):
-            self.ctrl.switch_page("home")
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    def _render_chat(self) -> None:
-        state = self.ctrl.state
-        udp: ChatUDPClient = state.udp_client
-
-        # 自動リロード
+    # ---------- Chat ----------
+    def page_chat(self):
         st_autorefresh(interval=2000, key="chat-refresh")
+        state = self.ctrl.state
+        udp: UDPClient = state.udp_client
+        state.messages.extend(udp.fetch_messages(state.messages))
 
-        # 新着メッセージ受信
-        new_msgs = udp.receive_messages(state.messages)
-        state.messages.extend(new_msgs)
-
-        # チャット表示
         css = f"<style>{Path(self.CSS_FILE).read_text()}</style>"
-        html = (
-            f'<div class="chat-wrapper">'
-            f'<div class="room-header">🏠 {state.room_name}</div>'
-            f'<div class="chat-box" id="chat-box">'
-        )
+        html = (f'<div class="chat-wrapper"><div class="room-header">🏠 {state.room_name}</div>'
+                f'<div class="chat-box" id="chat-box">')
         for m in state.messages[-300:]:
             if ":" in m:
-                sender, content = (s.strip() for s in m.split(":", 1))
-                if sender == "System":
+                sender, content = (s.strip() for s in m.split(":",1))
+                if sender=="System":
                     html += f'<div class="wrap system"><div class="msg">{content}</div></div>'
                 else:
-                    cls = "mine" if sender == state.username else "other"
-                    html += (
-                        f'<div class="wrap {cls}">'
-                        f'<div class="name">{sender}</div>'
-                        f'<div class="msg">{content}</div>'
-                        f'</div>'
-                    )
+                    cls = "mine" if sender==state.username else "other"
+                    html += (f'<div class="wrap {cls}"><div class="name">{sender}</div>'
+                             f'<div class="msg">{content}</div></div>')
             elif m.strip():
                 html += f'<div class="wrap system"><div class="msg">{m}</div></div>'
         html += """
-                  <div id="bottom-anchor"></div>
-                </div></div>
-                <script>
-                  const anchor=document.getElementById('bottom-anchor');
-                  requestAnimationFrame(()=>anchor.scrollIntoView({block:'end'}));
-                </script>
-            """
-        components.html(css + html, height=780, scrolling=False)
+            <div id="bottom-anchor"></div></div></div>
+            <script>
+              const a=document.getElementById('bottom-anchor');
+              requestAnimationFrame(()=>a.scrollIntoView({block:'end'}));
+            </script>
+        """
+        components.html(css+html, height=780, scrolling=False)
 
-        # エンター送信用コールバック
         def _on_enter():
             msg = st.session_state.chat_input
             if msg:
-                try:
-                    udp.send_chat_message(msg)
-                except Exception as e:
-                    st.error(f"送信失敗: {e}")
-                state.messages.append(f"{state.username}: {msg}")
+                try: udp.send_chat_message(msg)
+                except Exception as e: st.error(f"送信失敗: {e}")
+                # state.messages.append(f"{state.username}: {msg}")
             st.session_state.chat_input = ""
 
-        # メッセージ入力（Enterで送信）
-        st.text_input(
-            "",
-            key="chat_input",
-            placeholder="メッセージを入力して Enter",
-            on_change=_on_enter,
-            label_visibility="collapsed",
-        )
+        st.text_input("", key="chat_input",
+                      placeholder="メッセージを入力して Enter",
+                      on_change=_on_enter,
+                      label_visibility="collapsed")
 
-
-# =========================================================
-# 状態管理、ページ遷移、UDP 起動
-# =========================================================
-class ChatAppController:
-    def __init__(self) -> None:
-        self.server = "127.0.0.1"
-        self.tcp_port = 9001
-        self.udp_port = 9002
+# ============================================================
+# Controller
+# ============================================================
+class AppController:
+    def __init__(self,
+                 server:str="127.0.0.1",
+                 tcp_port:int=9001,
+                 udp_port:int=9002):
+        self.server, self.tcp_port, self.udp_port = server,tcp_port,udp_port
         self.state = st.session_state
-        self._init_session()
+        self._init_state()
+        self.tcp_client = TCPClient(self.server, self.tcp_port)
 
-    def _init_session(self) -> None:
-        defaults = {
-            "page": "home",
-            "client_info": None,
-            "username": "",
-            "room_name": "",
-            "messages": [],
-            "rooms": [],
-            "udp_client": None,
-            # chat_input キーも初期化
-            "chat_input": "",
-        }
-        for k, v in defaults.items():
-            if k not in self.state:
-                self.state[k] = v
+    def _init_state(self):
+        defaults = {"page":"home","rooms":[],
+                    "client_info":None,"username":"",
+                    "room_name":"","udp_client":None,
+                    "messages":[],"chat_input":""}
+        for k,v in defaults.items():
+            if k not in self.state: self.state[k]=v
 
-    def switch_page(self, page: str) -> None:
+    def set_connection_info(self, info, user, room):
+        self.state.client_info = info
+        self.state.username    = user
+        self.state.room_name   = room
+        self.state.messages    = []
+        self.state.udp_client  = UDPClient(self.server, self.udp_port,
+                                           info, self.tcp_client.enc)
+
+    def switch_page(self,page:str):
         self.state.page = page
         st.rerun()
 
-    def connect_udp(self) -> None:
-        self.state.udp_client = ChatUDPClient(
-            self.server, self.udp_port, self.state.client_info
-        )
-        self.state.udp_client.send_system_message()
-
-
-# =========================================================
-# エントリーポイント
-# =========================================================
-if __name__ == '__main__':
-    ctrl = ChatAppController()
-    tcp_client = ChatTCPClient(ctrl.server, ctrl.tcp_port)
-    ui_manager = ChatUIManager(ctrl, tcp_client)
-
-    ui_manager.setup_page()
-    ui_manager.render()
+# ============================================================
+# Main
+# ============================================================
+if __name__ == "__main__":
+    ctrl = AppController()
+    gui  = GUIManager(ctrl)
+    gui.setup()
+    gui.render()
