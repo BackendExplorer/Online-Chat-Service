@@ -499,7 +499,7 @@ app  --> handler
 
 - [Streamlit](https://docs.streamlit.io/)
 
-  GUIを迅速に実装するために参照
+  `GUI`を迅速に実装するために参照
   
 <br>
 
