@@ -278,6 +278,11 @@ sequenceDiagram
 
   クライアントごとの並行処理を軽量に行うため
 
+- **`Streamlit`**
+
+  Pythonのみで手軽にWeb UIを構築できるため、開発効率を重視して採用
+
+
 <br>
 
 ### 2.  技術スタックと 開発環境 の全体像
@@ -491,6 +496,10 @@ app  --> handler
 - [PyCryptodome — AES (CFBモード)](https://www.pycryptodome.org/)
 
   共通鍵暗号方式によるデータの暗号化のために参照
+
+- [Streamlit (https://docs.streamlit.io/)]
+
+  GUIを迅速に実装するために参照
   
 <br>
 
