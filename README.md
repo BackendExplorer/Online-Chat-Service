@@ -187,7 +187,7 @@ python3 client.py
 
 | ホスト | ゲスト |
 |:-------:|:--------:|
-|<br><img src="https://github.com/user-attachments/assets/d97033da-9315-41dc-996e-1c487b4581de" width="100%" /> |<br><img src="https://github.com/user-attachments/assets/523790f8-1813-44ea-a0e9-0a5922b1bc91" width="100%" /> |
+|<br><img src="https://github.com/user-attachments/assets/64532563-e7fa-4083-8d7f-ad61812931ff" width="100%" /> |<br><img src="https://github.com/user-attachments/assets/927afed6-981e-426f-ac18-460bf4c83aee" width="100%" /> |
 
 <br>
 
