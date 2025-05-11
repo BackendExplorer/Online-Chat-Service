@@ -1,5 +1,9 @@
 # 🌐 Online Chat Service 💬  
 
+
+https://github.com/user-attachments/assets/52c817a8-b74a-48b6-95e5-3f03c52c1894
+
+
 <br>
 
 ### 独自プロトコル・暗号通信・マルチスレッド・ソケット通信によるグループチャットアプリ
