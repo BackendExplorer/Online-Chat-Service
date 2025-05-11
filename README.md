@@ -1,9 +1,3 @@
-| <h3 style="text-align: center;">🧑‍💻 ホスト</h3> | <h3 style="text-align: center;">👥 ゲスト</h3> |
-|:----------------------------------:|:----------------------------------:|
-| <img src="https://github.com/user-attachments/assets/64532563-e7fa-4083-8d7f-ad61812931ff" width="100%" /> | <img src="https://github.com/user-attachments/assets/927afed6-981e-426f-ac18-460bf4c83aee" width="100%" /> |
-
-
-
 # 🌐 Online Chat Service 💬  
 
 <br>
