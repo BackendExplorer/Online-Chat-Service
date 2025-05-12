@@ -1,28 +1,3 @@
-## スクリーンショット（横並び）
-
-<table align="center" cellspacing="0" cellpadding="0">
-  <tr>
-    <!-- 左側セル：テーブル幅の 50% -->
-    <td width="50%">
-      <img
-        src="https://github.com/user-attachments/assets/4a5c71ec-8f82-44d9-ba84-0232e93fccae"
-        alt="スクリーンショット 2025-05-12 13 01 13"
-        width="100%"
-      />
-    </td>
-    <!-- 右側セル：幅 307px -->
-    <td>
-      <img
-        src="https://github.com/user-attachments/assets/3bc079fb-d453-4824-9d0a-a5edf4d1da06"
-        alt="スクリーンショット 2025-03-27 1 41 33"
-        width="307"
-      />
-    </td>
-  </tr>
-</table>
-
-
-
 # 🌐 Online Chat Service 💬  
 
 <br>
@@ -434,27 +409,7 @@ app  --> handler
 
 以下は、チャットルーム接続のために設計された **独自プロトコル TCRP**（Talk Chat Room Protocol） のパケット構造を表します。
 
-<!-- 幅を 400px に固定、高さは自動調整 -->
-## スクリーンショット（横並び）
-
-<table>
-  <tr>
-    <td>
-      <img
-        src="https://github.com/user-attachments/assets/4a5c71ec-8f82-44d9-ba84-0232e93fccae"
-        alt="スクリーンショット 2025-05-12 13 01 13"
-        width="50%"
-      />
-    </td>
-    <td>
-      <img
-        src="https://github.com/user-attachments/assets/3bc079fb-d453-4824-9d0a-a5edf4d1da06"
-        alt="スクリーンショット 2025-03-27 1 41 33"
-        width="307"
-      />
-    </td>
-  </tr>
-</table>
+<img width="812" alt="スクリーンショット 2025-05-12 13 20 08" src="https://github.com/user-attachments/assets/83c21fdc-5c3f-4253-a5c7-f7a67438ed4f" />
 
 <br>
 
