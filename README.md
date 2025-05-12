@@ -136,9 +136,15 @@ https://github.com/user-attachments/assets/3923c939-72fe-4236-9f2b-3a75e9b86fcc
 
 - [Python 3.8以上](https://www.python.org/downloads/)
 
+- [PyCryptodome](https://www.pycryptodome.org/)
+
+- [Streamlit](https://streamlit.io/)
+
 - [Git](https://git-scm.com/)
 
-- [PyCryptodome](https://www.pycryptodome.org/)
+- [Docker](https://docs.docker.com/get-docker/)
+
+
   
 <br>
 
