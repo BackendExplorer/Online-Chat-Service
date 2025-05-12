@@ -1,4 +1,4 @@
-<img width="634" alt="スクリーンショット 2025-05-12 12 47 19" src="https://github.com/user-attachments/assets/a200b12d-c270-4274-88dc-6979c89e77c4" /># 🌐 Online Chat Service 💬  
+# 🌐 Online Chat Service 💬  
 
 <br>
 
@@ -408,7 +408,8 @@ app  --> handler
 
 以下は、チャットルーム接続のために設計された **独自プロトコル TCRP**（Talk Chat Room Protocol） のパケット構造を表します。
 
-<img width="592" alt="スクリーンショット 2025-05-12 12 47 26" src="https://github.com/user-attachments/assets/44d4d68a-6a56-46dc-a679-c1344e0e892d" />
+<img width="592" alt="スクリーンショット 2025-05-12 12 47 26" src="https://github.com/user-attachments/assets/d2c9328d-e0b7-4522-b1a9-96c0d21031b1" />
+
 
 
   <img width="307" alt="スクリーンショット 2025-03-27 1 41 33" src="https://github.com/user-attachments/assets/3bc079fb-d453-4824-9d0a-a5edf4d1da06" />
