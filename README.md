@@ -411,7 +411,8 @@ app  --> handler
 
 <!-- 幅を 400px に固定、高さは自動調整 -->
 <p>
-<img width="634" alt="スクリーンショット 2025-05-12 12 47 19" src="https://github.com/user-attachments/assets/9af9424a-5443-4477-91a8-1df0c87cdb4a" />
+
+<img width="788" alt="スクリーンショット 2025-05-12 12 58 47" src="https://github.com/user-attachments/assets/b826ad3f-e606-434e-a0f6-7d4f452b51b9" />
 
 
   <img width="307" alt="スクリーンショット 2025-03-27 1 41 33" src="https://github.com/user-attachments/assets/3bc079fb-d453-4824-9d0a-a5edf4d1da06" />
