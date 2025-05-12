@@ -410,11 +410,8 @@ app  --> handler
 以下は、チャットルーム接続のために設計された **独自プロトコル TCRP**（Talk Chat Room Protocol） のパケット構造を表します。
 
 <!-- 幅を 400px に固定、高さは自動調整 -->
-<img
-  src="https://github.com/user-attachments/assets/ec3ef2ac-abe2-4663-8376-c4e431aa5ea5"
-  alt="スクリーンショット 2025-05-12 12 47 26"
-  width="400"
-/>
+<p>
+<img width="634" alt="スクリーンショット 2025-05-12 12 47 19" src="https://github.com/user-attachments/assets/9af9424a-5443-4477-91a8-1df0c87cdb4a" />
 
 
   <img width="307" alt="スクリーンショット 2025-03-27 1 41 33" src="https://github.com/user-attachments/assets/3bc079fb-d453-4824-9d0a-a5edf4d1da06" />
