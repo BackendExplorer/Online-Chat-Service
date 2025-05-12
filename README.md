@@ -246,6 +246,7 @@ sequenceDiagram
     note right of GH: GitHubリポジトリ更新時に自動CI/CD
 
 ```
+<img width="789" alt="スクリーンショット 2025-05-12 12 17 57" src="https://github.com/user-attachments/assets/6cd54bbe-e39a-407b-a4b8-0dc6d8eb6a6c" />
 
 
 
