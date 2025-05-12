@@ -248,11 +248,6 @@ sequenceDiagram
 ```
 <img width="789" alt="スクリーンショット 2025-05-12 12 17 57" src="https://github.com/user-attachments/assets/6cd54bbe-e39a-407b-a4b8-0dc6d8eb6a6c" />
 
-
-
-<img width="792" alt="スクリーンショット 2025-05-01 2 00 56" src="https://github.com/user-attachments/assets/932fc12d-0a3c-42d2-8afa-e66f6eb2328e" />
-<br>
-
 ---
 
 
