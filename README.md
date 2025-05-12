@@ -416,7 +416,7 @@ app  --> handler
 <img
   src="https://github.com/user-attachments/assets/0cb71c79-86e9-48f6-a448-80f759bd87b9"
   alt="スクリーンショット 2025-05-12 13 01 13"
-  width="80%"
+  width="60%"
 />
 
 
