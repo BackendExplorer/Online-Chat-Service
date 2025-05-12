@@ -303,6 +303,7 @@ sequenceDiagram
 | UIフレームワーク | ![Streamlit](https://img.shields.io/badge/UI-Streamlit-red) <br>Webベースのインターフェースを簡易に構築 |
 | 開発環境       | ![macOS](https://img.shields.io/badge/OS-macOS-lightgrey)&nbsp;&nbsp;&nbsp;&nbsp;![VSCode](https://img.shields.io/badge/Editor-VSCode-blue) |
 | バージョン管理 | ![Git](https://img.shields.io/badge/VersionControl-Git-orange)&nbsp;&nbsp;&nbsp;&nbsp;![GitHub](https://img.shields.io/badge/Repo-GitHub-black) |
+| デプロイ・運用環境 | ![Docker](https://img.shields.io/badge/Container-Docker-blue) ![EC2](https://img.shields.io/badge/Cloud-EC2-orange) ![GitHub%20Actions](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue) |
 | 描画ツール     | ![Mermaid](https://img.shields.io/badge/Diagram-Mermaid-green)&nbsp;&nbsp;&nbsp;&nbsp;![LaTeX](https://img.shields.io/badge/Doc-LaTeX-9cf) |
 
 
