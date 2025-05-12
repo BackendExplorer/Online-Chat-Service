@@ -413,7 +413,15 @@ app  --> handler
 <p>
 
 
-<img width="391" alt="スクリーンショット 2025-05-12 13 01 20" src="https://github.com/user-attachments/assets/15d8c8fe-584a-49d6-a775-73a11cac9f38" />
+
+
+<img
+  src="https://github.com/user-attachments/assets/c80a4f0c-409c-4fd1-9c89-34dce930f179"
+  alt="スクリーンショット 2025-05-12 13 01 20"
+  width="800"    <!-- 幅を800pxに固定 -->
+  height="auto"  <!-- 縦横比を維持 -->
+/>
+
 
 
   <img width="307" alt="スクリーンショット 2025-03-27 1 41 33" src="https://github.com/user-attachments/assets/3bc079fb-d453-4824-9d0a-a5edf4d1da06" />
