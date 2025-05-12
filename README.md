@@ -1,13 +1,17 @@
-<table border="0" style="border:none;border-collapse:collapse;">
+## スクリーンショット（横並び）
+
+<table align="center" cellspacing="0" cellpadding="0">
   <tr>
-    <td style="border:none;">
+    <!-- 左側セル：テーブル幅の 50% -->
+    <td width="50%">
       <img
         src="https://github.com/user-attachments/assets/4a5c71ec-8f82-44d9-ba84-0232e93fccae"
         alt="スクリーンショット 2025-05-12 13 01 13"
-        width="50%"
+        width="100%"
       />
     </td>
-    <td style="border:none;">
+    <!-- 右側セル：幅 307px -->
+    <td>
       <img
         src="https://github.com/user-attachments/assets/3bc079fb-d453-4824-9d0a-a5edf4d1da06"
         alt="スクリーンショット 2025-03-27 1 41 33"
