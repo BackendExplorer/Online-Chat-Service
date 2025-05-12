@@ -1,0 +1,235 @@
+/* ---------- 基本変数 & 全体 ---------- */
+:root{
+    --accent:#219ebc;
+    --accent-hover:#197b9b;
+    --fg:#1e2a38;
+    --card-bg:#fff;
+    --bg-grad-start:    #e0f2ff;  /* 旧: #f5faff */
+    --bg-grad-end:      #c2e0ff;  /* 旧: #e9f2ff */
+  
+    /* チャットバブル用 */
+    --mine-start:#a0d8f1;
+    --mine-end:#c9eafc;
+    --other-start:#adebb4;
+    --other-end:#d4f8dd;
+    --sys-start:#ffeab6;
+    --sys-end:#fff6d3;
+  }
+  
+  html, body, .stApp {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: linear-gradient(135deg, var(--bg-grad-start), var(--bg-grad-end));
+  }
+  
+  header,footer{visibility:hidden;}
+  .app-scale{max-width:900px;margin:0 auto; padding: 1.2rem 1rem; }
+  
+  /* ---------- ボタン ---------- */
+  div.stButton>button,button[kind="primary"]{
+    width:100%!important;padding:.85rem 0!important;
+    font-size:1.05rem!important;font-weight:600!important;
+    border-radius:12px!important;border:none!important;
+    background:var(--accent)!important;color:#fff!important;
+    box-shadow:0 3px 10px rgba(0,0,0,.1)!important;
+    transition:background .25s ease,transform .1s ease;
+  }
+  div.stButton>button:hover,button[kind="primary"]:hover{
+    background:var(--accent-hover)!important;transform:translateY(-2px);
+  }
+  button[kind="secondary"]{
+    background:#fff!important;color:var(--accent)!important;
+    border:2px solid var(--accent)!important;
+  }
+  button[kind="secondary"]:hover{
+    background:rgba(33,158,188,.15)!important;
+  }
+  
+  /* ---------- 入力欄 ---------- */
+  /* ---------- 入力欄 ---------- */
+  div[data-baseweb="input"]{
+    background-color: #fff !important;        /* 白背景に */
+    border:2px solid #cccccc!important;       /* 薄めのグレー → 中間くらいのグレーに */
+    border-radius:10px!important;
+  }
+  div[data-baseweb="input"]:hover{
+    border:2px solid var(--accent)!important;
+    box-shadow:0 0 0 3px rgba(33,158,188,.15)!important;
+  }
+  div[data-baseweb="input"]:focus-within{
+    border:2px solid var(--accent)!important;
+    box-shadow:0 0 0 3px rgba(33,158,188,.3)!important;
+  }
+  
+  /* div[data-baseweb="input"] input{padding:.8rem 1rem;font-size:1rem;border:none;background-color: white;} */
+  
+  /* 入力欄の縦幅をまるごと広げる */
+  div[data-baseweb="input"] {
+    height: 4rem !important;            /* ラッパー自体の高さ */
+  }
+  
+  div[data-baseweb="input"] input {
+    height: 100% !important;            /* 中の input をラッパーいっぱいに */
+    line-height: 3rem !important;       /* テキストの縦位置を中央寄せ */
+    box-sizing: border-box !important;  /* padding を含めてサイズ計算 */
+  }
+  
+  
+  /* ---------- ホーム ---------- */
+  .home-card{
+    width:100%;max-width:480px;margin:0 auto;
+    background:var(--card-bg);padding:3rem 2rem;border-radius:20px;
+    box-shadow:0 6px 24px rgba(0,0,0,.06);
+    display:flex;flex-direction:column;
+    gap:2.4rem;
+    align-items:center;
+  }
+  .home-card h1{
+    margin:0 0 1.6rem 0;
+    font-size:1.85rem;font-weight:700;
+    background:linear-gradient(120deg,var(--accent) 0%,var(--accent-hover) 100%);
+    -webkit-background-clip:text;color:transparent;
+  }
+  
+  /* ---------- ルーム作成/参加 ---------- */
+  .form-card{
+    width:100%;max-width:520px;margin:0 auto;
+    background:var(--card-bg);padding:3rem;border-radius:20px;
+    box-shadow:0 6px 24px rgba(0,0,0,.06);
+  }
+  .btn-row{display:flex;gap:1rem;margin-top:2rem;}
+  
+  .join-card{
+    width:100%;max-width:540px;margin:0 auto;
+    background:var(--card-bg);padding:3rem;border-radius:20px;
+    box-shadow:0 6px 24px rgba(0,0,0,.06);
+  }
+  
+  /* ---------- チャット ---------- */
+  /* 入力フォーム全体の幅を 600px に制限して中央寄せ */
+  div.block-container {
+    max-width: 700px;       /* お好みの幅に調整 */
+    margin: 0 auto;         /* 横方向の中央揃え */
+    padding: 1.5rem;        /* 既存の padding を保つ */
+  }
+  
+  
+  .chat-wrapper{
+    width:100%;max-width:650px;margin:0 auto;
+    height:750px;display:flex;flex-direction:column;
+    background:var(--card-bg);border-radius:20px;
+    box-shadow:0 6px 24px rgba(0,0,0,.06);overflow:hidden;
+  }
+  
+  .room-header{
+    text-align:center;font-size:1.2rem;font-weight:700;
+    padding:.9rem 1.2rem;color:var(--fg);
+    /* background: linear-gradient(135deg, #e3f2fd, #90caf9); */
+    border-bottom:1px solid #dbe5ef;
+    
+    background-color: 		#1976D2 !important;
+    color: #fff;          /
+  }
+  
+  .chat-box{
+    flex:1;overflow-y:auto;padding:2em;display:flex;flex-direction:column;gap:1em;
+  }
+  .chat-box::-webkit-scrollbar{width:8px;}
+  .chat-box::-webkit-scrollbar-track{background:#e3e7eb;border-radius:4px;}
+  .chat-box::-webkit-scrollbar-thumb{background:#a4b0be;border-radius:4px;}
+  
+  .wrap{display:flex;flex-direction:column;}
+  .wrap.mine{align-items:flex-end;}
+  .wrap.other{align-items:flex-start;}
+  .wrap.system{align-items:center;}
+  
+  .name{font-size:.75em;font-weight:600;margin-bottom:.3em;color:var(--fg);}
+  .msg{
+    position:relative;max-width:65%;padding:1em 1.5em;
+    font-size:1rem;line-height:1.5;color:var(--fg);
+    border-radius:18px;box-shadow:0 3px 12px rgba(0,0,0,.05);
+    word-break:break-word;animation:fadeIn .3s ease;
+  }
+  .wrap.mine   .msg{background:linear-gradient(135deg,var(--mine-start),var(--mine-end));}
+  .wrap.other  .msg{background:linear-gradient(135deg,var(--other-start),var(--other-end));}
+  .wrap.system .msg{
+    background:linear-gradient(135deg,var(--sys-start),var(--sys-end));
+    display:inline-flex;align-items:center;gap:.5em;font-weight:600;
+  }
+  .wrap.system .msg::before{content:'🔔';font-size:1.2em;}
+  
+  @keyframes fadeIn{
+    from{opacity:0;transform:translateY(8px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+  
+  
+  /* ─── Streamlit フォーム全体コンテナの枠／影を消す ─── */
+  section[data-testid="stFormViewContainer"],
+  div[data-testid="stFormContainer"],
+  div[data-testid="stForm"] {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  /* ─── フォーム内部の直接の <div> も念のため消す ─── */
+  section[data-testid="stFormViewContainer"] > div,
+  div[data-testid="stFormContainer"] > div,
+  div[data-testid="stForm"] > div {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+  
+  /* ─── 念のため <hr> 要素も全消去 ─── */
+  hr[data-testid="stHorizontalRule"],
+  section[data-testid="stFormViewContainer"] hr,
+  div[data-testid="stFormContainer"] hr,
+  div[data-testid="stForm"] hr {
+    display: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  
+  
+  /* ─── チャット欄を包んでいるブロックコンテナを背景と同化 ─── */
+  div.block-container,
+  section[data-testid="stBlock"],
+  div[data-testid="stBlock"] {
+    background: transparent !important;      /* 背景を透過 */
+    border: none !important;               /* 枠線を削除 */
+    box-shadow: none !important;           /* 影を削除 */
+    padding: 0 !important;                 /* 余白調整（必要に応じて） */
+    margin: 0 !important;                  /* 余白調整（必要に応じて） */
+  }
+  
+  
+  
+  
+  
+  .chat-wrapper {
+    /* 固定ピクセルで増やすなら */
+    height: 763px !important;   /* ← 750px → 900px に変更 */
+  
+    /* またはビューポート比率で指定するなら */
+    /* height: 70vh !important; */  /* 画面高の70% を使う */
+  }
+  
+  
+  /* メッセージ入力欄を真っ白に */
+  div[data-baseweb="input"] input {
+    background-color: #ffffff !important;
+  }
+  
+  
+  /* ─── 送信ボタンを非表示に ─── */
+  section[data-testid="stFormViewContainer"] form.stForm div.stButton,
+  section[data-testid="stFormViewContainer"] form.stForm div.stButton > button,
+  .stButton > button[type="submit"],
+  button[kind="primary"] {
+    display: none !important;
+  }
