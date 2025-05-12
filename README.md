@@ -416,7 +416,7 @@ app  --> handler
 
 以下は、チャットルーム接続のために設計された **独自プロトコル TCRP**（Talk Chat Room Protocol） のパケット構造を表します。
 
-<img width="812" alt="スクリーンショット 2025-05-12 13 20 08" src="https://github.com/user-attachments/assets/83c21fdc-5c3f-4253-a5c7-f7a67438ed4f" />
+<img width="817" alt="スクリーンショット 2025-05-12 13 20 08" src="https://github.com/user-attachments/assets/83c21fdc-5c3f-4253-a5c7-f7a67438ed4f" />
 
 <br><br>
 
