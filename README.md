@@ -1,3 +1,17 @@
+<ul>
+
+    <p>実装の背景や設計の工夫について、Qiita記事で詳しく解説しています。</p>
+    <p>
+      <a href="https://qiita.com/your-article-link" target="_blank" rel="noopener noreferrer">
+        TCP・UDP×マルチスレッドで作る、ゼロからのチャットアプリ開発
+      </a>
+    </p>
+
+</ul>
+
+
+
+
 # 🌐 Online Chat Service 💬  
 
 <br>
