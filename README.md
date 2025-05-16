@@ -227,7 +227,7 @@ Start --> 選択
 
 <div style="font-size:120%; line-height:1.6;">
   
-## <a id="システム全体の構成図"></a>🔄 システム全体の構成図
+## <a id="システム全体の構成図"></a>🗺️ システム全体の構成図
 
 ```mermaid
 sequenceDiagram
