@@ -1,4 +1,3 @@
-# ============================  server.py  ============================
 import socket
 import threading
 import time
@@ -13,20 +12,20 @@ class CryptoUtil:
     """AES-CFB128 + RSA-PKCS1_OAEP の簡易ラッパー"""
     # ---------- AES ----------
     @staticmethod
-    def aes_encrypt(data: bytes, key: bytes, iv: bytes) -> bytes:
+    def aes_encrypt(data, key, iv):
         return AES.new(key, AES.MODE_CFB, iv=iv, segment_size=128).encrypt(data)
 
     @staticmethod
-    def aes_decrypt(data: bytes, key: bytes, iv: bytes) -> bytes:
+    def aes_decrypt(data, key, iv):
         return AES.new(key, AES.MODE_CFB, iv=iv, segment_size=128).decrypt(data)
 
     # ---------- RSA ----------
     @staticmethod
-    def rsa_encrypt(data: bytes, pub_key: RSA.RsaKey) -> bytes:
+    def rsa_encrypt(data, pub_key):
         return PKCS1_OAEP.new(pub_key).encrypt(data)
 
     @staticmethod
-    def rsa_decrypt(data: bytes, priv_key: RSA.RsaKey) -> bytes:
+    def rsa_decrypt(data, priv_key):
         return PKCS1_OAEP.new(priv_key).decrypt(data)
 
 
@@ -39,28 +38,28 @@ class Encryption:
         self.aes_key = self.iv = None
 
     # --- RSA 公開鍵授受 --------------------------------
-    def get_public_key_bytes(self) -> bytes:
+    def get_public_key_bytes(self):
         return self.public_key.export_key()
 
-    def load_peer_public_key(self, data: bytes):
+    def load_peer_public_key(self, data):
         self.peer_public_key = RSA.import_key(data)
 
     # --- 対称鍵（AES + IV） ------------------------------
-    def decrypt_symmetric_key(self, encrypted: bytes):
+    def decrypt_symmetric_key(self, encrypted):
         sym                    = CryptoUtil.rsa_decrypt(encrypted, self.private_key)
         self.aes_key, self.iv  = sym[:16], sym[16:32]
 
-    def wrap_socket(self, sock: socket.socket):
+    def wrap_socket(self, sock):
         return EncryptedSocket(sock, self.aes_key, self.iv)
 
 
 class EncryptedSocket:
     """send/recv を AES 暗号化する薄いラッパー"""
-    def __init__(self, sock: socket.socket, key: bytes, iv: bytes):
+    def __init__(self, sock, key, iv):
         self.sock, self.key, self.iv = sock, key, iv
 
     # --- 内部 util --------------------------------------
-    def _recvn(self, n: int) -> bytes:
+    def _recvn(self, n):
         data = b''
         while len(data) < n:
             chunk = self.sock.recv(n - len(data))
@@ -70,12 +69,12 @@ class EncryptedSocket:
         return data
 
     # --- 送受信 API -------------------------------------
-    def sendall(self, data: bytes):
+    def sendall(self, data):
         ct = CryptoUtil.aes_encrypt(data, self.key, self.iv)
         self.sock.sendall(len(ct).to_bytes(4, 'big') + ct)
     send = sendall  # send() 互換
 
-    def recv(self, bufsize: int = 4096) -> bytes:
+    def recv(self, bufsize=4096):
         lb = self._recvn(4)
         if not lb:
             return b''
@@ -96,7 +95,7 @@ class TCPServer:
     client_data        = {}   # {token: [addr, room, user, is_host, pw, last]}
     encryption_objects = {}   # {token: Encryption}
 
-    def __init__(self, server_address: str, server_port: int):
+    def __init__(self, server_address, server_port):
         self.server_address, self.server_port = server_address, server_port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.bind((server_address, server_port))
@@ -113,7 +112,7 @@ class TCPServer:
 
     # --- 生ソケットで N バイト受信 -----------------------
     @staticmethod
-    def _recvn(conn: socket.socket, n: int) -> bytes:
+    def _recvn(conn, n):
         data = b''
         while len(data) < n:
             chunk = conn.recv(n - len(data))
@@ -123,7 +122,7 @@ class TCPServer:
         return data
 
     # --- RSA-AES 鍵交換 --------------------------------
-    def perform_key_exchange(self, conn: socket.socket):
+    def perform_key_exchange(self, conn):
         enc = Encryption()
 
         # ① クライアント公開鍵
@@ -142,7 +141,7 @@ class TCPServer:
         return enc.wrap_socket(conn), enc
 
     # --- クライアント初回リクエスト処理 ------------------
-    def handle_client_request(self, connection: socket.socket, client_address):
+    def handle_client_request(self, connection, client_address):
         connection, enc = self.perform_key_exchange(connection)
 
         # 最初の「ヘッダー＋ペイロード」
@@ -160,7 +159,7 @@ class TCPServer:
             self.join_room(connection, token)
 
     # --- 共通ヘッダー解析 -------------------------------
-    def decode_message(self, data: bytes):
+    def decode_message(self, data):
         header, body = data[:self.HEADER_MAX_BYTE], data[self.HEADER_MAX_BYTE:]
         room_len, operation, state = header[:3]
         payload_size               = int.from_bytes(header[3:], "big")
@@ -207,7 +206,7 @@ class TCPServer:
 
 # ──── UDP サーバ ───────────────────────────────────────
 class UDPServer:
-    def __init__(self, server_address: str, server_port: int):
+    def __init__(self, server_address, server_port):
         self.server_address, self.server_port = server_address, server_port
         self.room_tokens     = TCPServer.room_tokens
         self.room_passwords  = TCPServer.room_passwords
@@ -248,7 +247,7 @@ class UDPServer:
         return room_name, token, msg
 
     # --- ブロードキャスト ------------------------------
-    def broadcast_to_room(self, room: str, message: str):
+    def broadcast_to_room(self, room, message):
         for token in self.room_tokens.get(room, []):
             info = self.client_data.get(token)
             if not info or not info[0]:
