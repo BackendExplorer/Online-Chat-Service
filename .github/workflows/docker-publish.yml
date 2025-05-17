@@ -30,3 +30,4 @@ jobs:
           file: ./server/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/secure-chat-server:latest
+
