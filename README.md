@@ -153,10 +153,10 @@ https://github.com/user-attachments/assets/3923c939-72fe-4236-9f2b-3a75e9b86fcc
 以下のコマンドをターミナルで実行します
 
 ```bash
-git clone https://github.com/yourusername/your-repo-name.git
+git clone git@github.com:BackendExplorer/Online-Chat.git
 ```
 ```bash
-cd your-repo-name
+cd Online-Chat
 ```
 
 <br>
