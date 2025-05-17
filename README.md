@@ -1,27 +1,3 @@
-```mermaid
-sequenceDiagram
-    autonumber
-    participant GUI as GUIフロントエンド
-    participant Client as クライアントプログラム
-    participant Server as サーバプログラム
-
-    %% メッセージ交換
-    GUI ->> Client: ルーム作成／参加リクエスト
-    Client ->> Server: TCP接続＋RSA/AES鍵交換
-    Server -->> Client: トークン／ルーム一覧応答
-    Client -->> GUI: ルーム情報を更新
-
-    GUI ->> Client: チャットメッセージ送信
-    Client ->> Server: UDP通信（AES暗号化）
-    Server -->> Client: メッセージブロードキャスト
-    Client -->> GUI: 受信メッセージを表示
-
-    %% 注釈
-    note right of Server: ルーム管理・タイムアウト監視を常時実行
-    note left of GUI: StreamlitによるフロントエンドUI
-
-```
-
 # 🌐 Online Chat Service 💬  
 
 <br>
@@ -256,27 +232,29 @@ Start --> 選択
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Dev  as 開発者（Dev）
-    participant GH   as CI/CD（GitHub Actions）
-    participant EC2  as サーバー（EC2・Docker）
-    participant CLI  as クライアント（ローカル）
+    participant GUI as GUIフロントエンド
+    participant Client as クライアントプログラム
+    participant Server as サーバプログラム
 
-    Dev ->> GH: コードを push
-    GH ->> GH: ビルド・テスト (CI)
-    GH ->> EC2: デプロイ（SSH + Docker Compose）
-    EC2 ->> EC2: サーバ起動（ポート 9001 / 9002）
+    %% メッセージ交換
+    GUI ->> Client: ルーム作成／参加リクエスト
+    Client ->> Server: TCP接続＋RSA/AES鍵交換
+    Server -->> Client: トークン／ルーム一覧応答
+    Client -->> GUI: ルーム情報を更新
 
-    CLI ->> CLI: Streamlit クライアント起動
-    CLI ->> EC2: TCP 接続
-    EC2 -->> CLI: トークン & ルーム応答
-    CLI ->> EC2: UDP 通信開始
-    EC2 -->> CLI: メッセージブロードキャスト
+    GUI ->> Client: チャットメッセージ送信
+    Client ->> Server: UDP通信（AES暗号化）
+    Server -->> Client: メッセージブロードキャスト
+    Client -->> GUI: 受信メッセージを表示
 
-    note right of EC2: Docker上で常時稼働（ルーム管理・タイムアウト監視）
-    note right of GH: GitHubリポジトリ更新時に自動CI/CD
+    %% 注釈
+    note right of Server: ルーム管理・タイムアウト監視を常時実行
+    note left of GUI: StreamlitによるフロントエンドUI
 
 ```
-<img width="789" alt="スクリーンショット 2025-05-12 12 17 57" src="https://github.com/user-attachments/assets/6cd54bbe-e39a-407b-a4b8-0dc6d8eb6a6c" />
+
+
+<img width="783" alt="スクリーンショット 2025-05-18 5 13 01" src="https://github.com/user-attachments/assets/60d7629c-7a85-406b-b49d-ed808f7977c9" />
 
 ---
 
