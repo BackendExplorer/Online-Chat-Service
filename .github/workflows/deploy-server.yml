@@ -41,3 +41,4 @@ jobs:
               -p 9001:9001/tcp \
               -p 9002:9002/udp \
               tenshinnoji/online-chat-service:latest
+
