@@ -1,12 +1,11 @@
 ```mermaid
 sequenceDiagram
     autonumber
-    participant GUI      as GUIフロントエンド
-    participant          as 
-    participant Client   as クライアントプログラム
-    participant          as 
-    participant Server   as サーバプログラム
+    participant GUI as GUIフロントエンド
+    participant Client as クライアントプログラム
+    participant Server as サーバプログラム
 
+    %% メッセージ交換
     GUI ->> Client: ルーム作成／参加リクエスト
     Client ->> Server: TCP接続＋RSA/AES鍵交換
     Server -->> Client: トークン／ルーム一覧応答
@@ -17,6 +16,7 @@ sequenceDiagram
     Server -->> Client: メッセージブロードキャスト
     Client -->> GUI: 受信メッセージを表示
 
+    %% 注釈
     note right of Server: ルーム管理・タイムアウト監視を常時実行
     note left of GUI: StreamlitによるフロントエンドUI
 
