@@ -56,7 +56,9 @@ class Encryption:
 class EncryptedSocket:
     """send/recv を AES 暗号化する薄いラッパー"""
     def __init__(self, sock, key, iv):
-        self.sock, self.key, self.iv = sock, key, iv
+        self.sock = sock
+        self.key = key
+        self.iv = iv                
 
     # --- 内部 util --------------------------------------
     def _recvn(self, n):
