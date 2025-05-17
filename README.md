@@ -1,3 +1,24 @@
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Server as サーバプログラム
+    participant Client as クライアントプログラム
+    participant GUI    as GUIフロントエンド
+
+    GUI ->> Client: ルーム作成／参加リクエスト
+    Client ->> Server: TCP接続＋RSA/AES鍵交換
+    Server -->> Client: トークン／ルーム一覧応答
+    Client -->> GUI: ルーム情報を更新
+
+    GUI ->> Client: チャットメッセージ送信
+    Client ->> Server: UDP通信（AES暗号化）
+    Server -->> Client: メッセージブロードキャスト
+    Client -->> GUI: 受信メッセージを表示
+
+    note right of Server: ルーム管理・タイムアウト監視を常時実行
+    note right of GUI: StreamlitによるフロントエンドUI
+```
+
 # 🌐 Online Chat Service 💬  
 
 <br>
