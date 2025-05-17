@@ -110,16 +110,23 @@ class TCPServer:
             except Exception:
                 conn.close()
 
-    # --- 生ソケットで N バイト受信 -----------------------
-    @staticmethod
-    def _recvn(conn, n):
-        data = b''
-        while len(data) < n:
-            chunk = conn.recv(n - len(data))
-            if not chunk:
-                break
-            data += chunk
-        return data
+    # --- クライアント初回リクエスト処理 ------------------
+    def handle_client_request(self, connection, client_address):
+        connection, enc = self.perform_key_exchange(connection)
+
+        # 最初の「ヘッダー＋ペイロード」
+        data = connection.recv(4096)
+        _, operation, _, _, room_name, payload = self.decode_message(data)
+
+        # クライアント登録
+        token = self.register_client(client_address, room_name, payload, operation)
+        TCPServer.encryption_objects[token] = enc
+
+        # 操作分岐
+        if operation == 1:
+            self.create_room(connection, room_name, token)
+        elif operation == 2:
+            self.join_room(connection, token)
 
     # --- RSA-AES 鍵交換 --------------------------------
     def perform_key_exchange(self, conn):
@@ -140,23 +147,16 @@ class TCPServer:
         # ④ 暗号化ソケットを返す
         return enc.wrap_socket(conn), enc
 
-    # --- クライアント初回リクエスト処理 ------------------
-    def handle_client_request(self, connection, client_address):
-        connection, enc = self.perform_key_exchange(connection)
-
-        # 最初の「ヘッダー＋ペイロード」
-        data = connection.recv(4096)
-        _, operation, _, _, room_name, payload = self.decode_message(data)
-
-        # クライアント登録
-        token = self.register_client(client_address, room_name, payload, operation)
-        TCPServer.encryption_objects[token] = enc
-
-        # 操作分岐
-        if operation == 1:
-            self.create_room(connection, room_name, token)
-        elif operation == 2:
-            self.join_room(connection, token)
+    # --- 生ソケットで N バイト受信 -----------------------
+    @staticmethod
+    def _recvn(conn, n):
+        data = b''
+        while len(data) < n:
+            chunk = conn.recv(n - len(data))
+            if not chunk:
+                break
+            data += chunk
+        return data
 
     # --- 共通ヘッダー解析 -------------------------------
     def decode_message(self, data):
