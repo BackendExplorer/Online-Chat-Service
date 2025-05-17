@@ -271,7 +271,7 @@ class UDPServer:
     # --- 非アクティブ切断 ------------------------------
     def remove_inactive_clients(self):
         while True:
-            cutoff = time.time() - 30
+            cutoff = time.time() - 100
             for token, info in list(self.client_data.items()):
                 if info[5] < cutoff:
                     try:
