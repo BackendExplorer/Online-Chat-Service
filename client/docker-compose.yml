@@ -10,10 +10,10 @@ services:
     #  name: host.docker.internal  で参照できる
     # extra_hosts:
     #   - "host.docker.internal:host-gateway"
-    environment:
-      # client.py 内で server を 127.0.0.1 → host.docker.internal に
-      # 変更しておくと、コンテナからホスト上のサーバへ届きます
-      CHAT_SERVER_HOST: host.docker.internal
+    # environment:
+    #   # client.py 内で server を 127.0.0.1 → host.docker.internal に
+    #   # 変更しておくと、コンテナからホスト上のサーバへ届きます
+    #   CHAT_SERVER_HOST: host.docker.internal
     # 必要に応じてログを見たい場合
-    stdin_open: true
-    tty: true
+    # stdin_open: true
+    # tty: true
