@@ -169,11 +169,16 @@ cd Online-Chat
 
 ### 1. サーバー起動
 
-ターミナルを開いて、以下のコマンドでサーバを起動します。
+Docker Desktopを起動たら、ターミナルを開いて、以下のコマンドでサーバコンテナを起動します。
 
 ```bash
-python3 server.py
+cd server
 ```
+
+```bash
+docker-compose up
+```
+
 <img width="618" alt="スクリーンショット 2025-05-06 13 04 39" src="https://github.com/user-attachments/assets/1c9462cc-662c-4196-ad89-158c1c2f0ebc" />
 
 
@@ -182,11 +187,14 @@ python3 server.py
 
 ### 2. クライアント起動
 
-別のターミナルを開き、以下のコマンドでクライアントを起動します。
+別のターミナルを開き、clientフォルダにいき、以下のコマンドでクライアントを起動します。
 
 ```bash
-python3 client.py
+docker-compose up
 ```
+
+http://localhost:8501 でアクセス可能です。
+
 以下のように複数のクライアントを起動することで、ユーザー同士がチャットのやり取りができます
 
 <br>
