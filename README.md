@@ -1,13 +1,9 @@
-<h3>1. サーバー起動</h3>
+1. サーバー起動
 
-<div style="margin-left: 20px;">
-  <p>Docker Desktopを起動したら、ターミナルを開いて、以下のコマンドでサーバコンテナを起動します。</p>
+  Docker Desktopを起動したら、ターミナルを開いて、以下のコマンドでサーバコンテナを起動します。
 
-  <pre><code class="language-bash">cd server</code></pre>
-  <pre><code class="language-bash">docker-compose up</code></pre>
-</div>
-
-
+  ```bash
+  cd server
 
 
 # 🌐 Online Chat Service 💬  
