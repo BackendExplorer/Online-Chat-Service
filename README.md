@@ -436,6 +436,7 @@ sequenceDiagram
     CI ->> Pytest: テストスクリプトを実行
     Pytest -->> CI: テスト結果（pass / fail）
     CI -->> GitHub: ステータスを通知（バッジ／ログ）
+```
 
 <br>
 
