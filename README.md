@@ -181,7 +181,7 @@ cd server
 docker-compose up
 ```
 
-<br><br>
+<br>
 
 
 ### 2. クライアント起動
