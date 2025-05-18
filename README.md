@@ -122,7 +122,7 @@ https://github.com/user-attachments/assets/3923c939-72fe-4236-9f2b-3a75e9b86fcc
 
 3. **得られた学び**
 
-      通信・暗号・並列処理を含むシステム設計と実装、Docker化、GitHub Actionsによる自動テストの経験
+      通信・暗号・並列処理を含むシステム設計と実装、`Docker化`、`GitHub Actions`による自動テストの経験
 
 <br>
 
