@@ -4,21 +4,16 @@ sequenceDiagram
     participant Client as クライアント
     participant Server as サーバ
 
-    Client ->> Server: RSA公開鍵要求
+    Client ->> Server: RSA公開鍵を要求
 
-    Note over Client,Server: 　
+    Server -->> Client: 公開鍵（RSA）を送信
 
-    Server -->> Client: 公開鍵(RSA)
+    Client ->> Server: 共通鍵（AES）をRSAで暗号化して送信
 
-    Note over Client,Server: 　
-
-    Client ->> Server: 共通鍵(AES)をRSAで暗号化して送信
-
-    Note over Client,Server: 　
-
-    Server -->> Client: 鍵交換完了通知
+    Server -->> Client: 鍵交換完了を通知
 
     Note over Client,Server: AES共通鍵での暗号通信が以後のチャットで使用される
+
 
 ```
 
