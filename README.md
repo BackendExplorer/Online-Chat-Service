@@ -43,7 +43,7 @@ https://github.com/user-attachments/assets/3923c939-72fe-4236-9f2b-3a75e9b86fcc
 
 - [クラス構成 と アーキテクチャ](#クラス構成とアーキテクチャ)
 
-- [自動テストとCI/CD構成](#自動テストとci-cd構成)
+- [GitHub Actionsによる自動テスト](#自動テストとci-cd構成)
 
 
 
@@ -417,15 +417,21 @@ app  --> handler
  
 <br>
 
-## <a id="自動テストとci-cd構成"></a>🔁 自動テストとCI/CD構成
+## <a id="自動テストとci-cd構成"></a>🔁 GitHub Actionsによる自動テスト
 
 <br>
 
-本プロジェクトでは、GitHub Actions を用いて自動テスト環境を構築しています。  
+<ul>
+  <li>
+    <p>本プロジェクトでは、GitHub Actions を用いた CI 環境を構築しています。</p>
+    <p>コードの push やプルリクエスト作成時にワークフローが自動で実行され、<code>pytest</code> によるユニットテストが走ります。</p>
+    <p>これにより、暗号処理や通信機能などの信頼性を常に保ちながら開発を継続できます。</p>
+  </li>
+</ul>
 
-コードの push やプルリクエスト作成時にワークフローが自動で実行され、<br>`pytest` によるユニットテストが走ります。  
+<br>
 
-これにより、暗号処理や通信機能などの信頼性を常に保ちながら開発を進めることができます。
+
 
 ```mermaid
 sequenceDiagram
