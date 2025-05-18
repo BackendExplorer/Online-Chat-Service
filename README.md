@@ -1,37 +1,3 @@
-```mermaid
-sequenceDiagram
-    autonumber
-    participant Dev as 開発者（Git操作）
-    participant GitHub as GitHubリポジトリ
-    participant CI as GitHub Actions（CI）
-    participant GUI as GUIフロントエンド
-    participant Client as クライアントプログラム
-    participant Server as サーバプログラム
-
-    %% CI テストフロー
-    Dev ->> GitHub: コードをpush / PR作成
-    GitHub ->> CI: ワークフローを起動
-    CI ->> CI: pytest による単体テスト実行
-    CI -->> GitHub: テスト結果を通知（pass/fail）
-
-    %% チャット実行フロー
-    GUI ->> Client: ルーム作成／参加リクエスト
-    Client ->> Server: TCP接続＋RSA/AES鍵交換
-    Server -->> Client: トークン／ルーム一覧応答
-    Client -->> GUI: ルーム情報を更新
-
-    GUI ->> Client: チャットメッセージ送信
-    Client ->> Server: UDP通信（AES暗号化）
-    Server -->> Client: メッセージブロードキャスト
-    Client -->> GUI: 受信メッセージを表示
-
-    %% 注釈
-    note right of Server: ルーム管理・タイムアウト監視を常時実行
-    note left of GUI: StreamlitによるフロントエンドUI
-    note right of CI: pytest による暗号化・通信のユニットテスト
-
-```
-
 # 🌐 Online Chat Service 💬  
 
 <br>
@@ -346,7 +312,7 @@ sequenceDiagram
 | UIフレームワーク | ![Streamlit](https://img.shields.io/badge/UI-Streamlit-red) <br>Webベースのインターフェースを簡易に構築 |
 | 開発環境       | ![macOS](https://img.shields.io/badge/OS-macOS-lightgrey)&nbsp;&nbsp;&nbsp;&nbsp;![VSCode](https://img.shields.io/badge/Editor-VSCode-blue) |
 | バージョン管理 | ![Git](https://img.shields.io/badge/VersionControl-Git-orange)&nbsp;&nbsp;&nbsp;&nbsp;![GitHub](https://img.shields.io/badge/Repo-GitHub-black) |
-| インフラ | ![Docker](https://img.shields.io/badge/Container-Docker-blue)  |
+| インフラ | ![Docker](https://img.shields.io/badge/Container-Docker-blue) ![GitHub Actions](https://img.shields.io/badge/CI-GitHub_Actions-black?logo=githubactions&logoColor=white) |
 | 描画ツール     | ![Mermaid](https://img.shields.io/badge/Diagram-Mermaid-green)&nbsp;&nbsp;&nbsp;&nbsp;![LaTeX](https://img.shields.io/badge/Doc-LaTeX-9cf) |
 
 
