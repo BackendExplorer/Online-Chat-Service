@@ -1,3 +1,19 @@
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Client as クライアント
+    participant Server as サーバ
+
+    Client ->> Server: RSA公開鍵要求
+    Server -->> Client: 公開鍵(RSA)
+    Client ->> Server: 共通鍵(AES)をRSAで暗号化して送信
+    Server -->> Client: 鍵交換完了通知
+
+    Note over Client,Server: AES共通鍵での暗号通信が以後のチャットで使用される
+
+```
+
+
 # Online Chat Service 
 
 ![Python](https://img.shields.io/badge/Python-3.13.2-blue)
