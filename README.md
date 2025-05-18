@@ -1,4 +1,4 @@
-# 🌐 Online Chat Service 💬  
+# Online Chat Service 
 
 ![Python](https://img.shields.io/badge/Python-3.13.2-blue)
 ![Streamlit](https://img.shields.io/badge/UI-Streamlit-red) 
