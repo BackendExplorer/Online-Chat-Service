@@ -1,6 +1,7 @@
 # 🌐 Online Chat Service 💬  
 
 ![Python](https://img.shields.io/badge/Python-3.13.2-blue)
+![Streamlit](https://img.shields.io/badge/UI-Streamlit-red) 
 ![Docker](https://img.shields.io/badge/Container-Docker-blue)
 ![GitHub Actions](https://img.shields.io/badge/CI-GitHub_Actions-black?logo=githubactions&logoColor=white)
 ![Build Status](https://img.shields.io/badge/build-success-brightgreen)
