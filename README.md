@@ -43,6 +43,8 @@ https://github.com/user-attachments/assets/3923c939-72fe-4236-9f2b-3a75e9b86fcc
 
 - [クラス構成 と アーキテクチャ](#クラス構成とアーキテクチャ)
 
+- [自動テストとCI/CD構成](#自動テストとCI/CD構成)
+
 
 
 <br>
@@ -415,7 +417,30 @@ app  --> handler
  
 <br>
 
+## <a id="自動テストとCI/CD構成"></a>🔁 自動テストとCI/CD構成
+
+本プロジェクトでは、GitHub Actions を用いて自動テスト環境を構築しています。  
+コードの push やプルリクエスト作成時にワークフローが自動で実行され、`pytest` によるユニットテストが走ります。  
+これにより、暗号処理や通信機能などの信頼性を常に保ちながら開発を進めることができます。
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Dev as 開発者
+    participant GitHub as GitHubリポジトリ
+    participant CI as GitHub Actions（CI）
+    participant Pytest as pytest
+
+    Dev ->> GitHub: コードを push / PR 作成
+    GitHub ->> CI: ワークフロー（ci.yml）を起動
+    CI ->> Pytest: テストスクリプトを実行
+    Pytest -->> CI: テスト結果（pass / fail）
+    CI -->> GitHub: ステータスを通知（バッジ／ログ）
+
+<br>
+
 ---
+
 ## <a id="設計上のこだわり"></a>⭐️ 設計上のこだわり
 
 <br>
