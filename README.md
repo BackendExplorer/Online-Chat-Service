@@ -460,7 +460,7 @@ sequenceDiagram
 <ul>
   <li>
     <p>以下は、チャットルーム接続のために設計された</p>
-    <p> <strong>独自プロトコル TCRP（Talk Chat Room Protocol）<strong> のパケット構造を表します。</p>
+    <p> <strong>独自プロトコル TCRP（Talk Chat Room Protocol）</strong>strong> のパケット構造を表します。</p>
     
   </li>
 </ul>
