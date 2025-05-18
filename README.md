@@ -571,11 +571,6 @@ sequenceDiagram
 ---
 
 ## <a id="ライセンス情報"></a>📜 ライセンス情報
-このプロジェクトは [MIT License](https://opensource.org/licenses/MIT) のもとで公開されています。  
-
-自由に利用、改変、再配布が可能ですが、利用の際は本ライセンス表記を保持してください。
-
-
 
 <br>
 
@@ -587,4 +582,3 @@ sequenceDiagram
 </ul>
 
 <br>
-
