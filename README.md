@@ -1,5 +1,10 @@
 # 🌐 Online Chat Service 💬  
 
+[![Python 3.13.2](https://img.shields.io/badge/python-3.13.2-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![Docker](https://img.shields.io/badge/docker-enabled-blue?logo=docker&logoColor=white)](https://www.docker.com/)
+[![GitHub Actions](https://github.com/ユーザー名/リポジトリ名/actions/workflows/ci.yml/badge.svg)](https://github.com/ユーザー名/リポジトリ名/actions)
+
+
 <br>
 
 ### 独自プロトコル・暗号通信・マルチスレッド・ソケット通信によるグループチャットアプリ
