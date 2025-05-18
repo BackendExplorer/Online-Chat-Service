@@ -3,6 +3,8 @@
 ![Python](https://img.shields.io/badge/Python-3.13.2-blue)
 ![Docker](https://img.shields.io/badge/Container-Docker-blue)
 ![GitHub Actions](https://img.shields.io/badge/CI-GitHub_Actions-black?logo=githubactions&logoColor=white)
+[![Coverage Status](https://coveralls.io/repos/github/ユーザー名/リポジトリ名/badge.svg?branch=main)](https://coveralls.io/github/ユーザー名/リポジトリ名)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
 
 <br>
