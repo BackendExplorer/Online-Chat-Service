@@ -1,10 +1,20 @@
-1. サーバー起動
+## <a id="基本的な使い方"></a>🧑‍💻 基本的な使い方
 
-  Docker Desktopを起動したら、ターミナルを開いて、以下のコマンドでサーバコンテナを起動します。
+<br>
 
-  ```bash
-  cd server
-  ```
+### 1. サーバー起動
+
+Docker Desktopを起動したら、ターミナルを開いて、以下のコマンドでサーバコンテナを起動します。
+
+    ```bash
+    cd server
+    ```
+
+    ```bash
+    docker-compose up
+    ```
+
+<br>
 
 # 🌐 Online Chat Service 💬  
 
