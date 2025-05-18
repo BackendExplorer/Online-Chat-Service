@@ -460,13 +460,13 @@ sequenceDiagram
 <ul>
   <li>
     <p>以下は、チャットルーム接続のために設計された</p>
-    <p> <strong>独自プロトコル TCRP**（Talk Chat Room Protocol）<strong> のパケット構造を表します。</p>
+    <p> <strong>独自プロトコル TCRP（Talk Chat Room Protocol）<strong> のパケット構造を表します。</p>
     
   </li>
 </ul>
 
 
-<br>
+
 
 <img width="817" alt="スクリーンショット 2025-05-12 13 20 08" src="https://github.com/user-attachments/assets/83c21fdc-5c3f-4253-a5c7-f7a67438ed4f" />
 
