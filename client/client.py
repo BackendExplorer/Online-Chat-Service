@@ -2,6 +2,7 @@
 #  client.py  ――  AES + RSA 暗号付きリアルタイムチャット
 #                     ＋ 4 画面構成 Streamlit GUI
 # ============================================================
+
 import socket
 import secrets
 import json
@@ -48,20 +49,17 @@ class CryptoUtil:
 # 鍵管理／暗号化ソケット
 # ============================================================
 class Encryption:
+    """
+    クライアント側では AES 鍵＋IV を保持し、
+    EncryptedSocket を生成するだけ（RSA は不要だが現状保持しても問題なし）
+    """
     def __init__(self):
-        self.private_key = RSA.generate(2048)
+        self.private_key = RSA.generate(2048)  # 使わないが互換維持
         self.public_key  = self.private_key.publickey()
-        self.peer_public_key = None
         self.aes_key = self.iv = None
 
     def get_public_key_bytes(self):
         return self.public_key.export_key()
-
-    def load_peer_public_key(self, data):
-        self.peer_public_key = RSA.import_key(data)
-
-    def encrypt_symmetric_key(self, aes_key, iv):
-        return CryptoUtil.rsa_encrypt(aes_key + iv, self.peer_public_key)
 
     def wrap_socket(self, sock):
         return EncryptedSocket(sock, self.aes_key, self.iv)
@@ -107,15 +105,25 @@ class TCPClient:
         self.sock = None
 
     def _connect_and_handshake(self):
+        """
+        新プロトコル
+          ① サーバ公開鍵 (len + key) を受信
+          ② AES鍵+IV を生成しサーバ公開鍵で暗号化して送信
+          ③ 暗号化ソケットへ切り替え
+        """
         base = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         base.connect((self.server_address, self.server_port))
-        c_pub = self.enc.get_public_key_bytes()
-        base.sendall(len(c_pub).to_bytes(4, 'big') + c_pub)
+
+        # ① サーバ公開鍵
         s_pub_len = int.from_bytes(base.recv(4), 'big')
-        self.enc.load_peer_public_key(base.recv(s_pub_len))
+        server_pub_key = RSA.import_key(base.recv(s_pub_len))
+
+        # ② AES鍵 + IV をサーバへ
         self.enc.aes_key, self.enc.iv = secrets.token_bytes(16), secrets.token_bytes(16)
-        enc_sym = self.enc.encrypt_symmetric_key(self.enc.aes_key, self.enc.iv)
+        enc_sym = CryptoUtil.rsa_encrypt(self.enc.aes_key + self.enc.iv, server_pub_key)
         base.sendall(len(enc_sym).to_bytes(4, 'big') + enc_sym)
+
+        # ③ 暗号化ソケット
         self.sock = self.enc.wrap_socket(base)
 
     def _make_packet(self, room, op, payload):
@@ -161,7 +169,7 @@ class TCPClient:
 
 
 # ============================================================
-# UDP クライアント
+# UDP クライアント（変更なし）
 # ============================================================
 class UDPClient:
     def __init__(self, server_addr, server_port, info, enc):
@@ -199,11 +207,8 @@ class UDPClient:
         except socket.timeout:
             pass
         return new
-
-
-# ============================================================
-# Streamlit GUI
-# ============================================================
+    
+    
 class GUIManager:
     CSS_FILE = "style.css"
     def __init__(self, controller):
