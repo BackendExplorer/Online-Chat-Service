@@ -1,3 +1,6 @@
+# ============================================================
+#  サーバプログラム（server.py）
+# ============================================================
 import socket
 import threading
 import time
@@ -7,7 +10,7 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher   import PKCS1_OAEP, AES
 
 
-# ──── 共通暗号ユーティリティ（クラス化） ─────────────────────────────
+# ──── 共通暗号ユーティリティ ───────────────────────────────
 class CryptoUtil:
     """AES-CFB128 + RSA-PKCS1_OAEP の簡易ラッパー"""
     # ---------- AES ----------
@@ -31,34 +34,32 @@ class CryptoUtil:
 
 # ──── 暗号鍵ハンドラ ────────────────────────────────────
 class Encryption:
+    """
+    サーバ側で RSA 鍵ペアを保持し、クライアントから送られてきた
+    AES 鍵＋IV を復号して保存するクラス
+    """
     def __init__(self):
         self.private_key = RSA.generate(2048)
         self.public_key  = self.private_key.publickey()
-        self.peer_public_key = None
         self.aes_key = self.iv = None
 
-    # --- RSA 公開鍵授受 --------------------------------
+    # --- サーバ公開鍵送信用 --------------------------------
     def get_public_key_bytes(self):
         return self.public_key.export_key()
 
-    def load_peer_public_key(self, data):
-        self.peer_public_key = RSA.import_key(data)
-
-    # --- 対称鍵（AES + IV） ------------------------------
+    # --- 対称鍵（AES+IV）受信用 ------------------------------
     def decrypt_symmetric_key(self, encrypted):
-        sym                    = CryptoUtil.rsa_decrypt(encrypted, self.private_key)
-        self.aes_key, self.iv  = sym[:16], sym[16:32]
+        sym                 = CryptoUtil.rsa_decrypt(encrypted, self.private_key)
+        self.aes_key, self.iv = sym[:16], sym[16:32]
 
     def wrap_socket(self, sock):
         return EncryptedSocket(sock, self.aes_key, self.iv)
 
 
 class EncryptedSocket:
-    """send/recv を AES 暗号化する薄いラッパー"""
+    """send/recv を AES で透過暗号化する薄いラッパー"""
     def __init__(self, sock, key, iv):
-        self.sock = sock
-        self.key = key
-        self.iv = iv                
+        self.sock, self.key, self.iv = sock, key, iv
 
     # --- 内部 util --------------------------------------
     def _recvn(self, n):
@@ -80,8 +81,8 @@ class EncryptedSocket:
         lb = self._recvn(4)
         if not lb:
             return b''
-        return CryptoUtil.aes_decrypt(self._recvn(int.from_bytes(lb, 'big')),
-                                      self.key, self.iv)
+        ct = self._recvn(int.from_bytes(lb, 'big'))
+        return CryptoUtil.aes_decrypt(ct, self.key, self.iv)
 
     def close(self):
         self.sock.close()
@@ -134,19 +135,15 @@ class TCPServer:
     def perform_key_exchange(self, conn):
         enc = Encryption()
 
-        # ① クライアント公開鍵
-        clen = int.from_bytes(self._recvn(conn, 4), 'big')
-        enc.load_peer_public_key(self._recvn(conn, clen))
-
-        # ② サーバ公開鍵
+        # ① サーバ公開鍵を送信
         spub = enc.get_public_key_bytes()
         conn.sendall(len(spub).to_bytes(4, 'big') + spub)
 
-        # ③ 暗号化済み AES+IV
+        # ② クライアントから暗号化済 AES+IV を受信
         elen = int.from_bytes(self._recvn(conn, 4), 'big')
         enc.decrypt_symmetric_key(self._recvn(conn, elen))
 
-        # ④ 暗号化ソケットを返す
+        # ③ 暗号化ソケットを返す
         return enc.wrap_socket(conn), enc
 
     # --- 生ソケットで N バイト受信 -----------------------
@@ -206,7 +203,9 @@ class TCPServer:
         conn.sendall(token)
 
 
-# ──── UDP サーバ ───────────────────────────────────────
+# ──── UDP サーバ（変更なし）───────────────────────────
+#  …（既存実装そのまま、省略していません）…
+
 class UDPServer:
     def __init__(self, server_address, server_port):
         self.server_address, self.server_port = server_address, server_port
