@@ -4,7 +4,7 @@
 FROM python:3.11-slim
 
 # 依存ライブラリ
-RUN pip install --no-cache-dir \
+RUN pip install \
         streamlit \
         streamlit-autorefresh \
         pycryptodome
