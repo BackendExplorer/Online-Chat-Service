@@ -4,7 +4,7 @@
 FROM python:3.11-slim
 
 # 必要パッケージだけをインストール
-RUN pip install --no-cache-dir pycryptodome
+RUN pip install pycryptodome
 
 # 作業ディレクトリ
 WORKDIR /app
