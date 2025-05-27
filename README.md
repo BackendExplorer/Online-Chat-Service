@@ -247,29 +247,31 @@ Start --> 選択
 ```mermaid
 sequenceDiagram
     autonumber
-    participant GUI as GUIフロントエンド
-    participant Client as クライアントプログラム
-    participant Server as サーバプログラム
+    participant Compose as Docker-Compose
+    participant Docker as Docker デーモン
+    participant ClientContainer as クライアントコンテナ
+    participant ServerContainer as サーバコンテナ
+
+    %% コンテナ起動フロー
+    Compose ->> Docker: Dockerfileからイメージをビルド
+    Docker ->> ServerContainer: サーバーコンテナを起動 (server.py)
+    Docker ->> ClientContainer: クライアントコンテナを起動 (client.py)
 
     %% メッセージ交換
-    GUI ->> Client: ルーム作成／参加リクエスト
-    Client ->> Server: TCP接続＋RSA/AES鍵交換
-    Server -->> Client: トークン／ルーム一覧応答
-    Client -->> GUI: ルーム情報を更新
+    ClientContainer ->> ServerContainer: TCP接続＋RSA/AES鍵交換
+    ServerContainer -->> ClientContainer: トークン／ルーム一覧応答
+    ClientContainer ->> ServerContainer: UDP通信（AES暗号化）
+    ServerContainer -->> ClientContainer: メッセージブロードキャスト
 
-    GUI ->> Client: チャットメッセージ送信
-    Client ->> Server: UDP通信（AES暗号化）
-    Server -->> Client: メッセージブロードキャスト
-    Client -->> GUI: 受信メッセージを表示
-
-    %% 注釈
-    note right of Server: ルーム管理・タイムアウト監視を常時実行
-    note left of GUI: StreamlitによるフロントエンドUI
+    %% クライアント内フロー (コンテナ内)
+    note right of ServerContainer: ルーム管理・タイムアウト監視を常時実行
+    note over Compose: docker-compose up で一発起動
+    
 
 ```
 
+<img width="789" alt="スクリーンショット 2025-05-27 9 42 55" src="https://github.com/user-attachments/assets/7eb0a366-3bc1-4d2d-8211-ecfcbcfcd3ff" />
 
-<img width="783" alt="スクリーンショット 2025-05-18 5 13 01" src="https://github.com/user-attachments/assets/60d7629c-7a85-406b-b49d-ed808f7977c9" />
 
 ---
 
