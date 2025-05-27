@@ -3,18 +3,13 @@
 # ------------------------------------------------------------
 FROM python:3.11-slim
 
-# 依存ライブラリ
 RUN pip install \
         streamlit \
         streamlit-autorefresh \
         pycryptodome
 
-# 作業ディレクトリ
 WORKDIR /app
-COPY client.py .
-
-# style.css を使う場合は同じフォルダにコピー
-COPY style.css ./
+COPY client.py style.css .
 
 EXPOSE 8501
 
