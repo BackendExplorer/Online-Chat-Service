@@ -133,18 +133,19 @@ class TCPServer:
 
     # --- RSA-AES 鍵交換 --------------------------------
     def perform_key_exchange(self, conn):
-        enc = Encryption()
-
+        key_manager = Encryption()
+    
         # ① サーバ公開鍵を送信
-        spub = enc.get_public_key_bytes()
-        conn.sendall(len(spub).to_bytes(4, 'big') + spub)
-
+        server_public_key_bytes = key_manager.get_public_key_bytes()
+        conn.sendall(len(server_public_key_bytes).to_bytes(4, 'big') + server_public_key_bytes)
+    
         # ② クライアントから暗号化済 AES+IV を受信
-        elen = int.from_bytes(self._recvn(conn, 4), 'big')
-        enc.decrypt_symmetric_key(self._recvn(conn, elen))
-
+        encrypted_key_length = int.from_bytes(self._recvn(conn, 4), 'big')
+        encrypted_key_data   = self._recvn(conn, encrypted_key_length)
+        key_manager.decrypt_symmetric_key(encrypted_key_data)
+    
         # ③ 暗号化ソケットを返す
-        return enc.wrap_socket(conn), enc
+        return key_manager.wrap_socket(conn), key_manager
 
     # --- 生ソケットで N バイト受信 -----------------------
     @staticmethod
