@@ -433,10 +433,8 @@ app  --> handler
 
 <ul>
   <li>
-    <p>本プロジェクトでは、GitHub Actions を用いた CI 環境を構築しています。</p>
-    <p>コードの push やプルリクエスト作成時にワークフローが自動で実行され、</p>
-    <p> <code>pytest</code> によるユニットテストが走ります。</p>
-    <p>これにより、暗号処理や通信機能などの信頼性を常に保ちながら開発を継続できます。</p>
+    本プロジェクトでは GitHub Actions による CI を構築し、push/PR 時に以下を自動実行します。
+    
   </li>
 </ul>
 
@@ -450,13 +448,18 @@ sequenceDiagram
     participant Dev as 開発者
     participant GitHub as GitHubリポジトリ
     participant CI as GitHub Actions（CI）
-    participant Pytest as pytest
+    participant Buildx as Docker Buildx
+    participant Compose as Docker Compose
 
     Dev ->> GitHub: コードを push / PR 作成
-    GitHub ->> CI: ワークフロー（ci.yml）を起動
-    CI ->> Pytest: テストスクリプトを実行
-    Pytest -->> CI: テスト結果（pass / fail）
-    CI -->> GitHub: ステータスを通知（バッジ／ログ）
+    GitHub ->> CI: ワークフロー(ci.yml)を起動
+    CI ->> Buildx: Docker Buildx をセットアップ
+    Buildx -->> CI: イメージビルド完了
+    CI ->> Compose: docker compose up -d
+    Compose -->> CI: コンテナ起動完了
+    CI ->> CI: sleep 10
+    CI ->> Compose: docker compose ps
+    CI ->> Compose: docker compose down
 ```
 
 <br>
