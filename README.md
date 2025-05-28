@@ -177,13 +177,10 @@ cd Online-Chat
 
 <br>
 
-### 1. サーバー起動
+### 1. コンテナ起動
 
-Docker Desktopを起動したら、ターミナルを開いて、以下のコマンドでサーバコンテナを起動します。
+Docker Desktopを起動したら、ターミナルを開いて、以下のコマンドでコンテナを起動します。
 
-```bash
-cd server
-```
 
 ```bash
 docker-compose up
@@ -191,14 +188,6 @@ docker-compose up
 
 <br>
 
-
-### 2. クライアント起動
-
-別のターミナルを開き、clientフォルダに移動して、以下のコマンドでクライアントを起動します。
-
-```bash
-docker-compose up
-```
 
 http://localhost:8501 でアクセス可能です。
 
@@ -448,18 +437,16 @@ sequenceDiagram
     participant Dev as 開発者
     participant GitHub as GitHubリポジトリ
     participant CI as GitHub Actions（CI）
-    participant Buildx as Docker Buildx
     participant Compose as Docker Compose
 
     Dev ->> GitHub: コードを push / PR 作成
-    GitHub ->> CI: ワークフロー(ci.yml)を起動
-    CI ->> Buildx: Docker Buildx をセットアップ
-    Buildx -->> CI: イメージビルド完了
+    GitHub ->> CI: CIワークフロー（ci.yml）を起動
+    CI ->> CI: Docker Buildx セットアップ & イメージビルド
     CI ->> Compose: docker compose up -d
-    Compose -->> CI: コンテナ起動完了
-    CI ->> CI: sleep 10
-    CI ->> Compose: docker compose ps
-    CI ->> Compose: docker compose down
+    Compose -->> CI: コンテナ起動確認
+    CI ->> CI: sleep 10（初期化待機）
+    CI ->> Compose: docker compose ps（状態確認）
+    CI ->> Compose: docker compose down（後処理）
 ```
 
 <br>
