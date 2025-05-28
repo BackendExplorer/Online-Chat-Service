@@ -202,7 +202,7 @@ http://localhost:8501 でアクセス可能です。
 <br>
 
 
-### 3. ユーザーの操作手順
+### 2. ユーザーの操作手順
 
 ```mermaid
 flowchart TD
