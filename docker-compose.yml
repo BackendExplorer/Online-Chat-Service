@@ -1,0 +1,20 @@
+# ./docker-compose.yml
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./server
+    ports:
+      - "8080:8080"
+      - "9090:9090/udp"
+    container_name: chat-server
+
+  client:
+    build:
+      context: ./client
+    ports:
+      - "8501:8501"
+    depends_on:
+      - server
+    container_name: chat-client
