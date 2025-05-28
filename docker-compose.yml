@@ -1,20 +1,21 @@
-# ./docker-compose.yml
-version: '3.8'
+version: "3.9"
 
 services:
   server:
     build:
       context: ./server
+    container_name: secure-chat-server          # 旧 server と secure-chat-server を統一
     ports:
-      - "8080:8080"
-      - "9090:9090/udp"
-    container_name: chat-server
+      - "8080:8080"            # 任意の HTTP／管理ポート（元ルート）
+      - "9090:9090/udp"        # 任意の UDP ポート（元ルート）
+      - "9001:9001/tcp"        # TCP キー交換 & 制御（元 server サブディレクトリ）
+      - "9002:9002/udp"        # UDP チャット本体（元 server サブディレクトリ）
 
   client:
     build:
       context: ./client
-    ports:
-      - "8501:8501"
+    container_name: secure-chat-client          # 旧 client と secure-chat-client を統一
     depends_on:
       - server
-    container_name: chat-client
+    ports:
+      - "8501:8501"            # Streamlit 等のフロントエンド（元 client／ルート双方）

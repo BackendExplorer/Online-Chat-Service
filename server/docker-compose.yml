@@ -1,9 +1,0 @@
-version: "3.9"
-
-services:
-  secure-chat-server:
-    build: .
-    container_name: secure-chat-server
-    ports:
-      - "9001:9001/tcp"     # TCP キー交換 & 制御
-      - "9002:9002/udp"     # UDP チャット本体

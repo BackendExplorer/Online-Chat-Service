@@ -1,9 +1,0 @@
-version: "3.9"
-
-services:
-  secure-chat-client:
-    build: .
-    container_name: secure-chat-client
-    ports:
-      - "8501:8501"            # ブラウザから http://localhost:8501
-    
