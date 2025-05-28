@@ -465,8 +465,8 @@ sequenceDiagram
   </li>
 </ul>
 
+<img width="1003" alt="スクリーンショット 2025-05-29 7 06 35" src="https://github.com/user-attachments/assets/2fa9e1e9-627f-4e97-9785-ea42bdff31e6" />
 
-<img width="1039" alt="スクリーンショット 2025-05-29 6 53 44" src="https://github.com/user-attachments/assets/c6288591-2801-40b5-938a-470285df6a0d" />
 
 
 <br><br>
