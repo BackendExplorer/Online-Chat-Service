@@ -377,10 +377,17 @@ class AppController:
         self.tcp_client = TCPClient(self.server, self.tcp_port)
 
     def _init_state(self):
-        defaults = {"page":"home","rooms":[],
-                    "client_info":None,"username":"",
-                    "room_name":"","udp_client":None,
-                    "messages":[],"chat_input":""}
+        defaults = {
+            "page": "home",          # 今表示している画面（ホームが初期値）
+            "rooms": [],             # 取得したルーム一覧
+            "client_info": None,     # サーバから受け取ったユーザー接続情報
+            "username": "",          # ユーザー名
+            "room_name": "",         # 入っているチャットルーム名
+            "udp_client": None,      # チャット通信を担当するUDPクライアント
+            "messages": [],          # 受け取ったメッセージ一覧
+            "chat_input": ""         # 入力中のチャットメッセージ
+        }
+
         for k,v in defaults.items():
             if k not in self.state:
                 self.state[k]=v
