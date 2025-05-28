@@ -1,34 +1,20 @@
-name: Docker Build & Compose CI
+# ./docker-compose.yml
+version: '3.8'
 
-on:
-  push:
-    paths:
-      - 'client/**'
-      - 'server/**'
-      - 'docker-compose.yml'
-      - '.github/workflows/ci.yml'
-  pull_request:
+services:
+  server:
+    build:
+      context: ./server
+    ports:
+      - "8080:8080"
+      - "9090:9090/udp"
+    container_name: chat-server
 
-jobs:
-  build-and-run:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: 📦 Checkout repository
-      uses: actions/checkout@v3
-
-    - name: 🐳 Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-    - name: 🔧 Build client and server containers
-      run: docker compose build
-
-    - name: 🚀 Start containers
-      run: |
-        docker compose up -d
-        sleep 10
-        docker ps
-
-    - name: 🧹 Clean up containers
-      if: always()
-      run: docker compose down
+  client:
+    build:
+      context: ./client
+    ports:
+      - "8501:8501"
+    depends_on:
+      - server
+    container_name: chat-client
