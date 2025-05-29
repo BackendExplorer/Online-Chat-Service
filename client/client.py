@@ -77,7 +77,7 @@ class EncryptedSocket:
 class TCPClient:
     def __init__(self, server_address, server_port):
         self.server_address, self.server_port = server_address, server_port
-        self.enc = Encryption()
+        self.encryption  = Encryption()
         self.sock = None
 
     def _connect_and_handshake(self):
@@ -366,7 +366,7 @@ class AppController:
         self.state.username    = user
         self.state.room_name   = room
         self.state.messages    = []
-        self.state.udp_client  = UDPClient(self.server, self.udp_port, info, self.tcp_client.enc)
+        self.state.udp_client = UDPClient(self.server, self.udp_port, info, self.tcp_client.encryption)
 
     def switch_page(self, page):
         self.state.page = page
