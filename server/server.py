@@ -1,6 +1,3 @@
-# ============================================================
-#  サーバプログラム（server.py）
-# ============================================================
 import socket
 import threading
 import time
@@ -12,7 +9,6 @@ from Crypto.Cipher   import PKCS1_OAEP, AES
 
 # ──── 共通暗号ユーティリティ ───────────────────────────────
 class CryptoUtil:
-    """AES-CFB128 + RSA-PKCS1_OAEP の簡易ラッパー"""
     # ---------- AES ----------
     @staticmethod
     def aes_encrypt(data, key, iv):
@@ -34,10 +30,6 @@ class CryptoUtil:
 
 # ──── 暗号鍵ハンドラ ────────────────────────────────────
 class Encryption:
-    """
-    サーバ側で RSA 鍵ペアを保持し、クライアントから送られてきた
-    AES 鍵＋IV を復号して保存するクラス
-    """
     def __init__(self):
         self.private_key = RSA.generate(2048)
         self.public_key  = self.private_key.publickey()
@@ -57,7 +49,6 @@ class Encryption:
 
 
 class EncryptedSocket:
-    """send/recv を AES で透過暗号化する薄いラッパー"""
     def __init__(self, sock, key, iv):
         self.sock, self.key, self.iv = sock, key, iv
 
@@ -204,9 +195,7 @@ class TCPServer:
         conn.sendall(token)
 
 
-# ──── UDP サーバ（変更なし）───────────────────────────
-#  …（既存実装そのまま、省略していません）…
-
+# ──── UDP サーバ ───────────────────────────
 class UDPServer:
     def __init__(self, server_address, server_port):
         self.server_address, self.server_port = server_address, server_port
