@@ -294,12 +294,14 @@ class UDPServer:
             TCPServer.encryption_objects.pop(token, None)
 
 
-# ──── エントリポイント --------------------------------
-if __name__ == "__main__":
-    SERVER = '0.0.0.0'
-    TCP_PORT, UDP_PORT = 9001, 9002
-    tcp_srv = TCPServer(SERVER, TCP_PORT)
-    udp_srv = UDPServer(SERVER, UDP_PORT)
 
-    threading.Thread(target=tcp_srv.accept_tcp_connections, daemon=True).start()
-    udp_srv.start_udp_server()
+if __name__ == "__main__":
+    server_address = '0.0.0.0'
+    tcp_server_port = 9001
+    udp_server_port = 9002
+
+    tcp_server = TCPServer(server_address, tcp_server_port)
+    udp_server = UDPServer(server_address, udp_server_port)
+
+    threading.Thread(target=tcp_server.accept_tcp_connections, daemon=True).start()
+    udp_server.start_udp_server()
