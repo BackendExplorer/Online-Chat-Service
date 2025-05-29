@@ -367,11 +367,8 @@ class GUIManager:
 # Controller
 # ============================================================
 class AppController:
-    def __init__(self,
-                 server=os.getenv("CHAT_SERVER_HOST","host.docker.internal"),
-                 tcp_port=9001,
-                 udp_port=9002):
-        self.server, self.tcp_port, self.udp_port = server,tcp_port,udp_port
+    def __init__(self, server="host.docker.internal", tcp_port=9001, udp_port=9002):
+        self.server, self.tcp_port, self.udp_port = server, tcp_port, udp_port
         self.state = st.session_state
         self._init_state()
         self.tcp_client = TCPClient(self.server, self.tcp_port)
