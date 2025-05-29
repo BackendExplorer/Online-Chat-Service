@@ -6,23 +6,17 @@
 import socket
 import secrets
 import json
-import logging
-import os
 from pathlib import Path
-
 from Crypto.PublicKey import RSA
 from Crypto.Cipher    import PKCS1_OAEP, AES
 
 TOKEN_MAX_BYTE          = 255
-ROOM_NAME_MAX_BYTE      = 2 ** 8
-PAYLOAD_MAX_BYTE        = 2 ** 29
-HEADER_SIZE             = 32
 
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 import streamlit.components.v1 as components
 
-logging.basicConfig(level=logging.INFO, format="%(message)s")
+
 
 # ============================================================
 # 暗号ユーティリティ
@@ -40,26 +34,12 @@ class CryptoUtil:
     def rsa_encrypt(data, pub_key):
         return PKCS1_OAEP.new(pub_key).encrypt(data)
 
-    @staticmethod
-    def rsa_decrypt(data, priv_key):
-        return PKCS1_OAEP.new(priv_key).decrypt(data)
-
-
 # ============================================================
 # 鍵管理／暗号化ソケット
 # ============================================================
 class Encryption:
-    """
-    クライアント側では AES 鍵＋IV を保持し、
-    EncryptedSocket を生成するだけ（RSA は不要だが現状保持しても問題なし）
-    """
     def __init__(self):
-        self.private_key = RSA.generate(2048)  # 使わないが互換維持
-        self.public_key  = self.private_key.publickey()
         self.aes_key = self.iv = None
-
-    def get_public_key_bytes(self):
-        return self.public_key.export_key()
 
     def wrap_socket(self, sock):
         return EncryptedSocket(sock, self.aes_key, self.iv)
@@ -82,7 +62,6 @@ class EncryptedSocket:
     def sendall(self, data):
         ct = CryptoUtil.aes_encrypt(data, self.key, self.iv)
         self.sock.sendall(len(ct).to_bytes(4, 'big') + ct)
-    send = sendall
 
     def recv(self, bufsize=4096):
         lb = self._recvn(4)
@@ -238,7 +217,7 @@ class GUIManager:
         st.markdown(
             """
             <div class="home-card">
-              <h1>💬 セキュアチャット</h1>
+              <h1>💬 Online Chat Service</h1>
             </div>
             """,
             unsafe_allow_html=True,
@@ -367,7 +346,7 @@ class GUIManager:
 # Controller
 # ============================================================
 class AppController:
-    def __init__(self, server="host.docker.internal", tcp_port=9001, udp_port=9002):
+    def __init__(self, server = "server" , tcp_port=9001, udp_port=9002):
         self.server, self.tcp_port, self.udp_port = server, tcp_port, udp_port
         self.state = st.session_state
         self._init_state()
@@ -394,8 +373,7 @@ class AppController:
         self.state.username    = user
         self.state.room_name   = room
         self.state.messages    = []
-        self.state.udp_client  = UDPClient(self.server, self.udp_port,
-                                           info, self.tcp_client.enc)
+        self.state.udp_client  = UDPClient(self.server, self.udp_port, info, self.tcp_client.enc)
 
     def switch_page(self, page):
         self.state.page = page
