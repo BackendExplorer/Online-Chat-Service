@@ -106,14 +106,14 @@ class TCPClient:
 
     def create_room(self, username, room, pwd):
         self._connect_and_handshake()
-        self.sock.send(self._make_packet(room, 1, {"username": username, "password": pwd}))
+        self.sock.sendall(self._make_packet(room, 1, {"username": username, "password": pwd}))
         token = self.sock.recv(TOKEN_MAX_BYTE)
         self.sock.close()
         return {token: [room, username]}
 
     def get_room_list(self, username):
         self._connect_and_handshake()
-        self.sock.send(self._make_packet("", 2, {"username": username, "password": ""}))
+        self.sock.sendall(self._make_packet("", 2, {"username": username, "password": ""}))
         raw = self.sock.recv(4096).decode()
         self.sock.close()
         try:
@@ -124,7 +124,7 @@ class TCPClient:
 
     def join_room(self, username, room, pwd):
         self._connect_and_handshake()
-        self.sock.send(self._make_packet("", 2, {"username": username, "password": ""}))
+        self.sock.sendall(self._make_packet("", 2, {"username": username, "password": ""}))
         _ = self.sock.recv(4096)
         self.sock.send(self._make_packet(room, 2, {"username": username, "password": pwd}))
         resp = self.sock.recv(TOKEN_MAX_BYTE)
