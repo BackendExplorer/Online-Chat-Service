@@ -42,32 +42,34 @@ class Encryption:
 
 
 class EncryptedSocket:
-    def __init__(self, sock, key, iv):
-        self.sock, self.key, self.iv = sock, key, iv
+    def __init__(self, raw_sock, aes_key, aes_iv):
+        self.raw_sock = raw_sock
+        self.aes_key  = aes_key
+        self.aes_iv   = aes_iv
 
-    def _recvn(self, n):
-        data = b''
-        while len(data) < n:
-            chunk = self.sock.recv(n - len(data))
-            if not chunk:
+    def _recv_exact(self, length):
+        buf = b''
+        while len(buf) < length:
+            part = self.raw_sock.recv(length - len(buf))
+            if not part:
                 break
-            data += chunk
-        return data
+            buf += part
+        return buf
 
-    def sendall(self, data):
-        ct = CryptoUtil.aes_encrypt(data, self.key, self.iv)
-        self.sock.sendall(len(ct).to_bytes(4, 'big') + ct)
+    def sendall(self, plaintext):
+        ciphertext = CryptoUtil.aes_encrypt(plaintext, self.aes_key, self.aes_iv)
+        self.raw_sock.sendall(len(ciphertext).to_bytes(4, 'big') + ciphertext)
 
-    def recv(self, bufsize=4096):
-        lb = self._recvn(4)
-        if not lb:
+    def recv(self, max_size=4096):
+        length_bytes = self._recv_exact(4)
+        if not length_bytes:
             return b''
-        enc_payload = self._recvn(int.from_bytes(lb, 'big'))
-        return CryptoUtil.aes_decrypt(enc_payload, self.key, self.iv)
+        total_len   = int.from_bytes(length_bytes, 'big')
+        ciphertext  = self._recv_exact(total_len)
+        return CryptoUtil.aes_decrypt(ciphertext, self.aes_key, self.aes_iv)
 
     def close(self):
-        self.sock.close()
-
+        self.raw_sock.close()
 
 # ============================================================
 # TCP クライアント
@@ -126,7 +128,7 @@ class TCPClient:
         self._connect_and_handshake()
         self.sock.sendall(self._make_packet("", 2, {"username": username, "password": ""}))
         _ = self.sock.recv(4096)
-        self.sock.send(self._make_packet(room, 2, {"username": username, "password": pwd}))
+        self.sock.sendall(self._make_packet(room, 2, {"username": username, "password": pwd}))
         resp = self.sock.recv(TOKEN_MAX_BYTE)
         self.sock.close()
         if resp.startswith(b"InvalidPassword"):
