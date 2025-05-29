@@ -1,20 +1,16 @@
-# ============================================================
-#  client.py  ――  AES + RSA 暗号付きリアルタイムチャット
-#                     ＋ 4 画面構成 Streamlit GUI
-# ============================================================
-
-import socket
-import secrets
 import json
+import secrets
+import socket
 from pathlib import Path
-from Crypto.PublicKey import RSA
-from Crypto.Cipher    import PKCS1_OAEP, AES
 
-TOKEN_MAX_BYTE          = 255
+from Crypto.Cipher import AES, PKCS1_OAEP
+from Crypto.PublicKey import RSA
 
 import streamlit as st
-from streamlit_autorefresh import st_autorefresh
 import streamlit.components.v1 as components
+from streamlit_autorefresh import st_autorefresh
+
+TOKEN_MAX_BYTE = 255
 
 
 
