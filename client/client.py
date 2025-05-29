@@ -96,7 +96,7 @@ class TCPClient:
         length_prefix     = len(encrypted_sym_key).to_bytes(4, 'big')
         tcp_sock.sendall(length_prefix + encrypted_sym_key)
     
-        self.secure_sock = self.encryption.wrap_socket(tcp_sock)
+        self.sock = self.encryption.wrap_socket(tcp_sock)
     
     def _make_packet(self, room, op, payload):
         payload_bin = json.dumps(payload).encode()
@@ -380,3 +380,4 @@ if __name__ == "__main__":
     gui  = GUIManager(ctrl)
     gui.setup()
     gui.render()
+
