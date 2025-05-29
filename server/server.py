@@ -90,6 +90,10 @@ class TCPServer:
         self.sock.bind((server_address, server_port))
         self.sock.listen()
 
+    # --- サーバ開始 -----------------------------------
+    def start_tcp_server(self):
+        self.accept_tcp_connections()
+
     # --- 接続受付 --------------------------------------
     def accept_tcp_connections(self):
         while True:
@@ -295,6 +299,7 @@ class UDPServer:
 
 
 
+# ──── エントリポイント --------------------------------
 if __name__ == "__main__":
     # サーバーのアドレスとポート番号を設定
     server_address = '0.0.0.0'
@@ -305,5 +310,14 @@ if __name__ == "__main__":
     tcp_server = TCPServer(server_address, tcp_server_port)
     udp_server = UDPServer(server_address, udp_server_port)
 
-    threading.Thread(target=tcp_server.accept_tcp_connections, daemon=True).start()
-    udp_server.start_udp_server()
+    # 各サーバーを並行して実行するスレッドを作成
+    thread_tcp = threading.Thread(target=tcp_server.start_tcp_server)
+    thread_udp = threading.Thread(target=udp_server.start_udp_server)
+
+    # スレッドを開始
+    thread_tcp.start()
+    thread_udp.start()
+
+    # スレッドの終了を待機
+    thread_tcp.join()
+    thread_udp.join()
