@@ -20,10 +20,6 @@ class CryptoUtil:
 
     # ---------- RSA ----------
     @staticmethod
-    def rsa_encrypt(data, pub_key):
-        return PKCS1_OAEP.new(pub_key).encrypt(data)
-
-    @staticmethod
     def rsa_decrypt(data, priv_key):
         return PKCS1_OAEP.new(priv_key).decrypt(data)
 
@@ -66,7 +62,6 @@ class EncryptedSocket:
     def sendall(self, data):
         ct = CryptoUtil.aes_encrypt(data, self.key, self.iv)
         self.sock.sendall(len(ct).to_bytes(4, 'big') + ct)
-    send = sendall  # send() 互換
 
     def recv(self, bufsize=4096):
         lb = self._recvn(4)
