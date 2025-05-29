@@ -42,7 +42,6 @@ class Encryption:
 
 
 class EncryptedSocket:
-    """AES-CFB で透過暗号化するソケット"""
     def __init__(self, sock, key, iv):
         self.sock, self.key, self.iv = sock, key, iv
 
@@ -80,12 +79,6 @@ class TCPClient:
         self.sock = None
 
     def _connect_and_handshake(self):
-        """
-        新プロトコル
-          ① サーバ公開鍵 (len + key) を受信
-          ② AES鍵+IV を生成しサーバ公開鍵で暗号化して送信
-          ③ 暗号化ソケットへ切り替え
-        """
         base = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         base.connect((self.server_address, self.server_port))
 
@@ -192,7 +185,7 @@ class GUIManager:
 
     # ---------- 共通セットアップ ----------
     def setup(self):
-        st.set_page_config("💬 セキュアチャット","💬",layout="centered")
+        st.set_page_config("💬 Online Chat Service","💬",layout="centered")
         css_path = Path(self.CSS_FILE)
         if css_path.exists():
             st.markdown(f"<style>{css_path.read_text()}</style>", unsafe_allow_html=True)
