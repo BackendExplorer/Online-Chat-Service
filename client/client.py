@@ -81,21 +81,23 @@ class TCPClient:
         self.sock = None
 
     def _connect_and_handshake(self):
-        base = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        base.connect((self.server_address, self.server_port))
-
-        # ① サーバ公開鍵
-        s_pub_len = int.from_bytes(base.recv(4), 'big')
-        server_pub_key = RSA.import_key(base.recv(s_pub_len))
-
-        # ② AES鍵 + IV をサーバへ
-        self.enc.aes_key, self.enc.iv = secrets.token_bytes(16), secrets.token_bytes(16)
-        enc_sym = CryptoUtil.rsa_encrypt(self.enc.aes_key + self.enc.iv, server_pub_key)
-        base.sendall(len(enc_sym).to_bytes(4, 'big') + enc_sym)
-
-        # ③ 暗号化ソケット
-        self.sock = self.enc.wrap_socket(base)
-
+        tcp_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        tcp_sock.connect((self.server_address, self.server_port))
+    
+        pubkey_len    = int.from_bytes(tcp_sock.recv(4), 'big')
+        server_pubkey = RSA.import_key(tcp_sock.recv(pubkey_len))
+    
+        aes_key = secrets.token_bytes(16)
+        aes_iv  = secrets.token_bytes(16)
+        self.encryption.aes_key = aes_key
+        self.encryption.aes_iv  = aes_iv
+    
+        encrypted_sym_key = CryptoUtil.rsa_encrypt(aes_key + aes_iv, server_pubkey)
+        length_prefix     = len(encrypted_sym_key).to_bytes(4, 'big')
+        tcp_sock.sendall(length_prefix + encrypted_sym_key)
+    
+        self.secure_sock = self.encryption.wrap_socket(tcp_sock)
+    
     def _make_packet(self, room, op, payload):
         payload_bin = json.dumps(payload).encode()
         header = (
