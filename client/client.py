@@ -11,6 +11,17 @@ from streamlit_autorefresh import st_autorefresh
 import streamlit.components.v1 as components
 
 
+
+class KeyExchangeManager:
+    def __init__(self):
+        self.aes_key = secrets.token_bytes(16)
+        self.iv      = secrets.token_bytes(16)
+
+    def encrypted_shared_secret(self, server_pub_key):
+        shared = self.aes_key + self.iv
+        return PKCS1_OAEP.new(server_pub_key).encrypt(shared)
+
+
 class SymmetricCipher:
     def __init__(self, key, iv):
         self.key = key
@@ -23,17 +34,7 @@ class SymmetricCipher:
         return AES.new(self.key, AES.MODE_CFB, iv=self.iv, segment_size=128).decrypt(data)
 
 
-class KeyExchangeClient:
-    def __init__(self):
-        self.aes_key = secrets.token_bytes(16)
-        self.iv      = secrets.token_bytes(16)
-
-    def encrypted_shared_secret(self, server_pub_key):
-        shared = self.aes_key + self.iv
-        return PKCS1_OAEP.new(server_pub_key).encrypt(shared)
-
-
-class SecureSocket:
+class EncryptedSocket:
     def __init__(self, raw_sock, cipher):
         self.raw_sock = raw_sock
         self.cipher   = cipher
@@ -83,13 +84,13 @@ class TCPClient:
         server_public_key = RSA.import_key(tcp_socket.recv(pubkey_length))
 
         # ② 共有鍵(AES鍵 + IV) を暗号化して送信
-        key_exchanger = KeyExchangeClient()
+        key_exchanger = KeyExchangeManager()
         encrypted_secret = key_exchanger.encrypted_shared_secret(server_public_key)
         tcp_socket.sendall(len(encrypted_secret).to_bytes(4, 'big') + encrypted_secret)
 
         # ③ 暗号化ソケット確立
         self.cipher = SymmetricCipher(key_exchanger.aes_key, key_exchanger.iv)
-        self.sock   = SecureSocket(tcp_socket, self.cipher)
+        self.sock   = EncryptedSocket(tcp_socket, self.cipher)
 
     def make_header(self, room_bytes, op, state, payload_bytes):
         return (
