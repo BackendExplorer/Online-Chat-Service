@@ -1,4 +1,3 @@
-
 import socket
 import threading
 import time
@@ -6,6 +5,7 @@ import secrets
 import json
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP, AES
+
 
 
 class RSAKeyExchange:
@@ -42,7 +42,6 @@ class AESCipherCFB:
     # AES CFBモードでデータを復号して返す
     def decrypt(self, data):
         return AES.new(self.key, AES.MODE_CFB, iv=self.iv, segment_size=128).decrypt(data)
-
 
 
 class SecureSocket:
@@ -238,7 +237,6 @@ class TCPServer:
         conn.sendall(token)
 
 
-# ──── UDP サーバ ───────────────────────────────────────
 class UDPServer:
     def __init__(self, server_address, server_port):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -267,7 +265,6 @@ class UDPServer:
             # ルーム内の全メンバーにメッセージをブロードキャスト
             self.broadcast(room, msg)
 
-    
     def decode_message(self, data):
         # ヘッダとボディを切り出す
         header = data[:2]
@@ -286,7 +283,6 @@ class UDPServer:
         cipher = self.encryption_objects.get(token)
         message = cipher.decrypt(encrypted_message).decode("utf-8") if cipher else encrypted_message.decode("utf-8")
         return room_name, token, message
-
 
     def broadcast(self, room_name, message):
         # 指定されたルームの全参加者に対してループ
