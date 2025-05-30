@@ -1,4 +1,41 @@
 ```mermaid
+graph TB
+
+  %% スタイル定義
+  classDef ui          fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+  classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+  classDef infra       fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+
+  %% 上段（Entry Point）
+  main["main.py"]:::ui
+
+  %% 中段（Application） を横並びに
+  subgraph Application
+    direction LR
+    controller["AppController\n+ GUIManager"]:::application
+    client    ["TCPClient\n+ UDPClient"]    :::application
+  end
+
+  %% 下段（Crypto） を横並びに
+  subgraph Crypto
+    direction LR
+    rsa   ["RSAKeyExchange"]:::infra
+    aes   ["AESCipherCFB"]    :::infra
+    sock  ["SecureSocket"]    :::infra
+  end
+
+  %% 矢印関係（元の構成のまま）
+  main       --> controller
+  controller --> client
+  client     --> rsa
+  client     --> aes
+  client     --> sock
+
+```
+
+
+
+```mermaid
 graph TD
 
 %% スタイル定義
