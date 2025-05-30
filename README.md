@@ -2,7 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.13.2-blue)
 ![Streamlit](https://img.shields.io/badge/UI-Streamlit-red) 
-![Docker](https://img.shields.io/badge/Container-Docker-blue)
+![Docker Compose](https://img.shields.io/badge/Orchestration-Docker_Compose-2496ED?logo=docker&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/CI-GitHub_Actions-black?logo=githubactions&logoColor=white)
 ![Build Status](https://img.shields.io/badge/build-success-brightgreen)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
