@@ -1,17 +1,15 @@
-import json
-import secrets
 import socket
+import secrets
+import json
+
 from pathlib import Path
 
-from Crypto.Cipher import AES, PKCS1_OAEP
 from Crypto.PublicKey import RSA
+from Crypto.Cipher    import PKCS1_OAEP, AES
 
 import streamlit as st
-import streamlit.components.v1 as components
 from streamlit_autorefresh import st_autorefresh
-
-TOKEN_MAX_BYTE = 255
-
+import streamlit.components.v1 as components
 
 
 # ============================================================
@@ -30,6 +28,7 @@ class CryptoUtil:
     def rsa_encrypt(data, pub_key):
         return PKCS1_OAEP.new(pub_key).encrypt(data)
 
+
 # ============================================================
 # 鍵管理／暗号化ソケット
 # ============================================================
@@ -40,7 +39,6 @@ class Encryption:
     def wrap_socket(self, sock):
         return EncryptedSocket(sock, self.aes_key, self.iv)
 
-
 class EncryptedSocket:
     def __init__(self, raw_sock, aes_key, aes_iv):
         self.raw_sock = raw_sock
@@ -48,28 +46,28 @@ class EncryptedSocket:
         self.aes_iv   = aes_iv
 
     def _recv_exact(self, length):
-        buf = b''
-        while len(buf) < length:
-            part = self.raw_sock.recv(length - len(buf))
+        buffer = b''
+        while len(buffer) < length:
+            part = self.raw_sock.recv(length - len(buffer))
             if not part:
                 break
-            buf += part
-        return buf
+            buffer += part
+        return buffer
 
     def sendall(self, plaintext):
         ciphertext = CryptoUtil.aes_encrypt(plaintext, self.aes_key, self.aes_iv)
         self.raw_sock.sendall(len(ciphertext).to_bytes(4, 'big') + ciphertext)
 
-    def recv(self, max_size=4096):
+    def recv(self):
         length_bytes = self._recv_exact(4)
         if not length_bytes:
             return b''
-        total_len   = int.from_bytes(length_bytes, 'big')
-        ciphertext  = self._recv_exact(total_len)
+        ciphertext = self._recv_exact(int.from_bytes(length_bytes, 'big'))
         return CryptoUtil.aes_decrypt(ciphertext, self.aes_key, self.aes_iv)
 
     def close(self):
         self.raw_sock.close()
+
 
 # ============================================================
 # TCP クライアント
@@ -77,27 +75,25 @@ class EncryptedSocket:
 class TCPClient:
     def __init__(self, server_address, server_port):
         self.server_address, self.server_port = server_address, server_port
-        self.encryption  = Encryption()
+        self.enc = Encryption()
         self.sock = None
 
     def _connect_and_handshake(self):
-        tcp_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        tcp_sock.connect((self.server_address, self.server_port))
-    
-        pubkey_len    = int.from_bytes(tcp_sock.recv(4), 'big')
-        server_pubkey = RSA.import_key(tcp_sock.recv(pubkey_len))
-    
-        aes_key = secrets.token_bytes(16)
-        aes_iv  = secrets.token_bytes(16)
-        self.encryption.aes_key = aes_key
-        self.encryption.aes_iv  = aes_iv
-    
-        encrypted_sym_key = CryptoUtil.rsa_encrypt(aes_key + aes_iv, server_pubkey)
-        length_prefix     = len(encrypted_sym_key).to_bytes(4, 'big')
-        tcp_sock.sendall(length_prefix + encrypted_sym_key)
-    
-        self.sock = self.encryption.wrap_socket(tcp_sock)
-    
+        base = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        base.connect((self.server_address, self.server_port))
+
+        # ① サーバ公開鍵
+        s_pub_len = int.from_bytes(base.recv(4), 'big')
+        server_pub_key = RSA.import_key(base.recv(s_pub_len))
+
+        # ② AES鍵 + IV をサーバへ
+        self.enc.aes_key, self.enc.iv = secrets.token_bytes(16), secrets.token_bytes(16)
+        enc_sym = CryptoUtil.rsa_encrypt(self.enc.aes_key + self.enc.iv, server_pub_key)
+        base.sendall(len(enc_sym).to_bytes(4, 'big') + enc_sym)
+
+        # ③ 暗号化ソケット
+        self.sock = self.enc.wrap_socket(base)
+
     def _make_packet(self, room, op, payload):
         payload_bin = json.dumps(payload).encode()
         header = (
@@ -111,14 +107,14 @@ class TCPClient:
     def create_room(self, username, room, pwd):
         self._connect_and_handshake()
         self.sock.sendall(self._make_packet(room, 1, {"username": username, "password": pwd}))
-        token = self.sock.recv(TOKEN_MAX_BYTE)
+        token = self.sock.recv()
         self.sock.close()
         return {token: [room, username]}
 
     def get_room_list(self, username):
         self._connect_and_handshake()
         self.sock.sendall(self._make_packet("", 2, {"username": username, "password": ""}))
-        raw = self.sock.recv(4096).decode()
+        raw = self.sock.recv().decode()
         self.sock.close()
         try:
             inner = raw.strip()[1:-1]
@@ -129,9 +125,9 @@ class TCPClient:
     def join_room(self, username, room, pwd):
         self._connect_and_handshake()
         self.sock.sendall(self._make_packet("", 2, {"username": username, "password": ""}))
-        _ = self.sock.recv(4096)
+        _ = self.sock.recv()
         self.sock.sendall(self._make_packet(room, 2, {"username": username, "password": pwd}))
-        resp = self.sock.recv(TOKEN_MAX_BYTE)
+        resp = self.sock.recv()
         self.sock.close()
         if resp.startswith(b"InvalidPassword"):
             raise ValueError("パスワードが違います。")
@@ -141,7 +137,7 @@ class TCPClient:
 
 
 # ============================================================
-# UDP クライアント（変更なし）
+# UDP クライアント
 # ============================================================
 class UDPClient:
     def __init__(self, server_addr, server_port, info, enc):
@@ -339,8 +335,8 @@ class GUIManager:
 # Controller
 # ============================================================
 class AppController:
-    def __init__(self, server = "server" , tcp_port=9001, udp_port=9002):
-        self.server, self.tcp_port, self.udp_port = server, tcp_port, udp_port
+    def __init__(self, server="server", tcp_port=9001, udp_port=9002):
+        self.server, self.tcp_port, self.udp_port = server,tcp_port,udp_port
         self.state = st.session_state
         self._init_state()
         self.tcp_client = TCPClient(self.server, self.tcp_port)
@@ -366,18 +362,15 @@ class AppController:
         self.state.username    = user
         self.state.room_name   = room
         self.state.messages    = []
-        self.state.udp_client = UDPClient(self.server, self.udp_port, info, self.tcp_client.encryption)
+        self.state.udp_client  = UDPClient(self.server, self.udp_port, info, self.tcp_client.enc)
 
     def switch_page(self, page):
         self.state.page = page
         st.rerun()
 
-# ============================================================
-# Main
-# ============================================================
+
 if __name__ == "__main__":
     ctrl = AppController()
     gui  = GUIManager(ctrl)
     gui.setup()
     gui.render()
-
