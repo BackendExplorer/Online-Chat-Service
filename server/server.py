@@ -286,13 +286,13 @@ if __name__ == "__main__":
     udp_server = UDPServer(server_address, udp_server_port)
 
     # 各サーバーを並行して実行するスレッドを作成
-    thread_tcp = threading.Thread(target=tcp_server.start_tcp_server)
-    thread_udp = threading.Thread(target=udp_server.start_udp_server)
-
+    tcp_thread = threading.Thread(target=tcp_server.start_tcp_server)
+    udp_thread = threading.Thread(target=udp_server.start_udp_server)
+    
     # スレッドを開始
-    thread_tcp.start()
-    thread_udp.start()
-
+    tcp_thread.start()
+    udp_thread.start()
+    
     # スレッドの終了を待機
-    thread_tcp.join()
-    thread_udp.join()
+    tcp_thread.join()
+    udp_thread.join()
