@@ -520,7 +520,8 @@ sequenceDiagram
   <li>
     <h3>サーバーの EC2 デプロイ</h3>
     <p>Docker 化した <code>server.py</code> を AWS EC2 上にデプロイし、インターネット経由での利用に対応します。</p>
-    <p>複数クライアントからの接続や動作確認を通じて、信頼性と安定性を検証する予定です。</p>
+    <p>Github Actionsで新しいDockerイメージを作成して、Docker Hub にアプロードしたものをEC2からdocker pullする予定です。</p>
+    
   </li>
 </ul>
 
