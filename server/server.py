@@ -8,35 +8,50 @@ from Crypto.Cipher import PKCS1_OAEP, AES
 
 
 class RSAKeyExchange:
+    
+    # RSA鍵ペアを生成（2048ビット）
     def __init__(self):
         self.private_key = RSA.generate(2048)
 
+    # 公開鍵をバイト列として返す（送信用）
     def public_key_bytes(self):
         return self.private_key.publickey().export_key()
 
     def decrypt_symmetric_key(self, encrypted):
+        # クライアントから受信したAES鍵＋IVを復号
         decrypted_bytes = PKCS1_OAEP.new(self.private_key).decrypt(encrypted)
+
+        # 復号結果からAES鍵とIVを分離して返す
         aes_key = decrypted_bytes[:16]
         iv      = decrypted_bytes[16:]
         return aes_key, iv
     
 
 class AESCipherCFB:
+
+    # 対称鍵と初期化ベクトル（IV）を保存
     def __init__(self, key, iv):
         self.key = key
         self.iv = iv
 
+    # AES CFBモードでデータを暗号化して返す
     def encrypt(self, data):
         return AES.new(self.key, AES.MODE_CFB, iv=self.iv, segment_size=128).encrypt(data)
 
+    # AES CFBモードでデータを復号して返す
     def decrypt(self, data):
         return AES.new(self.key, AES.MODE_CFB, iv=self.iv, segment_size=128).decrypt(data)
 
+
+
 class SecureSocket:
+
+    # ソケット本体と暗号化用の対称暗号オブジェクトを保存
     def __init__(self, sock, cipher):
         self.sock = sock
         self.cipher = cipher
 
+    # 指定されたバイト数を受信するまで繰り返す
     def recv_exact(self, n):
         buf = bytearray()
         while len(buf) < n:
@@ -46,14 +61,18 @@ class SecureSocket:
             buf.extend(chunk)
         return bytes(buf)
 
+    # 平文を暗号化し、長さ（4バイト）付きで送信
     def sendall(self, plaintext):
         ciphertext = self.cipher.encrypt(plaintext)
         self.sock.sendall(len(ciphertext).to_bytes(4, 'big') + ciphertext)
 
     def recv(self):
+        # 最初の4バイトで受信データの長さを取得
         length = self.recv_exact(4)
         if not length:
             return b''
+
+        # 指定バイト数のデータを受信し、復号して返す
         ciphertext = self.recv_exact(int.from_bytes(length, 'big'))
         return self.cipher.decrypt(ciphertext)
 
@@ -126,17 +145,15 @@ class TCPServer:
         # 暗号化通信を行うためのソケットを作成して返す
         return secure_socket, symmetric_cipher
 
+    # 指定されたバイト数を受信するまで繰り返す
     @staticmethod
     def recvn(conn, n):
-        # 受信バッファを初期化
         buf = bytearray()
-        # 指定されたバイト数（n）に達するまで繰り返し受信
         while len(buf) < n:
             chunk = conn.recv(n - len(buf))
             if not chunk:
                 break
             buf.extend(chunk)
-        # バイト列として返す
         return bytes(buf)
 
     def decode_message(self, data):
@@ -157,44 +174,66 @@ class TCPServer:
         return room_name_size, operation, state, payload_size, room_name, payload
 
     def register_client(self, addr, room_name, payload, operation):
+        # ペイロードをパースしてユーザー情報を取得
         info = json.loads(payload) if payload else {}
+
+        # クライアント識別用のトークンを生成
         token = secrets.token_bytes(self.TOKEN_MAX_BYTE)
 
+        # ユーザー名・パスワードを抽出（無い場合は空文字）
         username    = info.get("username", "")
         password    = info.get("password", "")
+
+        # 操作がルーム作成ならホストとみなす（1: 作成, 2: 参加）
         is_host     = int(operation == 1)
+
+        # 初期状態では未参加ルーム、最後のアクティブ時間を記録
         joined_room = ""
         last_active = time.time()
 
+        # クライアント情報をトークンに紐づけて保存
         TCPServer.client_data[token] = [
             addr, joined_room, username, is_host, password, last_active
         ]
         return token
 
     def create_room(self, conn, room_name, token):
+        # トークンをクライアントに送信
         conn.sendall(token)
+        # ルームにホストとしてトークンを登録
         self.room_tokens[room_name] = [token]
+        # クライアントが送信したパスワードをルームに紐づけて保存
         TCPServer.room_passwords[room_name] = TCPServer.client_data[token][4]
+        # クライアントの所属ルーム情報を更新
         TCPServer.client_data[token][1] = room_name
 
     def join_room(self, conn, token):
+        # 現在のルーム一覧をクライアントに送信
         conn.sendall(str(list(self.room_tokens)).encode())
-
+        
+        # クライアントから参加希望ルームとパスワードを受信
         _, _, _, _, requested_room, payload = self.decode_message(conn.recv())
         password = json.loads(payload).get("password", "")
+
+        # クライアント情報にパスワードを記録
         TCPServer.client_data[token][4] = password
 
+         # 指定されたルームが存在しない場合はエラーを返す
         if requested_room not in self.room_tokens:
             conn.sendall(b"InvalidRoom")
             return
 
+        # パスワードが設定されており、不一致ならエラーを返す
         stored_password = self.room_passwords.get(requested_room, "")
         if stored_password and stored_password != password:
             conn.sendall(b"InvalidPassword")
             return
 
+        # ルームにクライアントを追加し、所属ルームを更新
         self.room_tokens[requested_room].append(token)
         TCPServer.client_data[token][1] = requested_room
+
+        # トークンをクライアントに返す（参加完了通知）
         conn.sendall(token)
 
 
