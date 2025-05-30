@@ -1,50 +1,3 @@
-```mermaid
-graph TD
-
-  %% スタイル
-  classDef ui fill:#fff8e1,stroke:#f9a825,stroke-width:2px
-  classDef controller fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-  classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-  classDef crypto fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-
-  subgraph Entry_Point["Entry Point"]
-    main["main.py (Streamlit)"]
-    class main ui
-  end
-
-  subgraph GUI
-    gui["GUIManager"]
-    class gui ui
-  end
-
-  subgraph Controller
-    controller["AppController"]
-    class controller controller
-  end
-
-  subgraph Application
-    tcp["TCPClient"]
-    udp["UDPClient"]
-    class tcp,udp application
-  end
-
-  subgraph Crypto
-    rsa["RSAKeyExchange"]
-    aes["AESCipherCFB"]
-    sock["SecureSocket"]
-    class rsa,aes,sock crypto
-  end
-
-  main --> gui
-  gui --> controller
-  controller --> tcp
-  controller --> udp
-  tcp --> rsa
-  tcp --> aes
-  tcp --> sock
-  udp --> aes
-
-```
 
 ```mermaid
 graph TD
@@ -54,7 +7,7 @@ graph TD
   classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
   classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:2px
 
-  subgraph Entry_Point["Entry Point"]
+  subgraph Entry_Point["GUI"]
     main["Streamlit"]
     class main ui
   end
