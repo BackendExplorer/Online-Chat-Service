@@ -1,4 +1,42 @@
+```mermaid
+graph TD
 
+%% スタイル定義
+classDef ui fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+classDef packet fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+
+subgraph Entry Point
+  main["Streamlit"]
+  class main ui
+end
+
+subgraph Application
+  app["TCPClient / UDPClient"]
+  class app application
+end
+
+subgraph Crypto
+  enc["Encryption"]
+  sock["EncryptedSocket"]
+  class enc,sock infra
+end
+
+subgraph Input Handling
+  handler["InputHandler"]
+  class handler packet
+end
+
+main --> app
+app  --> enc
+app  --> sock
+app  --> handler
+
+
+
+
+```
 
 ```mermaid
 graph TD
