@@ -107,7 +107,7 @@ class TCPClient:
         return header + room_bytes + payload_bytes
 
     # クライアントが新しいルームを作成する関数
-    def create_room(self, username, room, pwd):
+    def create_room(self, username, room, password):
         # サーバーに接続して鍵交換を行う
         self.connect_and_handshake()
 
@@ -116,7 +116,7 @@ class TCPClient:
         op_code = 1  # 操作コード：1 = ルーム作成
 
         # ルーム作成用のパケットを作成
-        payload = {"username": username, "password": pwd}
+        payload = {"username": username, "password": password}
         packet = self.make_packet(room, op_code, payload)
 
         # パケットを送信
@@ -165,7 +165,7 @@ class TCPClient:
             return [response]
 
     # クライアントが既存のルームに参加する関数
-    def join_room(self, username, room, pwd):
+    def join_room(self, username, room, password):
         # サーバーに接続して鍵交換を行う
         self.connect_and_handshake()
 
@@ -180,7 +180,7 @@ class TCPClient:
         _ = self.sock.recv()  # ルーム一覧はここでは使わない
 
         # --- ルーム参加リクエスト送信 ---
-        payload_join = {"username": username, "password": pwd}
+        payload_join = {"username": username, "password": password}
         join_packet = self.make_packet(room, op_code, payload_join)
         self.sock.sendall(join_packet)
 
