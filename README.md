@@ -487,7 +487,7 @@ sequenceDiagram
 
 <br>
 
-- **得られた成果**
+- **解決アプローチ**
 
   `TCPServer` と `UDPServer` をそれぞれ別スレッドで起動し、並列処理を実現。
 
