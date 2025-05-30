@@ -475,7 +475,7 @@ sequenceDiagram
 <ul>
   <li>
     <h3>TCP と UDP の並列処理の設計</h3>
-    <p>接続の確実性が必要な制御系（ルーム作成・参加など）には <code>TCP</code> を、リアルタイム性が重要なチャット通信には <code>UDP</code> を使い分けました。</p>
+    <p>正確な通信が必要な部分（ルーム作成・参加など）には <code>TCP</code> を、リアルタイム性が必要な部分には <code>UDP</code> を使いました。</p>
     <p>クライアントやルーム情報などは <code>TCPServer</code> のクラス変数として一元管理し、<code>UDPServer</code> からも参照できるようにすることで、両サーバ間で状態を正しく共有できるようにしました。</p>
   </li>
   <br>
