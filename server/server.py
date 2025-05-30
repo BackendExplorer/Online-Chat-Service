@@ -96,47 +96,64 @@ class TCPServer:
         # 対称暗号オブジェクトをトークンに対応付けて保存
         TCPServer.encryption_objects[token] = symmetric_cipher
 
+        # 操作コードに応じて処理を分岐（1: 作成 / 2: 参加）
         if operation == 1:
+            # 新しいルームを作成
             self.create_room(secure_socket, room_name, token)
         elif operation == 2:
+            # 既存のルームに参加
             self.join_room(secure_socket, token)
 
     # RSA-AES 鍵交換
     def perform_key_exchange(self, conn):
+        # RSA 鍵ペアを生成
         key_manager = RSAKeyExchange()
 
+        # 公開鍵をクライアントに送信
         public_key_bytes = key_manager.public_key_bytes()
         conn.sendall(len(public_key_bytes).to_bytes(4, 'big') + public_key_bytes)
-
+        
+        # クライアントから暗号化された AES鍵＋IV を受信
         encrypted_key_size = int.from_bytes(self.recvn(conn, 4), 'big')
         encrypted_key_iv = self.recvn(conn, encrypted_key_size)
+        # 秘密鍵で復号し、AES鍵と IV を取得
         aes_key, aes_iv = key_manager.decrypt_symmetric_key(encrypted_key_iv)
 
+        # 対称暗号用のオブジェクトを作成
         symmetric_cipher = AESCipherCFB(aes_key, aes_iv)
         secure_socket = SecureSocket(conn, symmetric_cipher)
+
+        # 暗号化通信を行うためのソケットを作成して返す
         return secure_socket, symmetric_cipher
 
     @staticmethod
     def recvn(conn, n):
+        # 受信バッファを初期化
         buf = bytearray()
+        # 指定されたバイト数（n）に達するまで繰り返し受信
         while len(buf) < n:
             chunk = conn.recv(n - len(buf))
             if not chunk:
                 break
             buf.extend(chunk)
+        # バイト列として返す
         return bytes(buf)
 
     def decode_message(self, data):
+        # ヘッダー と ボディ を切り出す
         header = data[:self.HEADER_MAX_BYTE]
         body   = data[self.HEADER_MAX_BYTE:]
 
+        # ヘッダから各フィールドを抽出
         room_name_size     = int.from_bytes(header[:1], "big")
         operation    = int.from_bytes(header[1:2], "big")
         state        = int.from_bytes(header[2:3], "big")
         payload_size = int.from_bytes(header[3:self.HEADER_MAX_BYTE], "big")
 
+        # ボディから各フィールドを抽出
         room_name = body[:room_name_size].decode("utf-8")
         payload   = body[room_name_size:room_name_size + payload_size].decode("utf-8")
+        
         return room_name_size, operation, state, payload_size, room_name, payload
 
     def register_client(self, addr, room_name, payload, operation):
