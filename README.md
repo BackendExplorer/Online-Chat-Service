@@ -1,3 +1,39 @@
+```mermaid
+graph TD
+
+%% スタイル定義
+classDef ui          fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+classDef infra       fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+
+subgraph Entry Point
+  main["main.py"]
+  class main ui
+end
+
+subgraph Application
+  controller["AppController\n+ GUIManager"]
+  client["TCPClient\n+ UDPClient"]
+  class controller,client application
+end
+
+subgraph Crypto
+  rsa["RSAKeyExchange"]
+  aes["AESCipherCFB"]
+  sock["SecureSocket"]
+  class rsa,aes,sock infra
+end
+
+main --> controller
+controller --> client
+client --> rsa
+client --> aes
+client --> sock
+
+```
+
+
+
 # Online Chat Service 
 
 ![Python](https://img.shields.io/badge/Python-3.13.2-blue)
