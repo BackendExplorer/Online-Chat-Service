@@ -15,9 +15,11 @@ class KeyExchangeManager:
         return self.private_key.publickey().export_key()
 
     def decrypt_symmetric_key(self, encrypted):
-        sym = PKCS1_OAEP.new(self.private_key).decrypt(encrypted)
-        return sym[:16], sym[16:]
-
+        decrypted_bytes = PKCS1_OAEP.new(self.private_key).decrypt(encrypted)
+        aes_key = decrypted_bytes[:16]
+        iv      = decrypted_bytes[16:]
+        return aes_key, iv
+    
 
 class SymmetricCipher:
     def __init__(self, key, iv):
