@@ -12,19 +12,19 @@ graph TB
   %% 中段（Application） を横並びに
   subgraph Application
     direction LR
-    controller["AppController\n+ GUIManager"]:::application
-    client    ["TCPClient\n+ UDPClient"]    :::application
+    controller["AppController<br>+ GUIManager"]:::application
+    client    ["TCPClient<br>+ UDPClient"]:::application
   end
 
   %% 下段（Crypto） を横並びに
   subgraph Crypto
     direction LR
     rsa   ["RSAKeyExchange"]:::infra
-    aes   ["AESCipherCFB"]    :::infra
-    sock  ["SecureSocket"]    :::infra
+    aes   ["AESCipherCFB"]:::infra
+    sock  ["SecureSocket"]:::infra
   end
 
-  %% 矢印関係（元の構成のまま）
+  %% 矢印関係
   main       --> controller
   controller --> client
   client     --> rsa
