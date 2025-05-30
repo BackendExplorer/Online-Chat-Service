@@ -253,11 +253,17 @@ class UDPServer:
 
     def handle_messages(self):
         while True:
+            # クライアントからのUDPメッセージを受信
             data, client_addr = self.sock.recvfrom(4096)
+
+             # メッセージからルーム名・トークン・本文を抽出
             room, token, msg  = self.decode_message(data)
 
+            # クライアントのIPアドレスと最終通信時刻を更新
             self.client_data[token][0] = client_addr
             self.client_data[token][5] = time.time()
+            
+            # ルーム内の全メンバーにメッセージをブロードキャスト
             self.broadcast(room, msg)
 
     def decode_message(self, data):
