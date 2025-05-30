@@ -7,7 +7,7 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP, AES
 
 
-class KeyExchangeManager:
+class RSAKeyExchange:
     def __init__(self):
         self.private_key = RSA.generate(2048)
 
@@ -21,7 +21,7 @@ class KeyExchangeManager:
         return aes_key, iv
     
 
-class SymmetricCipher:
+class AESCipherCFB:
     def __init__(self, key, iv):
         self.key = key
         self.iv = iv
@@ -32,7 +32,7 @@ class SymmetricCipher:
     def decrypt(self, data):
         return AES.new(self.key, AES.MODE_CFB, iv=self.iv, segment_size=128).decrypt(data)
 
-class EncryptedSocket:
+class SecureSocket:
     def __init__(self, sock, cipher):
         self.sock = sock
         self.cipher = cipher
@@ -65,7 +65,7 @@ class TCPServer:
     room_tokens = {}        # {room : [token, ...]}
     room_passwords = {}     # {room : password}
     client_data = {}        # {token: [addr, room, user, is_host, pw, last]}
-    encryption_objects = {} # {token: SymmetricCipher}
+    encryption_objects = {} # {token: AESCipherCFB}
 
     def __init__(self, server_address, server_port):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -98,7 +98,7 @@ class TCPServer:
 
     # RSA-AES 鍵交換
     def perform_key_exchange(self, conn):
-        key_manager = KeyExchangeManager()
+        key_manager = RSAKeyExchange()
 
         public_key_bytes = key_manager.public_key_bytes()
         conn.sendall(len(public_key_bytes).to_bytes(4, 'big') + public_key_bytes)
@@ -107,8 +107,8 @@ class TCPServer:
         encrypted_key_iv = self.recvn(conn, encrypted_key_length)
         aes_key, aes_iv = key_manager.decrypt_symmetric_key(encrypted_key_iv)
 
-        symmetric_cipher = SymmetricCipher(aes_key, aes_iv)
-        secure_socket = EncryptedSocket(conn, symmetric_cipher)
+        symmetric_cipher = AESCipherCFB(aes_key, aes_iv)
+        secure_socket = SecureSocket(conn, symmetric_cipher)
         return secure_socket, symmetric_cipher
 
     @staticmethod
