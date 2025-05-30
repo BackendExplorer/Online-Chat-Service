@@ -278,12 +278,12 @@ class UDPServer:
 
 
 if __name__ == "__main__":
-    # サーバーのアドレスとポート番号を設定
+    # サーバーの IPアドレス と ポート番号 を設定
     server_address  = '0.0.0.0'
     tcp_server_port = 9001
     udp_server_port = 9002
 
-    # TCP サーバーと UDP サーバーを作成
+    # TCPサーバー と UDPサーバー を作成
     tcp_server = TCPServer(server_address, tcp_server_port)
     udp_server = UDPServer(server_address, udp_server_port)
 
