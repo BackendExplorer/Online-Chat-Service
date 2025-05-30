@@ -30,7 +30,6 @@ class SymmetricCipher:
     def decrypt(self, data):
         return AES.new(self.key, AES.MODE_CFB, iv=self.iv, segment_size=128).decrypt(data)
 
-
 class EncryptedSocket:
     def __init__(self, sock, cipher):
         self.sock = sock
@@ -56,11 +55,7 @@ class EncryptedSocket:
         ciphertext = self.recv_exact(int.from_bytes(length, 'big'))
         return self.cipher.decrypt(ciphertext)
 
-    def close(self):
-        self.sock.close()
 
-
-# ──── TCP サーバ ───────────────────────────────────────
 class TCPServer:
     HEADER_MAX_BYTE = 32
     TOKEN_MAX_BYTE = 255
@@ -70,7 +65,7 @@ class TCPServer:
     client_data = {}        # {token: [addr, room, user, is_host, pw, last]}
     encryption_objects = {} # {token: SymmetricCipher}
 
-    def __init__(self, server_address: str, server_port: int):
+    def __init__(self, server_address, server_port):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.bind((server_address, server_port))
         self.sock.listen()
@@ -78,11 +73,11 @@ class TCPServer:
     
     def start_tcp_server(self):
         while True:
-            conn, addr = self.sock.accept()
+            connection, client_address = self.sock.accept()
             try:
-                self.handle_client(conn, addr)
+                self.handle_client(connection, client_address)
             except Exception:
-                conn.close()
+                connection.close()
 
     # クライアント初回リクエスト処理
     def handle_client(self, connection, client_address):
@@ -116,13 +111,13 @@ class TCPServer:
 
     @staticmethod
     def recvn(conn, n):
-        data = b''
-        while len(data) < n:
-            chunk = conn.recv(n - len(data))
+        buf = bytearray()
+        while len(buf) < n:
+            chunk = conn.recv(n - len(buf))
             if not chunk:
                 break
-            data += chunk
-        return data
+            buf.extend(chunk)
+        return bytes(buf)
 
     def decode_message(self, data):
         header = data[:self.HEADER_MAX_BYTE]
@@ -202,44 +197,51 @@ class UDPServer:
             self.client_data[token][5] = time.time()
             self.broadcast(room, msg)
 
-    def decode_message(self, data: bytes):
-        header   = data[:2]
-        body     = data[2:]
+    def decode_message(self, data):
+        header = data[:2]
+        body = data[2:]
 
-        room_len = int.from_bytes(header[:1], "big")
-        tok_len  = int.from_bytes(header[1:2], "big")
+        room_name_size = int.from_bytes(header[:1], "big")
+        token_size = int.from_bytes(header[1:2], "big")
 
-        room_name = body[:room_len].decode("utf-8")
-        token     = body[room_len:room_len + tok_len]
-        enc_msg   = body[room_len + tok_len:]
+        room_name = body[:room_name_size].decode("utf-8")
+        token = body[room_name_size:room_name_size + token_size]
+        encrypted_message = body[room_name_size + token_size:]
 
         cipher = self.encryption_objects.get(token)
-        msg    = cipher.decrypt(enc_msg).decode("utf-8") if cipher else enc_msg.decode("utf-8")
-        return room_name, token, msg
+        message = cipher.decrypt(encrypted_message).decode("utf-8") if cipher else encrypted_message.decode("utf-8")
+        return room_name, token, message
 
-    def broadcast(self, room, message):
-        for token in self.room_tokens.get(room, []):
-            info = self.client_data.get(token)
-            if not info or not info[0]:
+
+    def broadcast(self, room_name, message):
+        for token in self.room_tokens.get(room_name, []):
+            client_info = self.client_data.get(token)
+            if not client_info or not client_info[0]:
                 continue
 
-            cipher  = self.encryption_objects.get(token)
-            enc_msg = cipher.encrypt(message.encode()) if cipher else message.encode()
+            cipher = self.encryption_objects.get(token)
+            encrypted_message = cipher.encrypt(message.encode()) if cipher else message.encode()
 
-            packet = (len(room).to_bytes(1, 'big') + len(token).to_bytes(1, 'big') +
-                      room.encode() + token + enc_msg)
+            packet = (
+                len(room_name).to_bytes(1, 'big') +
+                len(token).to_bytes(1, 'big') +
+                room_name.encode() +
+                token +
+                encrypted_message
+            )
             try:
-                self.sock.sendto(packet, info[0])
+                self.sock.sendto(packet, client_info[0])
             except Exception:
                 pass
 
     def remove_inactive_clients(self):
         while True:
-            cutoff = time.time() - 30
-            for token, info in list(self.client_data.items()):
-                if info[5] < cutoff:
+            inactivity_threshold = time.time() - 30
+            for token, client_info in list(self.client_data.items()):
+                last_active_time = client_info[5]
+                if last_active_time < inactivity_threshold:
                     try:
-                        self.disconnect(token, info)
+                        self.disconnect(token, client_info)
                     except Exception:
                         pass
             time.sleep(60)
@@ -272,7 +274,7 @@ class UDPServer:
         self.sock.sendto(timeout_msg, addr)
 
 
-# ──── メインエントリ ────────────────────────────────
+
 if __name__ == "__main__":
     # サーバーのアドレスとポート番号を設定
     server_address  = '0.0.0.0'
@@ -294,3 +296,4 @@ if __name__ == "__main__":
     # スレッドの終了を待機
     thread_tcp.join()
     thread_udp.join()
+
