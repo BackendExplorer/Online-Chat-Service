@@ -491,9 +491,9 @@ sequenceDiagram
 
   `TCPServer` と `UDPServer` をそれぞれ別スレッドで起動し、並列処理を実現。
 
-  クライアント情報やルーム情報は `TCPServer` のクラス変数（`room_members_map`、`clients_map`）に集約し、
+  クライアント情報やルーム情報は `TCPServer` のクラス変数（`room_members_map`、`clients_map`）
 
-  `UDPServer` からも直接参照できるように設計。
+  に集約し、`UDPServer` からも直接参照できるように設計。
  
 <br>
     
