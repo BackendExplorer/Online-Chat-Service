@@ -374,40 +374,41 @@ sequenceDiagram
 classDiagram
 direction LR
 
-TCPServer -- UDPServer
+TCPServer <|-- UDPServer
 
 class TCPServer {
     - HEADER_MAX_BYTE: int
     - TOKEN_MAX_BYTE: int
-    - server_address: str
-    - server_port: int
     - sock: socket
-    - room_members_map: dict
-    - clients_map: dict
+    - room_tokens: dict
+    - room_passwords: dict
+    - client_data: dict
+    - encryption_objects: dict
     + __init__(server_address: str, server_port: int)
     + start_tcp_server(): None
-    - accept_tcp_connections(): None
-    - handle_client_request(connection: socket, client_address: tuple): None
+    - handle_client_request(conn: socket, addr: tuple): None
+    - perform_key_exchange(conn: socket): tuple
     - decode_message(data: bytes): tuple
-    - register_client(token: bytes, client_address: tuple, room_name: str, payload: str, operation: int): None
-    - create_room(connection: socket, room_name: str, payload: str, token: bytes): None
-    - join_room(connection: socket, room_name: str, payload: str, token: bytes): None
+    - register_client(addr: tuple, room: str, payload: str, op: int): bytes
+    - create_room(conn: SecureSocket, room: str, token: bytes): None
+    - join_room(conn: SecureSocket, token: bytes): None
 }
 
 class UDPServer {
-    - server_address: str
-    - server_port: int
-    - room_members_map: dict
-    - clients_map: dict
     - sock: socket
+    - room_tokens: dict
+    - room_passwords: dict
+    - client_data: dict
+    - encryption_objects: dict
     + __init__(server_address: str, server_port: int)
     + start_udp_server(): None
     - handle_messages(): None
     - decode_message(data: bytes): tuple
-    - broadcast_message(room_name: str, message: str): None
+    - broadcast(room: str, message: str): None
     - remove_inactive_clients(): None
-    - disconnect_inactive_client(client_token: bytes, client_info: list): None
+    - disconnect(token: bytes, info: list): None
 }
+
 ```
 <br>
 
