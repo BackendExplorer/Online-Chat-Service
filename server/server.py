@@ -266,31 +266,39 @@ class UDPServer:
             # ルーム内の全メンバーにメッセージをブロードキャスト
             self.broadcast(room, msg)
 
+    
     def decode_message(self, data):
+        # ヘッダとボディを切り出す
         header = data[:2]
         body = data[2:]
 
+        # ヘッダから各フィールドを抽出
         room_name_size = int.from_bytes(header[:1], "big")
         token_size = int.from_bytes(header[1:2], "big")
 
+        # ボディから各フィールドを抽出
         room_name = body[:room_name_size].decode("utf-8")
         token = body[room_name_size:room_name_size + token_size]
         encrypted_message = body[room_name_size + token_size:]
 
+        # トークンに対応する暗号オブジェクトを使ってメッセージを復号
         cipher = self.encryption_objects.get(token)
         message = cipher.decrypt(encrypted_message).decode("utf-8") if cipher else encrypted_message.decode("utf-8")
         return room_name, token, message
 
 
     def broadcast(self, room_name, message):
+        # 指定されたルームの全参加者に対してループ
         for token in self.room_tokens.get(room_name, []):
             client_info = self.client_data.get(token)
             if not client_info or not client_info[0]:
-                continue
+                continue    # 無効なクライアントはスキップ
 
+            # 対応する暗号オブジェクトでメッセージを暗号化
             cipher = self.encryption_objects.get(token)
             encrypted_message = cipher.encrypt(message.encode()) if cipher else message.encode()
 
+            # パケットを構築（ルーム名長 + トークン長 + ルーム名 + トークン + メッセージ）
             packet = (
                 len(room_name).to_bytes(1, 'big') +
                 len(token).to_bytes(1, 'big') +
@@ -299,20 +307,27 @@ class UDPServer:
                 encrypted_message
             )
             try:
+                # クライアントにメッセージを送信
                 self.sock.sendto(packet, client_info[0])
             except Exception:
                 pass
 
     def remove_inactive_clients(self):
         while True:
+            # タイムアウトの閾値（30秒間アクティビティがない場合）
             inactivity_threshold = time.time() - 30
+             
+            # 全クライアントを走査して、非アクティブなクライアントを検出
             for token, client_info in list(self.client_data.items()):
                 last_active_time = client_info[5]
                 if last_active_time < inactivity_threshold:
                     try:
+                        # 非アクティブなクライアントを切断
                         self.disconnect(token, client_info)
                     except Exception:
                         pass
+
+            # 60秒ごとにチェックを繰り返す
             time.sleep(60)
 
     def disconnect(self, token, info):
@@ -320,27 +335,35 @@ class UDPServer:
         members = self.room_tokens.get(room, [])
         timeout_msg = b"Timeout!"
 
-        # １）ルーム内への通知
+        # ① ルーム内への通知
         if is_host:
+            # ホストがタイムアウトした場合は、ルームの終了を通知
             self.broadcast(room, f"System: ホストの{username}がタイムアウトしたためルームを終了します")
             self.broadcast(room, "exit!")
-            # ルーム情報を消去
+            
+            # ルームのデータを削除
             self.room_tokens.pop(room, None)
             self.room_passwords.pop(room, None)
-            targets = members[:]   # 参加者全員を削除対象に
+
+            # 全参加者を削除対象とする
+            targets = members[:]   
         else:
+            # 一般ユーザーがタイムアウトした場合の通知
             self.broadcast(room, f"System: {username}がタイムアウトにより退出しました。")
+
+            # ルームから該当トークンを削除
             if token in members:
                 members.remove(token)
-            targets = [token]      # 自身のみを削除対象に
 
-        # ２）データ構造からのクリーンアップ
+            # 該当ユーザーのみを削除対象とする
+            targets = [token]      
+
+        # ② クライアントデータと暗号オブジェクトを削除
         for token in targets:
             self.client_data.pop(token, None)
             self.encryption_objects.pop(token, None)
 
-
-        # ３）クライアントへのタイムアウト通知（例外は呼び出し元へ伝播）
+        # ③ クライアントにタイムアウト通知を送信（失敗時の例外は呼び出し元で処理）
         self.sock.sendto(timeout_msg, addr)
 
 
