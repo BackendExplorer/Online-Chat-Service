@@ -1,36 +1,3 @@
-```mermaid
-graph TB
-
-  %% ノード定義（改行は <br> で）
-  main["main.py"]
-  controller["AppController<br>+ GUIManager"]
-  client["TCPClient<br>+ UDPClient"]
-  rsa["RSAKeyExchange"]
-  aes["AESCipherCFB"]
-  sock["SecureSocket"]
-
-  %% ピラミッド型の構造
-  main --> controller
-  controller --> client
-  client --> rsa
-  client --> aes
-  client --> sock
-
-  %% 可能な限り横に並べる
-  rsa --- aes
-  aes --- sock
-
-  %% スタイル（任意）
-  classDef ui fill:#fff8e1,stroke:#f9a825,stroke-width:2px
-  classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-  classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-
-  class main ui
-  class controller,client application
-  class rsa,aes,sock infra
-
-```
-
 
 
 ```mermaid
