@@ -1,6 +1,40 @@
 ```mermaid
 graph TD
 
+  %% スタイル定義
+  classDef ui fill:#fff8e1,stroke:#f9a825,stroke-width:2px
+  classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+  classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+
+  subgraph Entry_Point["Entry Point"]
+    main["Streamlit"]
+    class main ui
+  end
+
+  subgraph Application
+    app["TCPClient / UDPClient"]
+    class app application
+  end
+
+  subgraph Crypto
+    rsa["RSAKeyExchange"]
+    aes["AESCipherCFB"]
+    sock["SecureSocket"]
+    class rsa,aes,sock infra
+  end
+
+  main --> app
+
+  app --> rsa
+  app --> aes
+  app --> sock
+
+```
+
+
+```mermaid
+graph TD
+
 %% スタイル定義
 classDef ui fill:#fff8e1,stroke:#f9a825,stroke-width:2px
 classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
