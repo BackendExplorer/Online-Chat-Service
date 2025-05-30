@@ -103,8 +103,8 @@ class TCPServer:
         public_key_bytes = key_manager.public_key_bytes()
         conn.sendall(len(public_key_bytes).to_bytes(4, 'big') + public_key_bytes)
 
-        encrypted_key_length = int.from_bytes(self.recvn(conn, 4), 'big')
-        encrypted_key_iv = self.recvn(conn, encrypted_key_length)
+        encrypted_key_size = int.from_bytes(self.recvn(conn, 4), 'big')
+        encrypted_key_iv = self.recvn(conn, encrypted_key_size)
         aes_key, aes_iv = key_manager.decrypt_symmetric_key(encrypted_key_iv)
 
         symmetric_cipher = AESCipherCFB(aes_key, aes_iv)
@@ -125,14 +125,14 @@ class TCPServer:
         header = data[:self.HEADER_MAX_BYTE]
         body   = data[self.HEADER_MAX_BYTE:]
 
-        room_len     = int.from_bytes(header[:1], "big")
+        room_name_size     = int.from_bytes(header[:1], "big")
         operation    = int.from_bytes(header[1:2], "big")
         state        = int.from_bytes(header[2:3], "big")
         payload_size = int.from_bytes(header[3:self.HEADER_MAX_BYTE], "big")
 
-        room_name = body[:room_len].decode("utf-8")
-        payload   = body[room_len:room_len + payload_size].decode("utf-8")
-        return room_len, operation, state, payload_size, room_name, payload
+        room_name = body[:room_name_size].decode("utf-8")
+        payload   = body[room_name_size:room_name_size + payload_size].decode("utf-8")
+        return room_name_size, operation, state, payload_size, room_name, payload
 
     def register_client(self, addr, room_name, payload, operation):
         info = json.loads(payload) if payload else {}
@@ -268,9 +268,10 @@ class UDPServer:
             targets = [token]      # 自身のみを削除対象に
 
         # ２）データ構造からのクリーンアップ
-        for t in targets:
-            self.client_data.pop(t, None)
-            self.encryption_objects.pop(t, None)
+        for token in targets:
+            self.client_data.pop(token, None)
+            self.encryption_objects.pop(token, None)
+
 
         # ３）クライアントへのタイムアウト通知（例外は呼び出し元へ伝播）
         self.sock.sendto(timeout_msg, addr)
