@@ -18,14 +18,10 @@ subgraph Application
 end
 
 subgraph Crypto
-  enc["Encryption"]
-  sock["EncryptedSocket"]
-  class enc,sock infra
-end
-
-subgraph Input Handling
-  handler["InputHandler"]
-  class handler packet
+  rsa["RSAKeyExchange"]
+  aes["AESCipherCFB"]
+  sock["SecureSocket"]
+  class rsa,aes,sock infra
 end
 
 main --> app
