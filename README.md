@@ -25,9 +25,9 @@ subgraph Crypto
 end
 
 main --> app
-app  --> enc
+
 app  --> sock
-app  --> handler
+
 
 
 
