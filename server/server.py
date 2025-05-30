@@ -72,23 +72,28 @@ class TCPServer:
         self.sock.bind((server_address, server_port))
         self.sock.listen()
 
-    
     def start_tcp_server(self):
         while True:
             connection, client_address = self.sock.accept()
             try:
-                self.handle_client(connection, client_address)
+                self.handle_client_request(connection, client_address)
             except Exception:
                 connection.close()
 
-    # クライアント初回リクエスト処理
-    def handle_client(self, connection, client_address):
+    def handle_client_request(self, connection, client_address):
+        # 鍵交換を実行
         secure_socket, symmetric_cipher = self.perform_key_exchange(connection)
 
+         # クライアントから初回リクエストを受信
         request_data = secure_socket.recv()
+
+        # ヘッダーとボディを解析
         _, operation, _, _, room_name, payload = self.decode_message(request_data)
 
+        # トークンを生成し、クライアント情報を登録
         token = self.register_client(client_address, room_name, payload, operation)
+
+        # 対称暗号オブジェクトをトークンに対応付けて保存
         TCPServer.encryption_objects[token] = symmetric_cipher
 
         if operation == 1:
