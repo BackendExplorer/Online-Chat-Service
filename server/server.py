@@ -104,7 +104,7 @@ class TCPServer:
         # 鍵交換を実行
         secure_socket, symmetric_cipher = self.perform_key_exchange(connection)
 
-         # クライアントから初回リクエストを受信
+        # クライアントから初回リクエストを受信
         request_data = secure_socket.recv()
 
         # ヘッダーとボディを解析
@@ -172,12 +172,14 @@ class TCPServer:
         room_name = body[:room_name_size].decode("utf-8")
         payload   = body[room_name_size:room_name_size + payload_size].decode("utf-8")
         
-        return room_name_size,  # ルーム名のサイズ
-               operation,       # 操作コード
-               state,           # 状態コード
-               payload_size,    # ペイロードのサイズ
-               room_name,       # ルーム名
-               payload          # 本文
+        return (
+            room_name_size,  # ルーム名のサイズ
+            operation,       # 操作コード
+            state,           # 状態コード
+            payload_size,    # ペイロードのサイズ
+            room_name,       # ルーム名
+            payload          # 本文
+        )
 
     def register_client(self, addr, room_name, payload, operation):
         # ペイロードをパースしてユーザー情報を取得
