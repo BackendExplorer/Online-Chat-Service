@@ -162,10 +162,11 @@ class TCPServer:
         body   = data[self.HEADER_MAX_BYTE:]
 
         # ヘッダから各フィールドを抽出
-        room_name_size     = int.from_bytes(header[:1], "big")
-        operation    = int.from_bytes(header[1:2], "big")
-        state        = int.from_bytes(header[2:3], "big")
-        payload_size = int.from_bytes(header[3:self.HEADER_MAX_BYTE], "big")
+        room_name_size = int.from_bytes(header[:1], "big")
+        operation      = int.from_bytes(header[1:2], "big")
+        state          = int.from_bytes(header[2:3], "big")
+        payload_size   = int.from_bytes(header[3:self.HEADER_MAX_BYTE], "big")
+
 
         # ボディから各フィールドを抽出
         room_name = body[:room_name_size].decode("utf-8")
