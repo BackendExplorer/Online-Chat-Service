@@ -134,9 +134,9 @@ class TCPServer:
         
         # クライアントから暗号化された AES鍵＋IV を受信
         encrypted_key_size = int.from_bytes(self.recvn(conn, 4), 'big')
-        encrypted_key_iv = self.recvn(conn, encrypted_key_size)
+        encrypted_key_iv   = self.recvn(conn, encrypted_key_size)
         # 秘密鍵で復号し、AES鍵と IV を取得
-        aes_key, aes_iv = key_manager.decrypt_symmetric_key(encrypted_key_iv)
+        aes_key, aes_iv    = key_manager.decrypt_symmetric_key(encrypted_key_iv)
 
         # 対称暗号用のオブジェクトを作成
         symmetric_cipher = AESCipherCFB(aes_key, aes_iv)
@@ -181,11 +181,11 @@ class TCPServer:
         token = secrets.token_bytes(self.TOKEN_MAX_BYTE)
 
         # ユーザー名・パスワードを抽出（無い場合は空文字）
-        username  = info.get("username", "")
-        password  = info.get("password", "")
+        username = info.get("username", "")
+        password = info.get("password", "")
 
         # 操作がルーム作成ならホストとみなす（1: 作成, 2: 参加）
-        is_host   = int(operation == 1)
+        is_host  = int(operation == 1)
 
         # 初期状態では未参加ルーム、最後のアクティブ時間を記録
         joined_room = ""
@@ -268,7 +268,7 @@ class UDPServer:
     def decode_message(self, data):
         # ヘッダとボディを切り出す
         header = data[:2]
-        body = data[2:]
+        body   = data[2:]
 
         # ヘッダから各フィールドを抽出
         room_name_size = int.from_bytes(header[:1], "big")
@@ -280,8 +280,9 @@ class UDPServer:
         encrypted_message = body[room_name_size + token_size:]
 
         # トークンに対応する暗号オブジェクトを使ってメッセージを復号
-        cipher = self.encryption_objects.get(token)
+        cipher  = self.encryption_objects.get(token)
         message = cipher.decrypt(encrypted_message).decode("utf-8") if cipher else encrypted_message.decode("utf-8")
+        
         return room_name, token, message
 
     def broadcast(self, room_name, message):
