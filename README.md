@@ -606,14 +606,15 @@ sequenceDiagram
 
 ---
 
-## <a id="ライセンス情報"></a>📜 ライセンス情報
+## <a id="ライセンス"></a>📜 ライセンス情報
 
 <br>
 
 <ul>
   <li>
-    このプロジェクトは <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a> のもとで公開されています。<br><br>
-    自由に利用、改変、再配布が可能ですが、利用の際は本ライセンス表記を保持してください。
+    このプロジェクトは MIT License のもとで公開されています。<br><br>
+    自由に利用、改変、再配布が可能ですが、利用の際は本ライセンス表記を保持してください。<br><br>
+    ライセンス全文はリポジトリ内の <a href="./LICENSE.md" target="_blank">LICENSEファイル</a>をご参照ください。
   </li>
 </ul>
 
