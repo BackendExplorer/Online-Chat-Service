@@ -78,14 +78,15 @@ class SecureSocket:
 
 
 class TCPServer:
+    
     HEADER_MAX_BYTE = 32
     TOKEN_MAX_BYTE = 255
 
-    room_tokens = {}        # {room : [token, ...]}
-    room_passwords = {}     # {room : password}
-    client_data = {}        # {token: [addr, room, user, is_host, pw, last]}
-    encryption_objects = {} # {token: AESCipherCFB}
-
+    room_tokens        = {}  # {room : [token, ...]}
+    room_passwords     = {}  # {room : password}
+    client_data        = {}  # {token: [addr, room, user, is_host, pw, last]}
+    encryption_objects = {}  # {token: AESCipherCFB}
+    
     def __init__(self, server_address, server_port):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.bind((server_address, server_port))
@@ -171,14 +172,19 @@ class TCPServer:
         room_name = body[:room_name_size].decode("utf-8")
         payload   = body[room_name_size:room_name_size + payload_size].decode("utf-8")
         
-        return room_name_size, operation, state, payload_size, room_name, payload
+        return room_name_size,  # ルーム名のサイズ
+               operation,       # 操作コード
+               state,           # 状態コード
+               payload_size,    # ペイロードのサイズ
+               room_name,       # ルーム名
+               payload          # 本文
 
     def register_client(self, addr, room_name, payload, operation):
         # ペイロードをパースしてユーザー情報を取得
-        info = json.loads(payload) if payload else {}
+        info     = json.loads(payload) if payload else {}
 
         # クライアント識別用のトークンを生成
-        token = secrets.token_bytes(self.TOKEN_MAX_BYTE)
+        token    = secrets.token_bytes(self.TOKEN_MAX_BYTE)
 
         # ユーザー名・パスワードを抽出（無い場合は空文字）
         username = info.get("username", "")
@@ -193,8 +199,14 @@ class TCPServer:
 
         # クライアント情報をトークンに紐づけて保存
         TCPServer.client_data[token] = [
-            addr, joined_room, username, is_host, password, last_active
+            addr,          # クライアントのアドレス
+            joined_room,   # 所属ルーム
+            username,      # ユーザー名
+            is_host,       # ホストかどうか
+            password,      # パスワード
+            last_active    # 最終アクティブ時刻
         ]
+        
         return token
 
     def create_room(self, conn, room_name, token):
@@ -299,11 +311,12 @@ class UDPServer:
             # パケットを構築（ルーム名長 + トークン長 + ルーム名 + トークン + メッセージ）
             packet = (
                 len(room_name).to_bytes(1, 'big') +
-                len(token).to_bytes(1, 'big') +
-                room_name.encode() +
-                token +
+                len(token).to_bytes(1, 'big')     +
+                room_name.encode()                +
+                token                             +
                 encrypted_message
             )
+
             try:
                 # クライアントにメッセージを送信
                 self.sock.sendto(packet, client_info[0])
@@ -330,7 +343,7 @@ class UDPServer:
 
     def disconnect(self, token, info):
         addr, room, username, is_host = info[:4]
-        members = self.room_tokens.get(room, [])
+        members     = self.room_tokens.get(room, [])
         timeout_msg = b"Timeout!"
 
         # ① ルーム内への通知
