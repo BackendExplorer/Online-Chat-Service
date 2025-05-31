@@ -12,7 +12,7 @@
 
 ### 独自プロトコル・暗号通信・マルチスレッド・ソケット通信によるグループチャットアプリ
 
-### システム設計から実装、Docker化、Github Actionsの自動テスト、Qiitaでの発信まで対応
+### システム設計から実装、Docker、Docker-Compose,Github Actionsの自動テストまで対応
 
 <br>
 
