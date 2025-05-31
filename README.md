@@ -73,8 +73,6 @@ https://github.com/user-attachments/assets/3923c939-72fe-4236-9f2b-3a75e9b86fcc
 
 
 
-- [Qiitaでの発信 : 開発ストーリー](#qiita-seisaku-katei-no-kaisetsu-ki)
-
 - [参考文献](#参考文献)
 
 - [ライセンス情報](#ライセンス情報)
@@ -546,24 +544,7 @@ sequenceDiagram
 
 
 ---
-## <a id="qiita-seisaku-katei-no-kaisetsu-ki"></a>✏️ Qiitaでの発信 : 開発ストーリー
 
-<br>
-
-<ul>
-  <li>
-    <p>実装の背景や設計の工夫について、Qiita記事で詳しく解説しています。</p>
-    <p>
-      <a href="https://qiita.com/your-article-link" target="_blank" rel="noopener noreferrer">
-        TCP・UDP×マルチスレッドで作る、ゼロからのチャットアプリ開発
-      </a>
-    </p>
-  </li>
-</ul>
-
-<br>
-
----
 ## <a id="参考文献"></a>📗 参考文献
 
 <br>
