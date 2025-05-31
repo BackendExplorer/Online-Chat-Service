@@ -167,7 +167,6 @@ class TCPServer:
         state          = int.from_bytes(header[2:3], "big")
         payload_size   = int.from_bytes(header[3:self.HEADER_MAX_BYTE], "big")
 
-
         # ボディから各フィールドを抽出
         room_name = body[:room_name_size].decode("utf-8")
         payload   = body[room_name_size:room_name_size + payload_size].decode("utf-8")
@@ -182,11 +181,11 @@ class TCPServer:
         token = secrets.token_bytes(self.TOKEN_MAX_BYTE)
 
         # ユーザー名・パスワードを抽出（無い場合は空文字）
-        username    = info.get("username", "")
-        password    = info.get("password", "")
+        username  = info.get("username", "")
+        password  = info.get("password", "")
 
         # 操作がルーム作成ならホストとみなす（1: 作成, 2: 参加）
-        is_host     = int(operation == 1)
+        is_host   = int(operation == 1)
 
         # 初期状態では未参加ルーム、最後のアクティブ時間を記録
         joined_room = ""
@@ -273,11 +272,11 @@ class UDPServer:
 
         # ヘッダから各フィールドを抽出
         room_name_size = int.from_bytes(header[:1], "big")
-        token_size = int.from_bytes(header[1:2], "big")
+        token_size     = int.from_bytes(header[1:2], "big")
 
         # ボディから各フィールドを抽出
-        room_name = body[:room_name_size].decode("utf-8")
-        token = body[room_name_size:room_name_size + token_size]
+        room_name         = body[:room_name_size].decode("utf-8")
+        token             = body[room_name_size:room_name_size + token_size]
         encrypted_message = body[room_name_size + token_size:]
 
         # トークンに対応する暗号オブジェクトを使ってメッセージを復号
