@@ -157,10 +157,10 @@
 以下のコマンドをターミナルで実行します
 
 ```bash
-git clone git@github.com:BackendExplorer/Online-Chat.git
+git clone git@github.com:BackendExplorer/Online-Chat-Service.git
 ```
 ```bash
-cd Online-Chat
+cd Online-Chat-Service
 ```
 
 <br>
