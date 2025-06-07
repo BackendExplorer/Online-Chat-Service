@@ -5,7 +5,8 @@
 ![Docker Compose](https://img.shields.io/badge/Orchestration-Docker_Compose-2496ED?logo=docker&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/CI-GitHub_Actions-black?logo=githubactions&logoColor=white)
 ![Build Status](https://img.shields.io/badge/build-success-brightgreen)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![License: Custom - Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-lightgrey.svg)](./LICENSE)
+
 
 
 <br>
@@ -24,7 +25,9 @@
 
 <br>
 
-https://github.com/user-attachments/assets/3923c939-72fe-4236-9f2b-3a75e9b86fcc
+![Image](https://github.com/user-attachments/assets/9c7608ac-3291-4aa1-8f2a-72da07aab874)
+
+![Image](https://github.com/user-attachments/assets/787643c5-a1da-4b60-ab98-b92fe79911a7)
   
 <br>
 
@@ -51,7 +54,6 @@ https://github.com/user-attachments/assets/3923c939-72fe-4236-9f2b-3a75e9b86fcc
 
 - [クラス構成 と モジュール設計](#クラス構成とモジュール設計)
 
-- [GitHub Actionsによる自動テスト](#自動テストとci-cd構成)
 
 
 
@@ -65,11 +67,11 @@ https://github.com/user-attachments/assets/3923c939-72fe-4236-9f2b-3a75e9b86fcc
 
 - [苦労した点](#苦労した点)
 
-- [追加予定の機能](#追加予定の機能)
+- [クラウド化への方針](#追加予定の機能)
 
 <br>
 
-## **📚 参考情報・ライセンス**
+## **📚 出典・ライセンス**
 
 
 
@@ -142,12 +144,6 @@ https://github.com/user-attachments/assets/3923c939-72fe-4236-9f2b-3a75e9b86fcc
 
 以下を事前にインストールしてください
 
-- [Python 3.8以上](https://www.python.org/downloads/)
-
-- [PyCryptodome](https://www.pycryptodome.org/)
-
-- [Streamlit](https://streamlit.io/)
-
 - [Git](https://git-scm.com/)
 
 - [Docker](https://docs.docker.com/get-docker/)
@@ -195,10 +191,9 @@ http://localhost:8501 でアクセス可能です。
 
 | ホスト | ゲスト |
 |:-------:|:--------:|
-|<br><img src="https://github.com/user-attachments/assets/64532563-e7fa-4083-8d7f-ad61812931ff" width="100%" /> |<br><img src="https://github.com/user-attachments/assets/927afed6-981e-426f-ac18-460bf4c83aee" width="100%" /> |
+|<br><img alt="Image" src="https://github.com/user-attachments/assets/16bf1e34-e667-4bfc-8742-7f602c4e3695" width="100%" /> |<br><img alt="Image" src="https://github.com/user-attachments/assets/61029b89-75c0-4764-bcff-ff80dd3d34a3" width="100%" /> |
 
 <br>
-
 
 ### 2. ユーザーの操作手順
 
@@ -257,8 +252,7 @@ sequenceDiagram
 
 ```
 
-<img width="789" alt="スクリーンショット 2025-05-27 9 42 55" src="https://github.com/user-attachments/assets/7eb0a366-3bc1-4d2d-8211-ecfcbcfcd3ff" />
-
+<img width="709" alt="Image" src="https://github.com/user-attachments/assets/a824ab62-2775-4593-9358-5cef36a8bdc4" />
 
 ---
 
@@ -341,44 +335,65 @@ sequenceDiagram
 <br>
 
 ```mermaid
-%%{init: {'themeVariables': {'scale': 0.3}}}%%
 classDiagram
-direction LR
 
-TCPServer <|-- UDPServer
+class RSAKeyExchange {
+    - private_key
+    + __init__()
+    + public_key_bytes() bytes
+    + decrypt_symmetric_key(encrypted) tuple
+}
+
+class AESCipherCFB {
+    - key
+    - iv
+    + __init__(key, iv)
+    + encrypt(data) bytes
+    + decrypt(data) bytes
+}
+
+class SecureSocket {
+    - sock
+    - cipher
+    + __init__(sock, cipher)
+    + recv_exact(n) bytes
+    + sendall(plaintext)
+    + recv() bytes
+}
 
 class TCPServer {
-    - HEADER_MAX_BYTE: int
-    - TOKEN_MAX_BYTE: int
-    - sock: socket
-    - room_tokens: dict
-    - room_passwords: dict
-    - client_data: dict
-    - encryption_objects: dict
-    + __init__(server_address: str, server_port: int)
-    + start_tcp_server(): None
-    - handle_client_request(conn: socket, addr: tuple): None
-    - perform_key_exchange(conn: socket): tuple
-    - decode_message(data: bytes): tuple
-    - register_client(addr: tuple, room: str, payload: str, op: int): bytes
-    - create_room(conn: SecureSocket, room: str, token: bytes): None
-    - join_room(conn: SecureSocket, token: bytes): None
+    - sock
+    + __init__(server_address, server_port)
+    + start_tcp_server()
+    + handle_client_request(connection, client_address)
+    + perform_key_exchange(conn)
+    + decode_message(data)
+    + register_client(addr, room_name, payload, operation)
+    + create_room(conn, room_name, token)
+    + join_room(conn, token)
+    + recvn(conn, n) static
 }
 
 class UDPServer {
-    - sock: socket
-    - room_tokens: dict
-    - room_passwords: dict
-    - client_data: dict
-    - encryption_objects: dict
-    + __init__(server_address: str, server_port: int)
-    + start_udp_server(): None
-    - handle_messages(): None
-    - decode_message(data: bytes): tuple
-    - broadcast(room: str, message: str): None
-    - remove_inactive_clients(): None
-    - disconnect(token: bytes, info: list): None
+    - sock
+    - room_tokens
+    - room_passwords
+    - client_data
+    - encryption_objects
+    + __init__(server_address, server_port)
+    + start_udp_server()
+    + handle_messages()
+    + decode_message(data)
+    + broadcast(room, message)
+    + remove_inactive_clients()
+    + disconnect(token, info)
 }
+
+TCPServer --> RSAKeyExchange : uses
+TCPServer --> SecureSocket : uses
+SecureSocket --> AESCipherCFB : uses
+UDPServer --> AESCipherCFB : uses 
+
 
 ```
 <br>
@@ -425,64 +440,60 @@ graph TD
  
 <br>
 
-## <a id="自動テストとci-cd構成"></a>🔁 GitHub Actionsによる自動テスト
-
-<br>
-
-<ul>
-  <li>
-    本プロジェクトでは GitHub Actions による CI を構築し、push/PR 時に以下を自動実行します。
-    
-  </li>
-</ul>
-
-<br>
-
-
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant Dev as 開発者
-    participant GitHub as GitHubリポジトリ
-    participant CI as GitHub Actions（CI）
-    participant Compose as Docker Compose
-
-    Dev ->> GitHub: コードを push / PR 作成
-    GitHub ->> CI: CIワークフロー（ci.yml）を起動
-    CI ->> CI: Docker Buildx セットアップ & イメージビルド
-    CI ->> Compose: docker compose up -d
-    Compose -->> CI: コンテナ起動確認
-    CI ->> CI: sleep 10（初期化待機）
-    CI ->> Compose: docker compose ps（状態確認）
-    CI ->> Compose: docker compose down（後処理）
-```
-
-<br>
-
 ---
 
 ## <a id="設計上のこだわり"></a>🌟 設計上のこだわり
 
 <br>
 
-<ul>
-  <li>
-    <p>以下は、チャットルーム接続のために設計された</p>
-    <p> <strong>独自プロトコル TCRP（Talk Chat Room Protocol）</strong> のパケット構造を表します。</p>
-    
-  </li>
-</ul>
+- **プロトコル仕様**
 
-<img width="789" alt="スクリーンショット 2025-05-31 22 43 14" src="https://github.com/user-attachments/assets/f1da146e-2dc8-4a63-87dc-84c6d4253a47" />
-
-
-
-<br><br>
-
----
+  以下は、チャットルーム接続のために設計された
+  
+  独自プロトコル **TCRP（Talk Chat Room Protocol）** のパケット構造を表します。
 
 <br>
+
+<img width="805" alt="Image" src="https://github.com/user-attachments/assets/1801cebc-8540-4fac-8833-9619ade31ab1" />
+
+<br>
+
+- **課題点**
+
+  チャットルームの作成・参加をTCP通信で制御するにあたり、  
+  
+  状態管理や処理の区別を正確に行う必要がありました。
+  
+  特に、Room作成・参加・応答といった複数の段階を整理して通信する仕組みが必要でした。
+
+<br>
+
+- **解決アプローチ**
+
+  ヘッダー部に `RoomNameSize（1B）`、`Operation（1B）`、`State（1B）`、
+  
+  `OperationPayloadSize（29B）` を固定長で定義。
+  
+  その後に、RoomName（最大8バイト）と OperationPayload（最大21バイト）を送信する構成としました。
+  
+  各フィールドのサイズを明示することで、サーバー側での解析を簡潔にし、
+
+  通信の一貫性と可読性を確保しました。
+
+<br>
+
+- **得られた成果**
+
+  クライアントとサーバー間のチャットルーム管理が明確に区分され、
+  
+  状態遷移（初期要求 → 応答 → 完了）も正確に処理できるようになりました。
+  
+  今後のプロトコル拡張（認証追加・通知処理など）にも対応しやすい柔軟な設計となっています。
+
+<br>
+
+
+---
 
 ## <a id="苦労した点"></a> ⚠️ 苦労した点
 
@@ -496,7 +507,7 @@ sequenceDiagram
   
   正確な通信（ルーム作成・参加など）で必要な `TCP通信` と、
 
-  リアルタイム性が求められるチャット通信で必要な `UDP通信` を並列処理できる必要がありました
+  リアルタイム性が求められるチャット通信で必要な `UDP通信` を並列処理できる必要がありました。
 
 <br>
 
@@ -524,24 +535,35 @@ sequenceDiagram
 
 ---
 
-## <a id="追加予定の機能"></a> 🔥 追加予定の機能
+## <a id="追加予定の機能"></a> 🔥 クラウド化への方針
 
 <br>
 
-<ul>
+- **課題点**
+
+  現在はローカル環境でのみ動作しており、外部ユーザーが利用できる状態ではありません。  
+
+  また、手動での更新は手間とミスの原因になります。
+
+<br>
+
+- **解決アプローチ**
+
+  公開環境として AWS EC2 を採用し、サーバーを常時起動可能にします。
   
-  <li>
-    <h3>サーバーの EC2 デプロイ</h3>
-    <p>Docker 化した <code>server.py</code> を AWS EC2 上にデプロイし、インターネット経由での利用に対応します。</p>
-    <p>デプロイの自動化には GitHub Actions を使用し、</p>
-    <p>ビルドした Docker イメージを Docker Hub にプッシュ → EC2 で Pull & 実行する構成を想定しています。</p>
-    
-    
-  </li>
-</ul>
+  GitHub Actions で Docker イメージを自動ビルド・更新し、
+  
+  EC2 側で自動的に pull・起動する仕組みを構築します。
 
 <br>
 
+- **得られる成果**
+
+  外部公開が可能になり、実利用に近い環境での運用が実現します。
+  
+  自動化によって保守も簡単になり、本番展開にもつながります。
+  
+<br>
 
 ---
 
@@ -587,15 +609,16 @@ sequenceDiagram
 
 ---
 
-## <a id="ライセンス"></a>📜 ライセンス情報
+## <a id="ライセンス情報"></a>📜 ライセンス情報
 
 <br>
 
 <ul>
   <li>
-    このプロジェクトは MIT License のもとで公開されています。<br><br>
-    自由に利用、改変、再配布が可能ですが、利用の際は本ライセンス表記を保持してください。<br><br>
-    ライセンス全文はリポジトリ内の <a href="./LICENSE.md" target="_blank">LICENSEファイル</a>をご参照ください。
+    本プロジェクトの全コード・構成・図・UIなどの著作権は、制作者である Tenshin Noji に帰属します。<br><br>
+    採用選考や個人的な学習を目的とした閲覧・参照は歓迎しますが、<br><br>
+    無断転載・複製・商用利用・二次配布は禁止とさせていただきます。<br><br>
+    ライセンス全文はリポジトリ内の <a href="./LICENSE.md" target="_blank">LICENSEファイル</a>をご覧ください。
   </li>
 </ul>
 
