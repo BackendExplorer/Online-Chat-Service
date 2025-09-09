@@ -275,62 +275,68 @@ sequenceDiagram
 classDiagram
 
 class RSAKeyExchange {
-    - private_key
-    + __init__()
-    + public_key_bytes() bytes
-    + decrypt_symmetric_key(encrypted) tuple
+    -private_key: RsaKey
+    +__init__()
+    +public_key_bytes(): bytes
+    +decrypt_symmetric_key(encrypted: bytes): tuple
 }
 
 class AESCipherCFB {
-    - key
-    - iv
-    + __init__(key, iv)
-    + encrypt(data) bytes
-    + decrypt(data) bytes
+    -key: bytes
+    -iv: bytes
+    +__init__(key: bytes, iv: bytes)
+    +encrypt(data: bytes): bytes
+    +decrypt(data: bytes): bytes
 }
 
 class SecureSocket {
-    - sock
-    - cipher
-    + __init__(sock, cipher)
-    + recv_exact(n) bytes
-    + sendall(plaintext)
-    + recv() bytes
-}
-
-class TCPServer {
-    - sock
-    + __init__(server_address, server_port)
-    + start_tcp_server()
-    + handle_client_request(connection, client_address)
-    + perform_key_exchange(conn)
-    + decode_message(data)
-    + register_client(addr, room_name, payload, operation)
-    + create_room(conn, room_name, token)
-    + join_room(conn, token)
-    + recvn(conn, n) static
+    -sock: socket
+    -cipher: AESCipherCFB
+    +__init__(sock: socket, cipher: AESCipherCFB)
+    +recv_exact(n: int): bytes
+    +sendall(plaintext: bytes): void
+    +recv(): bytes
 }
 
 class UDPServer {
-    - sock
-    - room_tokens
-    - room_passwords
-    - client_data
-    - encryption_objects
-    + __init__(server_address, server_port)
-    + start_udp_server()
-    + handle_messages()
-    + decode_message(data)
-    + broadcast(room, message)
-    + remove_inactive_clients()
-    + disconnect(token, info)
+    -sock: socket
+    -room_tokens: dict
+    -room_passwords: dict
+    -client_data: dict
+    -encryption_objects: dict
+    +__init__(server_address: str, server_port: int)
+    +start_udp_server(): void
+    +handle_messages(): void
+    +decode_message(data: bytes): tuple
+    +broadcast(room_name: str, message: str): void
+    +remove_inactive_clients(): void
+    +disconnect(token: bytes, info: list): void
 }
 
-TCPServer --> RSAKeyExchange : uses
+class TCPServer {
+    -sock: socket
+    +HEADER_MAX_BYTE: int
+    +TOKEN_MAX_BYTE: int
+    +room_tokens: dict
+    +room_passwords: dict
+    +client_data: dict
+    +encryption_objects: dict
+    +__init__(server_address: str, server_port: int)
+    +start_tcp_server(): void
+    +handle_client_request(connection: socket, client_address: tuple): void
+    +perform_key_exchange(conn: socket): tuple
+    +decode_message(data: bytes): tuple
+    +register_client(addr: tuple, room_name: str, payload: str, operation: int): bytes
+    +create_room(conn: SecureSocket, room_name: str, token: bytes): void
+    +join_room(conn: SecureSocket, token: bytes): void
+    +recvn(conn: socket, n: int): bytes
+}
+
+TCPServer --> UDPServer : uses data from
 TCPServer --> SecureSocket : uses
 SecureSocket --> AESCipherCFB : uses
-UDPServer --> AESCipherCFB : uses 
-
+TCPServer --> RSAKeyExchange : uses
+UDPServer --> AESCipherCFB : uses
 
 ```
 <br>
