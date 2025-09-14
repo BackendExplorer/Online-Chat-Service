@@ -5,6 +5,7 @@ import secrets
 import json
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP, AES
+from sqlite_logger import SQLiteLogger # ログ機能のインポート
 
 
 
@@ -87,42 +88,63 @@ class TCPServer:
     client_data        = {}  # {token: [addr, room, user, is_host, pw, last]}
     encryption_objects = {}  # {token: AESCipherCFB}
     
-    def __init__(self, server_address, server_port):
+    def __init__(self, server_address, server_port, logger):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.bind((server_address, server_port))
         self.sock.listen()
+        self.logger = logger
 
     def start_tcp_server(self):
         while True:
             connection, client_address = self.sock.accept()
-            try:
-                self.handle_client_request(connection, client_address)
-            except Exception:
-                connection.close()
+            # 各クライアントの処理を新しいスレッドで実行
+            client_thread = threading.Thread(target=self.handle_client_request, args=(connection, client_address))
+            client_thread.daemon = True
+            client_thread.start()
 
     def handle_client_request(self, connection, client_address):
-        # 鍵交換を実行
-        secure_socket, symmetric_cipher = self.perform_key_exchange(connection)
+        try:
+            # 鍵交換を実行
+            secure_socket, symmetric_cipher = self.perform_key_exchange(connection)
 
-        # クライアントから初回リクエストを受信
-        request_data = secure_socket.recv()
+            # クライアントから初回リクエストを受信
+            request_data = secure_socket.recv()
+            if not request_data:
+                return
 
-        # ヘッダーとボディを解析
-        _, operation, _, _, room_name, payload = self.decode_message(request_data)
+            # ヘッダーとボディを解析
+            _, operation, _, _, room_name, payload = self.decode_message(request_data)
 
-        # トークンを生成し、クライアント情報を登録
-        token = self.register_client(client_address, room_name, payload, operation)
+            # 操作コード 2 (ルーム一覧取得) はユーザー登録なしで処理
+            if operation == 2:
+                self.list_rooms(secure_socket)
+                return
 
-        # 対称暗号オブジェクトをトークンに対応付けて保存
-        TCPServer.encryption_objects[token] = symmetric_cipher
+            # 操作コード 1, 3 の場合はユーザー登録を行う
+            token = self.register_client(client_address, room_name, payload, operation)
+            username = TCPServer.client_data[token][2]
+            self.logger.log('USER_CONNECT', username=username, client_ip=client_address)
+            TCPServer.encryption_objects[token] = symmetric_cipher
 
-        # 操作コードに応じて処理を分岐（1: 作成 / 2: 参加）
-        if operation == 1:
-            # 新しいルームを作成
-            self.create_room(secure_socket, room_name, token)
-        elif operation == 2:
-            # 既存のルームに参加
-            self.join_room(secure_socket, token)
+            # 操作コードに応じて処理を分岐（1: 作成 / 3: 参加）
+            if operation == 1:
+                # 新しいルームを作成
+                self.create_room(secure_socket, room_name, token)
+            elif operation == 3:
+                # 既存のルームに参加
+                self.join_room(secure_socket, token, room_name, payload)
+
+        except json.JSONDecodeError as e:
+            self.logger.log('ERROR', details=f"JSON Decode Error: {e}", client_ip=client_address)
+        except Exception as e:
+            self.logger.log('ERROR', details=f"TCP Handle Request Error: {e}", client_ip=client_address)
+        finally:
+            connection.close()
+
+    def list_rooms(self, conn):
+        # 現在のルーム一覧をクライアントに送信
+        self.logger.log('LIST_ROOMS', details=f"Room list requested by {conn.sock.getpeername()}")
+        conn.sendall(str(list(self.room_tokens)).encode())
 
     # RSA-AES 鍵交換
     def perform_key_exchange(self, conn):
@@ -192,7 +214,7 @@ class TCPServer:
         username = info.get("username", "")
         password = info.get("password", "")
 
-        # 操作がルーム作成ならホストとみなす（1: 作成, 2: 参加）
+        # 操作がルーム作成ならホストとみなす（1: 作成）
         is_host  = int(operation == 1)
 
         # 初期状態では未参加ルーム、最後のアクティブ時間を記録
@@ -212,8 +234,6 @@ class TCPServer:
         return token
 
     def create_room(self, conn, room_name, token):
-        # トークンをクライアントに送信
-        conn.sendall(token)
         # ルームにホストとしてトークンを登録
         self.room_tokens[room_name] = [token]
         # クライアントが送信したパスワードをルームに紐づけて保存
@@ -221,25 +241,32 @@ class TCPServer:
         # クライアントの所属ルーム情報を更新
         TCPServer.client_data[token][1] = room_name
 
-    def join_room(self, conn, token):
-        # 現在のルーム一覧をクライアントに送信
-        conn.sendall(str(list(self.room_tokens)).encode())
+        # ログ記録 (ROOM_CREATED)
+        username = TCPServer.client_data[token][2]
+        client_ip = TCPServer.client_data[token][0]
+        self.logger.log('ROOM_CREATED', username=username, room_name=room_name, client_ip=client_ip)
         
-        # クライアントから参加希望ルームとパスワードを受信
-        _, _, _, _, requested_room, payload = self.decode_message(conn.recv())
+        # トークンをクライアントに送信
+        conn.sendall(token)
+
+    def join_room(self, conn, token, requested_room, payload):
         password = json.loads(payload).get("password", "")
+        username = TCPServer.client_data[token][2]
+        client_ip = TCPServer.client_data[token][0]
 
         # クライアント情報にパスワードを記録
         TCPServer.client_data[token][4] = password
 
-         # 指定されたルームが存在しない場合はエラーを返す
+        # 指定されたルームが存在しない場合はエラーを返す
         if requested_room not in self.room_tokens:
+            self.logger.log('JOIN_FAIL', username=username, details=f"Invalid room: {requested_room}", client_ip=client_ip)
             conn.sendall(b"InvalidRoom")
             return
 
         # パスワードが設定されており、不一致ならエラーを返す
         stored_password = self.room_passwords.get(requested_room, "")
         if stored_password and stored_password != password:
+            self.logger.log('JOIN_FAIL', username=username, room_name=requested_room, details="Invalid password", client_ip=client_ip)
             conn.sendall(b"InvalidPassword")
             return
 
@@ -247,18 +274,22 @@ class TCPServer:
         self.room_tokens[requested_room].append(token)
         TCPServer.client_data[token][1] = requested_room
 
+        # ログ記録 (USER_JOINED)
+        self.logger.log('USER_JOINED', username=username, room_name=requested_room, client_ip=client_ip)
+
         # トークンをクライアントに返す（参加完了通知）
         conn.sendall(token)
 
 
 class UDPServer:
-    def __init__(self, server_address, server_port):
+    def __init__(self, server_address, server_port, logger):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind((server_address, server_port))
         self.room_tokens        = TCPServer.room_tokens
         self.room_passwords     = TCPServer.room_passwords
         self.client_data        = TCPServer.client_data
         self.encryption_objects = TCPServer.encryption_objects
+        self.logger = logger
 
     def start_udp_server(self):
         threading.Thread(target=self.handle_messages, daemon=True).start()
@@ -266,18 +297,29 @@ class UDPServer:
 
     def handle_messages(self):
         while True:
-            # クライアントからのUDPメッセージを受信
-            data, client_addr = self.sock.recvfrom(4096)
+            try:
+                # クライアントからのUDPメッセージを受信
+                data, client_addr = self.sock.recvfrom(4096)
 
-             # メッセージからルーム名・トークン・本文を抽出
-            room, token, msg  = self.decode_message(data)
+                # メッセージからルーム名・トークン・本文を抽出
+                room, token, msg  = self.decode_message(data)
 
-            # クライアントのIPアドレスと最終通信時刻を更新
-            self.client_data[token][0] = client_addr
-            self.client_data[token][5] = time.time()
-            
-            # ルーム内の全メンバーにメッセージをブロードキャスト
-            self.broadcast(room, msg)
+                if token in self.client_data:
+                    # クライアントのIPアドレスと最終通信時刻を更新
+                    self.client_data[token][0] = client_addr
+                    self.client_data[token][5] = time.time()
+                    
+                    # ログ記録 (MESSAGE_SENT)
+                    username = self.client_data[token][2]
+                    self.logger.log('MESSAGE_SENT', username=username, room_name=room, details=msg, client_ip=client_addr)
+
+                    # ルーム内の全メンバーにメッセージをブロードキャスト
+                    self.broadcast(room, msg)
+                else:
+                    self.logger.log('INVALID_TOKEN', details=f"Received UDP from unknown token", client_ip=client_addr)
+            except Exception as e:
+                self.logger.log('ERROR', details=f"UDP Handle Messages Error: {e}")
+
 
     def decode_message(self, data):
         # ヘッダとボディを切り出す
@@ -301,6 +343,9 @@ class UDPServer:
 
     def broadcast(self, room_name, message):
         # 指定されたルームの全参加者に対してループ
+        if room_name not in self.room_tokens:
+            return
+
         for token in self.room_tokens.get(room_name, []):
             client_info = self.client_data.get(token)
             if not client_info or not client_info[0]:
@@ -322,13 +367,13 @@ class UDPServer:
             try:
                 # クライアントにメッセージを送信
                 self.sock.sendto(packet, client_info[0])
-            except Exception:
-                pass
+            except Exception as e:
+                self.logger.log('ERROR', details=f"UDP Broadcast Error to {client_info[0]}: {e}")
 
     def remove_inactive_clients(self):
         while True:
-            # タイムアウトの閾値（30秒間アクティビティがない場合）
-            inactivity_threshold = time.time() - 300
+            # タイムアウトの閾値（60秒間アクティビティがない場合）
+            inactivity_threshold = time.time() - 60
              
             # 全クライアントを走査して、非アクティブなクライアントを検出
             for token, client_info in list(self.client_data.items()):
@@ -337,8 +382,8 @@ class UDPServer:
                     try:
                         # 非アクティブなクライアントを切断
                         self.disconnect(token, client_info)
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        self.logger.log('ERROR', details=f"Disconnect Error for {client_info[2]}: {e}")
 
             # 60秒ごとにチェックを繰り返す
             time.sleep(60)
@@ -348,48 +393,62 @@ class UDPServer:
         members     = self.room_tokens.get(room, [])
         timeout_msg = b"Timeout!"
 
+        # ログ記録 (USER_TIMEOUT)
+        self.logger.log('USER_TIMEOUT', username=username, room_name=room, client_ip=addr)
+
         # ① ルーム内への通知
-        if is_host:
-            # ホストがタイムアウトした場合は、ルームの終了を通知
-            self.broadcast(room, f"System: ホストの{username}がタイムアウトしたためルームを終了します")
-            self.broadcast(room, "exit!")
-            
-            # ルームのデータを削除
-            self.room_tokens.pop(room, None)
-            self.room_passwords.pop(room, None)
+        if room and room in self.room_tokens:
+            if is_host:
+                # ホストがタイムアウトした場合は、ルームの終了を通知
+                self.broadcast(room, f"System: ホストの{username}がタイムアウトしたためルームを終了します")
+                self.broadcast(room, "exit!")
+                
+                # ルームのデータを削除
+                self.room_tokens.pop(room, None)
+                self.room_passwords.pop(room, None)
 
-            # 全参加者を削除対象とする
-            targets = members[:]   
+                # 全参加者を削除対象とする
+                targets = members[:]   
+            else:
+                # 一般ユーザーがタイムアウトした場合の通知
+                self.broadcast(room, f"System: {username}がタイムアウトにより退出しました。")
+
+                # ルームから該当トークンを削除
+                if token in members:
+                    members.remove(token)
+
+                # 該当ユーザーのみを削除対象とする
+                targets = [token]
         else:
-            # 一般ユーザーがタイムアウトした場合の通知
-            self.broadcast(room, f"System: {username}がタイムアウトにより退出しました。")
-
-            # ルームから該当トークンを削除
-            if token in members:
-                members.remove(token)
-
-            # 該当ユーザーのみを削除対象とする
-            targets = [token]      
+            targets = [token]
 
         # ② クライアントデータと暗号オブジェクトを削除
-        for token in targets:
-            self.client_data.pop(token, None)
-            self.encryption_objects.pop(token, None)
+        for t in targets:
+            self.client_data.pop(t, None)
+            self.encryption_objects.pop(t, None)
 
         # ③ クライアントにタイムアウト通知を送信（失敗時の例外は呼び出し元で処理）
-        self.sock.sendto(timeout_msg, addr)
+        try:
+            self.sock.sendto(timeout_msg, addr)
+        except Exception as e:
+            self.logger.log('ERROR', details=f"Timeout notification send failed to {addr}: {e}")
 
 
 
 if __name__ == "__main__":
+    
     # サーバーの IPアドレス と ポート番号 を設定
     server_address  = '0.0.0.0'
     tcp_server_port = 9001
     udp_server_port = 9002
 
+    # loggerインスタンスを生成
+    logger = SQLiteLogger('/app/logs.db')
+    logger.log('SERVER_START', details='Server process started.')
+
     # TCPサーバー と UDPサーバー を作成
-    tcp_server = TCPServer(server_address, tcp_server_port)
-    udp_server = UDPServer(server_address, udp_server_port)
+    tcp_server = TCPServer(server_address, tcp_server_port, logger)
+    udp_server = UDPServer(server_address, udp_server_port, logger)
 
     # 各サーバーを並行して実行するスレッドを作成
     tcp_thread = threading.Thread(target=tcp_server.start_tcp_server)

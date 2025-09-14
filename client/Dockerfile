@@ -18,4 +18,4 @@ EXPOSE 8501
 
 # エントリーポイント
 # main.py から起動する構成
-CMD ["streamlit", "run", "main.py", "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "client.py", "--server.port=8501", "--server.address=0.0.0.0"]

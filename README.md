@@ -11,9 +11,9 @@
 
 <br>
 
-### 独自プロトコル・暗号通信・マルチスレッド・ソケット通信によるグループチャットアプリ
+### ゼロから構築した暗号化マルチスレッドチャットシステム
 
-### システム設計から実装、Docker、Docker-Compose、Github Actionsの自動テストまで対応
+### 独自プロトコル＋TCP/UDP通信＋Docker運用まで自作
 
 <br>
 
@@ -50,9 +50,13 @@
 
 - [システム全体の構成図](#システム全体の構成図)
 
+- [クラス設計](#クラス構成とモジュール設計)
+
+- [CI（継続的インテグレーション）](#ci)
+
 - [使用技術](#使用技術)
 
-- [クラス構成 と モジュール設計](#クラス構成とモジュール設計)
+
 
 
 
@@ -67,7 +71,7 @@
 
 - [苦労した点](#苦労した点)
 
-- [クラウド化への方針](#追加予定の機能)
+- [クラウド化・大規模化へのアプローチ](#追加予定の機能)
 
 <br>
 
@@ -130,7 +134,7 @@
 
 3. **得られた学び**
 
-      通信・暗号・並列処理を含むシステム設計と実装、`Docker化`、`GitHub Actions`による自動テストの経験
+      通信・暗号・並列処理を含むシステム設計と実装、`Docker化`、`GitHub Actions`によるビルドテストの経験
 
 <br>
 
@@ -201,13 +205,13 @@ http://localhost:8501 でアクセス可能です。
 flowchart TD
 %%─── ノード定義 ───
 Start([スタート])
-選択["ユーザー名を入力"]
-ルーム名入力[ルーム名を入力]
-パスワード設定[パスワードを設定]
-ルーム一覧[ルーム一覧から選択]
-パスワード入力[パスワードを入力]
-チャット中[チャット中]
-自動退出[自動退出]
+選択(ユーザー名を入力)
+ルーム名入力(ルーム名を入力)
+パスワード設定(パスワードを設定)
+ルーム一覧(ルーム一覧から選択)
+パスワード入力(パスワードを入力)
+チャット中(チャット中)
+自動退出(自動退出)
 End([終了])
 
 %%─── フロー定義 ───
@@ -215,6 +219,7 @@ Start --> 選択
 選択 -- 作成 --> ルーム名入力 --> パスワード設定 --> チャット中
 選択 -- 参加 --> ルーム一覧 --> パスワード入力 --> チャット中
 チャット中 -->|5分間無操作| 自動退出 --> End
+
 ```
 
 <br>
@@ -257,6 +262,148 @@ sequenceDiagram
 ---
 
 
+
+## <a id="クラス構成とモジュール設計"></a>📌 クラス設計
+
+<br>
+
+### <a id="server.py のクラス図"></a> サーバプログラム のクラス図
+
+<br>
+
+```mermaid
+classDiagram
+
+class RSAKeyExchange {
+    -private_key: RsaKey
+    +__init__()
+    +public_key_bytes(): bytes
+    +decrypt_symmetric_key(encrypted: bytes): tuple
+}
+
+class AESCipherCFB {
+    -key: bytes
+    -iv: bytes
+    +__init__(key: bytes, iv: bytes)
+    +encrypt(data: bytes): bytes
+    +decrypt(data: bytes): bytes
+}
+
+class SecureSocket {
+    -sock: socket
+    -cipher: AESCipherCFB
+    +__init__(sock: socket, cipher: AESCipherCFB)
+    +recv_exact(n: int): bytes
+    +sendall(plaintext: bytes): void
+    +recv(): bytes
+}
+
+class UDPServer {
+    -sock: socket
+    -room_tokens: dict
+    -room_passwords: dict
+    -client_data: dict
+    -encryption_objects: dict
+    +__init__(server_address: str, server_port: int)
+    +start_udp_server(): void
+    +handle_messages(): void
+    +decode_message(data: bytes): tuple
+    +broadcast(room_name: str, message: str): void
+    +remove_inactive_clients(): void
+    +disconnect(token: bytes, info: list): void
+}
+
+class TCPServer {
+    -sock: socket
+    +HEADER_MAX_BYTE: int
+    +TOKEN_MAX_BYTE: int
+    +room_tokens: dict
+    +room_passwords: dict
+    +client_data: dict
+    +encryption_objects: dict
+    +__init__(server_address: str, server_port: int)
+    +start_tcp_server(): void
+    +handle_client_request(connection: socket, client_address: tuple): void
+    +perform_key_exchange(conn: socket): tuple
+    +decode_message(data: bytes): tuple
+    +register_client(addr: tuple, room_name: str, payload: str, operation: int): bytes
+    +create_room(conn: SecureSocket, room_name: str, token: bytes): void
+    +join_room(conn: SecureSocket, token: bytes): void
+    +recvn(conn: socket, n: int): bytes
+}
+
+TCPServer --> UDPServer : uses data from
+TCPServer --> SecureSocket : uses
+SecureSocket --> AESCipherCFB : uses
+TCPServer --> RSAKeyExchange : uses
+UDPServer --> AESCipherCFB : uses
+
+```
+
+<br>
+
+### TCP と UDP の並列処理の設計
+
+<br>
+
+- **課題点**
+  
+  正確な通信（ルーム作成・参加など）で必要な `TCP通信` と、
+
+  リアルタイム性が求められるチャット通信で必要な `UDP通信` を並列処理する必要がありました。
+
+<br>
+
+- **解決アプローチ**
+
+  `TCPServer` と `UDPServer` をそれぞれ別スレッドで起動し、並列処理を実現。
+
+  クライアント情報やルーム情報は `TCPServer` のクラス変数（`room_members_map`、`clients_map`）
+
+  に集約し、`UDPServer` からも直接参照できるように設計。
+ 
+<br>
+    
+- **得られた成果**
+  
+  TCP による確実なルーム管理と UDP による低遅延チャットを同時に両立。
+   
+  複数ルーム・複数ユーザーが同時接続しても、メッセージの遅延や不整合がなく、
+
+  安定したチャット体験を提供。  
+
+
+<br>
+
+
+
+
+---
+
+## 🔀 CI（継続的インテグレーション） <a id="ci"></a>
+
+<br>
+
+<img width="829" alt="Image" src="https://github.com/user-attachments/assets/3a7e3c99-6eaa-41ce-9428-6f3e52a37088" />
+
+<br>
+
+- **導入の背景**
+
+  コード変更やサーバーコンテナ数の増加など、
+  
+  構成が変化した際にも確実にビルド・起動できることを確認するため、
+  
+  `docker compose build` と `up` を実行し、`ps コマンド`で起動状態を確認、
+
+  最後に `down` によりクリーンアップするGitHub Actionsを導入しました。
+
+  手動での確認作業を不要とし、CI上で常時チェックを行うことで、開発の効率と信頼性を向上させました。
+
+
+<br>
+
+---
 ## <a id="使用技術"></a>🧰 使用技術
 
 <br>
@@ -297,9 +444,9 @@ sequenceDiagram
 
 - **`Github Actions`**
 
-  プッシュやプルリクエスト時に、Docker Buildxによるビルドから起動・動作確認・クリーンアップを
+  プッシュやプルリクエスト時に、docker compose を用いたビルド・起動・動作確認・クリーンアップを
 
-  自動化し、変更によって生じた不具合を素早く検出・修正できるようにするため
+  自動化し、構成変更などによって生じた不具合を素早く検出・修正できるようにするため
 
 
 
@@ -326,121 +473,6 @@ sequenceDiagram
 
 ---
 
-## <a id="クラス構成とモジュール設計"></a>📌 クラス構成 と モジュール設計
-
-<br>
-
-### <a id="server.py のクラス図"></a> [サーバプログラム](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/server.py) のクラス図
-
-<br>
-
-```mermaid
-classDiagram
-
-class RSAKeyExchange {
-    - private_key
-    + __init__()
-    + public_key_bytes() bytes
-    + decrypt_symmetric_key(encrypted) tuple
-}
-
-class AESCipherCFB {
-    - key
-    - iv
-    + __init__(key, iv)
-    + encrypt(data) bytes
-    + decrypt(data) bytes
-}
-
-class SecureSocket {
-    - sock
-    - cipher
-    + __init__(sock, cipher)
-    + recv_exact(n) bytes
-    + sendall(plaintext)
-    + recv() bytes
-}
-
-class TCPServer {
-    - sock
-    + __init__(server_address, server_port)
-    + start_tcp_server()
-    + handle_client_request(connection, client_address)
-    + perform_key_exchange(conn)
-    + decode_message(data)
-    + register_client(addr, room_name, payload, operation)
-    + create_room(conn, room_name, token)
-    + join_room(conn, token)
-    + recvn(conn, n) static
-}
-
-class UDPServer {
-    - sock
-    - room_tokens
-    - room_passwords
-    - client_data
-    - encryption_objects
-    + __init__(server_address, server_port)
-    + start_udp_server()
-    + handle_messages()
-    + decode_message(data)
-    + broadcast(room, message)
-    + remove_inactive_clients()
-    + disconnect(token, info)
-}
-
-TCPServer --> RSAKeyExchange : uses
-TCPServer --> SecureSocket : uses
-SecureSocket --> AESCipherCFB : uses
-UDPServer --> AESCipherCFB : uses 
-
-
-```
-<br>
-
-
-### <a id="client.py のクラス図"></a> [クライアント](https://github.com/BackendExplorer/Online-Chat-Service/blob/main/client.py) のモジュール構成
-
-<br>
-
-
-```mermaid
-graph TD
-
-  %% スタイル定義
-  classDef ui fill:#fff8e1,stroke:#f9a825,stroke-width:2px
-  classDef application fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-  classDef infra fill:#fce4ec,stroke:#c2185b,stroke-width:2px
-
-  subgraph Entry_Point["GUI"]
-    main["Streamlit"]
-    class main ui
-  end
-
-  subgraph Application
-    app["TCPClient / UDPClient"]
-    class app application
-  end
-
-  subgraph Crypto
-    rsa["RSAKeyExchange"]
-    aes["AESCipherCFB"]
-    sock["SecureSocket"]
-    class rsa,aes,sock infra
-  end
-
-  main --> app
-
-  app --> rsa
-  app --> aes
-  app --> sock
-
-
-```
- 
-<br>
-
----
 
 ## <a id="設計上のこだわり"></a>🌟 設計上のこだわり
 
@@ -499,43 +531,45 @@ graph TD
 
 <br>
 
-### TCP と UDP の並列処理の設計
+### 安全なチャットメッセージ送受信のための暗号化通信の設計
 
 <br>
 
 - **課題点**
   
-  正確な通信（ルーム作成・参加など）で必要な `TCP通信` と、
-
-  リアルタイム性が求められるチャット通信で必要な `UDP通信` を並列処理できる必要がありました。
+  チャットの通信内容の秘匿性と、メッセージ交換のリアルタイム性を両立させる必要がありました。<br>
+  
+  安全な公開鍵暗号（RSA）は低速で、高速な共通鍵暗号（AES）は安全な鍵共有が課題でした。
 
 <br>
 
 - **解決アプローチ**
 
-  `TCPServer` と `UDPServer` をそれぞれ別スレッドで起動し、並列処理を実現。
+  最初に RSA で公開鍵をサーバーからクライアントに送り、クライアント側でAES鍵を生成し、<br>
 
-  クライアント情報やルーム情報は `TCPServer` のクラス変数（`room_members_map`、`clients_map`）
+  それをRSAで暗号化してサーバーに送信。以降の通信はAESによる共通鍵暗号化通信に切り替えることで、<br>
 
-  に集約し、`UDPServer` からも直接参照できるように設計。
- 
+  安全かつ効率的にチャットメッセージを送受信できるようにしました。
+
 <br>
     
 - **得られた成果**
+
+  この設計により、安全な鍵交換と低遅延なリアルタイム通信を両立させることができました<br>
+
+  結果として、ユーザーは安全かつ快適にチャットを利用できます。
   
-  TCP による確実なルーム管理と UDP による低遅延チャットを同時に両立。
-   
-  複数ルーム・複数ユーザーが同時接続しても、メッセージの遅延や不整合がなく、
-
-  安定したチャット体験を提供。  
-
-
 <br>
+
 
 
 ---
 
-## <a id="追加予定の機能"></a> 🔥 クラウド化への方針
+## <a id="追加予定の機能"></a> 🔥 クラウド化・大規模化へのアプローチ
+
+<br>
+
+### クラウド化への方針
 
 <br>
 
@@ -563,6 +597,38 @@ graph TD
   
   自動化によって保守も簡単になり、本番展開にもつながります。
   
+
+
+<br><br>
+
+
+
+### システムの大規模化にあたっては、以下の3段階でアクセス増加に備えます。
+
+<br>
+
+1. **垂直スケーリング**
+
+    処理能力を高めるためにCPUの性能を上げたり、キャッシュを増やすためにメモリを追加し、
+
+    より多くのデータを保存するためにストレージを増やします。
+
+<br>
+
+2. **水平スケーリング**
+
+    垂直スケーリングにおける物理的なハードウェアの限界を突破するために、
+
+    サーバの数を増やします。このとき、各サーバーをノードと呼びます。
+
+<br>
+
+3. **ロードバランサー**
+  
+    ユーザーからのすべての通信は、まずロードバランサーノードに集約され、
+
+    そこから適切なサーバノードに自動振り分けされます。
+
 <br>
 
 ---
@@ -623,3 +689,7 @@ graph TD
 </ul>
 
 <br>
+
+
+
+docker-compose exec server sqlite3 /app/logs.db "SELECT * FROM logs ORDER BY id DESC LIMIT 20;"

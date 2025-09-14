@@ -4,18 +4,23 @@ services:
   server:
     build:
       context: ./server
-    container_name: secure-chat-server         
+    container_name: secure-chat-server
     ports:
-      - "8080:8080"          
-      - "9090:9090/udp"       
-      - "9001:9001/tcp"        
-      - "9002:9002/udp"        
+      - "8080:8080"
+      - "9090:9090/udp"
+      - "9001:9001/tcp"
+      - "9002:9002/udp"
+    volumes:
+      - ./server:/app 
+
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
 
   client:
     build:
       context: ./client
-    container_name: secure-chat-client        
+    container_name: secure-chat-client
     depends_on:
       - server
     ports:
-      - "8501:8501"            
+      - "8501:8501"
