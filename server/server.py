@@ -119,11 +119,11 @@ class TCPServer:
 
             # ルーム作成フロー
             if operation == 1: 
-                self.handle_create_room(secure_socket, client_address, room_name, payload, symmetric_cipher)
+                self.handle_create_request	(secure_socket, client_address, room_name, payload, symmetric_cipher)
                 
             # ルーム参加フロー
             elif operation == 2: 
-                self.handle_join_room(secure_socket, client_address, room_name, payload, symmetric_cipher)
+                self.handle_join_request	(secure_socket, client_address, room_name, payload, symmetric_cipher)
             
              # ルーム一覧取得フロー
             elif operation == 3:
@@ -136,7 +136,7 @@ class TCPServer:
         finally:
             connection.close()
 
-    def handle_create_room(self, secure_socket, client_address, room_name, payload, symmetric_cipher):
+    def handle_create_request	(self, secure_socket, client_address, room_name, payload, symmetric_cipher):
         # State: 1 (準拠) の応答を送信
         ack_payload = json.dumps({"status": "OK"}).encode('utf-8')
         ack_packet = self.make_packet(room_name, 1, 1, ack_payload)
@@ -149,13 +149,13 @@ class TCPServer:
         TCPServer.encryption_objects[token] = symmetric_cipher
         
         # サーバー内部でルームを作成
-        self.create_room(room_name, token)
+        self.register_room(room_name, token)
 
         # State: 2 (完了) の応答としてトークンを送信
         complete_packet = self.make_packet(room_name, 1, 2, token)
         secure_socket.sendall(complete_packet)
 
-    def handle_join_room(self, secure_socket, client_address, room_name, payload, symmetric_cipher):
+    def handle_join_request	(self, secure_socket, client_address, room_name, payload, symmetric_cipher):
         username = json.loads(payload).get("username", "")
         password = json.loads(payload).get("password", "")
 
@@ -187,7 +187,7 @@ class TCPServer:
         TCPServer.encryption_objects[token] = symmetric_cipher
         
         # サーバー内部でルームに参加
-        self.join_room(room_name, token)
+        self.register_user(room_name, token)
 
         # State: 2 (完了) の応答としてトークンを送信
         complete_packet = self.make_packet(room_name, 2, 2, token)
@@ -298,7 +298,7 @@ class TCPServer:
         
         return token
 
-    def create_room(self, room_name, token):
+    def register_room(self, room_name, token):
         # ルームにホストとしてトークンを登録
         self.room_tokens[room_name] = [token]
         # クライアントが送信したパスワードをルームに紐づけて保存
@@ -311,7 +311,7 @@ class TCPServer:
         client_ip = TCPServer.client_data[token][0]
         self.logger.log('ROOM_CREATED', username=username, room_name=room_name, client_ip=client_ip)
 
-    def join_room(self, room_name, token):
+    def register_user(self, room_name, token):
         # ルームにクライアントを追加し、所属ルームを更新
         self.room_tokens[room_name].append(token)
         TCPServer.client_data[token][1] = room_name
