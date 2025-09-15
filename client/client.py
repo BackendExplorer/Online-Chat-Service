@@ -111,98 +111,142 @@ class TCPClient:
     
         return room_size + op_code + state_code + payload_size
 
-    def make_packet(self, room, op, payload):
-        # payloadがNoneの場合は空のJSONオブジェクトにする
+    def make_packet(self, room, op, state, payload):
         payload_obj = payload if payload is not None else {}
         payload_bytes = json.dumps(payload_obj).encode("utf-8")
         room_bytes = room.encode("utf-8")
-        header = self.make_header(room_bytes, op, 0, payload_bytes)
+        header = self.make_header(room_bytes, op, state, payload_bytes)
         return header + room_bytes + payload_bytes
+    
+    def decode_server_response(self, data):
+        # サーバーからのレスポンスパケットをデコードする
+        header = data[:32]
+        body = data[32:]
+        
+        room_name_size = header[0]
+        operation = header[1]
+        state = header[2]
+        payload_size = int.from_bytes(header[3:], 'big')
+        
+        room_name = body[:room_name_size].decode('utf-8')
+        payload = body[room_name_size:room_name_size+payload_size] # payloadはJSONかもしれないし、ただのバイト列かもしれない
+        
+        return room_name, operation, state, payload
 
     # クライアントが新しいルームを作成する関数
     def create_room(self, username, room, password):
-        # サーバーに接続して鍵交換を行う
-        self.connect_and_handshake()
+        try:
+            # サーバーに接続して鍵交換を行う
+            self.connect_and_handshake()
 
-        # 操作コード：1 = ルーム作成
-        op_code = 1
+            # 操作コード：1 = ルーム作成, 状態: 0 = リクエスト
+            op_code = 1
+            state = 0
+            payload = {"username": username, "password": password}
+            packet = self.make_packet(room, op_code, state, payload)
 
-        # ルーム作成用のパケットを作成
-        payload = {"username": username, "password": password}
-        packet = self.make_packet(room, op_code, payload)
+            # State: 0 のパケットを送信
+            self.sock.sendall(packet)
 
-        # パケットを送信
-        self.sock.sendall(packet)
+            # State: 1 (準拠) の応答を待つ
+            ack_response = self.sock.recv()
+            _, _, ack_state, _ = self.decode_server_response(ack_response)
+            if ack_state != 1:
+                raise ConnectionAbortedError("サーバーからのACKが不正です。")
 
-        # サーバーからトークンを受信
-        token = self.sock.recv()
+            # State: 2 (完了) の応答（トークン）を待つ
+            complete_response = self.sock.recv()
+            _, _, token_state, token = self.decode_server_response(complete_response)
+            if token_state != 2:
+                raise ConnectionAbortedError("サーバからトークンを受信できませんでした。")
 
-        # 接続を閉じる
-        self.sock.close()
-
-        # トークンとルーム情報を返す
-        return {token: [room, username]}
+            # トークンとルーム情報を返す
+            return {token: [room, username]}
+        finally:
+            if self.sock:
+                self.sock.close()
 
     # サーバーからルーム一覧を取得する関数
     def get_room_list(self):
-        # サーバーと接続して鍵交換を行う
-        self.connect_and_handshake()
-
-        # 操作コード：2 = ルーム一覧取得
-        op_code = 2
-        packet = self.make_packet("", op_code, None)
-
-        # パケットを送信
-        self.sock.sendall(packet)
-
-        # サーバーからの応答を受信・復号
-        response = self.sock.recv().decode()
-
-        # 接続を閉じる
-        self.sock.close()
-
-        # 応答文字列をリスト形式に整形して返す
         try:
-            raw_list = response.strip()[1:-1]  # 例: "['room1', 'room2']"
-            room_list = [
-                room.strip().strip("'\"") 
-                for room in raw_list.split(',') 
-                if room.strip()
-            ]
-            return room_list
-        except Exception:
-            # パース失敗時はそのまま文字列をリストで返す
-            return [response]
+            # サーバーと接続して鍵交換を行う
+            self.connect_and_handshake()
+
+            # 操作コード：4 = ルーム一覧取得, 状態: 0 = リクエスト
+            op_code = 3
+            state = 0
+            packet = self.make_packet("", op_code, state, {})
+
+            # パケットを送信
+            self.sock.sendall(packet)
+
+            # サーバーからの応答を受信・復号
+            response_data = self.sock.recv()
+            _, _, resp_state, payload_bytes = self.decode_server_response(response_data)
+            
+            if resp_state != 1:
+                raise ConnectionAbortedError("ルーム一覧の取得に失敗しました。")
+
+            response = payload_bytes.decode()
+
+            # 応答文字列をリスト形式に整形して返す
+            try:
+                raw_list = response.strip()[1:-1]  # 例: "['room1', 'room2']"
+                room_list = [
+                    room.strip().strip("'\"") 
+                    for room in raw_list.split(',') 
+                    if room.strip()
+                ]
+                return room_list
+            except Exception:
+                # パース失敗時はそのまま文字列をリストで返す
+                return [response]
+        finally:
+            if self.sock:
+                self.sock.close()
 
     # クライアントが既存のルームに参加する関数
     def join_room(self, username, room, password):
-        # サーバーに接続して鍵交換を行う
-        self.connect_and_handshake()
+        try:
+            # サーバーに接続して鍵交換を行う
+            self.connect_and_handshake()
 
-        # 操作コード：3 = ルーム参加
-        op_code = 3
+            # 操作コード：2 = ルーム参加, 状態: 0 = リクエスト
+            op_code = 2
+            state = 0
+            payload = {"username": username, "password": password}
+            packet = self.make_packet(room, op_code, state, payload)
 
-        # 参加用のパケットを作成
-        payload = {"username": username, "password": password}
-        packet = self.make_packet(room, op_code, payload)
+            # パケットを送信
+            self.sock.sendall(packet)
 
-        # パケットを送信
-        self.sock.sendall(packet)
+            # State: 1 (準拠) または State: 255 (エラー) の応答を待つ
+            ack_response = self.sock.recv()
+            _, _, ack_state, ack_payload = self.decode_server_response(ack_response)
+            
+            # エラー処理
+            if ack_state == 255:
+                error_msg = ack_payload.decode()
+                if "InvalidPassword" in error_msg:
+                    raise ValueError("パスワードが違います。")
+                if "InvalidRoom" in error_msg:
+                    raise ValueError("ルームが存在しません。")
+                raise ConnectionAbortedError(f"参加エラー: {error_msg}")
+            
+            if ack_state != 1:
+                raise ConnectionAbortedError("サーバーからのACKが不正です。")
 
-        # サーバーからの応答を受信
-        resp = self.sock.recv()
+            # State: 2 (完了) の応答（トークン）を待つ
+            complete_response = self.sock.recv()
+            _, _, token_state, token = self.decode_server_response(complete_response)
+            if token_state != 2:
+                raise ConnectionAbortedError("サーバからトークンを受信できませんでした。")
 
-        # 接続を閉じる
-        self.sock.close()
-
-        # エラー判定
-        if resp.startswith(b"InvalidPassword"):
-            raise ValueError("パスワードが違います。")
-        if resp.startswith(b"InvalidRoom"):
-            raise ValueError("ルームが存在しません。")
-
-        # 正常応答：トークンを辞書で返す
-        return {resp: [room, username]}
+            # 正常応答：トークンを辞書で返す
+            return {token: [room, username]}
+        finally:
+            if self.sock:
+                self.sock.close()
 
 
 class UDPClient:
@@ -273,27 +317,23 @@ class UDPClient:
 
 
 class GUIManager:
-    """
-    Streamlitを使用したGUIの描画と管理を担当するクラス。
-    装飾的なHTML/CSSを排除し、標準ウィジェットのみで構成。
-    """
+    
     def __init__(self, controller):
         self.controller = controller
         self.tcp_client = controller.tcp_client
 
+    # アプリの基本設定（ページタイトルやレイアウト）
     def setup(self):
-        """アプリの基本設定（ページタイトルやレイアウト）を行う"""
         st.set_page_config("💬 Online Chat Service", "💬", layout="centered")
 
+    # 現在のページ状態に応じて適切な描画関数を呼び出す
     def render(self):
-        """現在のページ状態に応じて適切な描画関数を呼び出す"""
         page_name = self.controller.session.page_name
-        # getattrを使用して、ページ名に応じたメソッドを動的に呼び出す
         page_function = getattr(self, f"page_{page_name}", self.page_home)
         page_function()
 
+    # ホーム画面（ルーム作成・参加の選択）を表示
     def page_home(self):
-        """ホーム画面（ルーム作成・参加の選択）を表示"""
         st.title("💬 Online Chat Service")
         st.write("ルームを作成するか、既存のルームに参加してください。")
 
@@ -303,8 +343,8 @@ class GUIManager:
         if col2.button("ルームに参加", use_container_width=True):
             self.controller.switch_page("join")
 
+    # ルーム作成画面を表示
     def page_create(self):
-        """ルーム作成画面を表示"""
         st.header("ルームを作成")
         with st.form("create_form"):
             username = st.text_input("ユーザー名", key="create_username")
@@ -329,8 +369,8 @@ class GUIManager:
                 except Exception as e:
                     st.error(f"作成失敗: {e}")
 
+    # ルーム参加画面を表示
     def page_join(self):
-        """ルーム参加画面を表示"""
         session = self.controller.session
         st.header("ルームに参加")
 
@@ -360,8 +400,8 @@ class GUIManager:
                 except Exception as e:
                     st.error(f"参加失敗: {e}")
 
+    # チャット画面を表示
     def page_chat(self):
-        """チャット画面を表示"""
         st_autorefresh(interval=2000, key="chat-refresh")
         
         session = self.controller.session
@@ -401,9 +441,7 @@ class GUIManager:
 
 
 class AppController:
-    """
-    アプリケーションの状態管理とページ遷移を担当するクラス。
-    """
+    
     def __init__(self, server_address, tcp_port, udp_port):
         self.server_address = server_address
         self.tcp_port = tcp_port
@@ -412,8 +450,8 @@ class AppController:
         self.init_session()
         self.tcp_client = TCPClient(self.server_address, self.tcp_port)
 
+    # セッションが初期化されていない場合にデフォルト値を設定
     def init_session(self):
-        """セッションが初期化されていない場合にデフォルト値を設定"""
         defaults = {
             "page_name": "home",
             "room_list": [],
@@ -428,8 +466,8 @@ class AppController:
             if key not in self.session:
                 self.session[key] = value
 
+    # サーバー接続後の情報をセッションに保存し、UDPクライアントを初期化
     def set_connection_info(self, connection_info, username, room_name):
-        """サーバー接続後の情報をセッションに保存し、UDPクライアントを初期化"""
         self.session.client_info = connection_info
         self.session.username = username
         self.session.room_name = room_name
@@ -438,8 +476,8 @@ class AppController:
             self.server_address, self.udp_port, connection_info, self.tcp_client.cipher
         )
 
+    # 指定されたページに遷移し、画面を再描画
     def switch_page(self, page_name):
-        """指定されたページに遷移し、画面を再描画"""
         self.session.page_name = page_name
         st.rerun()
 
