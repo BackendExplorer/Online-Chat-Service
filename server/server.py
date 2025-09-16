@@ -24,7 +24,7 @@ class RSAKeyExchange:
 
         # 復号結果からAES鍵とIVを分離して返す
         aes_key = decrypted_bytes[:16]
-        iv      = decrypted_bytes[16:]
+        iv = decrypted_bytes[16:]
         return aes_key, iv
     
 
@@ -69,9 +69,6 @@ class SecureSocket:
     def recv(self):
         # 最初の4バイトで受信データの長さを取得
         length = self.recv_exact(4)
-        if not length:
-            return b''
-
         # 指定バイト数のデータを受信し、復号して返す
         ciphertext = self.recv_exact(int.from_bytes(length, 'big'))
         return self.cipher.decrypt(ciphertext)
@@ -79,9 +76,6 @@ class SecureSocket:
 
 class TCPServer:
     
-    HEADER_MAX_BYTE = 32
-    TOKEN_MAX_BYTE = 255
-
     room_tokens        = {}  # {room : [token, ...]}
     room_passwords     = {}  # {room : password}
     client_data        = {}  # {token: [addr, room, user, is_host, pw, last]}
@@ -107,15 +101,9 @@ class TCPServer:
 
             # クライアントから初回リクエスト(State: 0)を受信
             request_data = secure_socket.recv()
-            if not request_data:
-                return
 
             # ヘッダーとボディを解析
             _, operation, state, _, room_name, payload = self.decode_message(request_data)
-
-            # Stateが0（リクエスト）でない場合は処理を中断
-            if state != 0:
-                return
 
             # ルーム作成フロー
             if operation == 1: 
@@ -211,9 +199,9 @@ class TCPServer:
         
         # クライアントから暗号化された AES鍵＋IV を受信
         encrypted_key_size = int.from_bytes(self.recvn(conn, 4), 'big')
-        encrypted_key_iv   = self.recvn(conn, encrypted_key_size)
+        encrypted_key_iv = self.recvn(conn, encrypted_key_size)
         # 秘密鍵で復号し、AES鍵と IV を取得
-        aes_key, aes_iv    = key_manager.decrypt_symmetric_key(encrypted_key_iv)
+        aes_key, aes_iv = key_manager.decrypt_symmetric_key(encrypted_key_iv)
 
         # 対称暗号用のオブジェクトを作成
         symmetric_cipher = AESCipherCFB(aes_key, aes_iv)
@@ -246,18 +234,18 @@ class TCPServer:
 
     def decode_message(self, data):
         # ヘッダー と ボディ を切り出す
-        header = data[:self.HEADER_MAX_BYTE]
-        body   = data[self.HEADER_MAX_BYTE:]
+        header = data[:32]
+        body = data[32:]
 
         # ヘッダから各フィールドを抽出
         room_name_size = int.from_bytes(header[:1], "big")
         operation      = int.from_bytes(header[1:2], "big")
         state          = int.from_bytes(header[2:3], "big")
-        payload_size   = int.from_bytes(header[3:self.HEADER_MAX_BYTE], "big")
+        payload_size   = int.from_bytes(header[3:32], "big")
 
         # ボディから各フィールドを抽出
         room_name = body[:room_name_size].decode("utf-8")
-        payload   = body[room_name_size:room_name_size + payload_size].decode("utf-8")
+        payload = body[room_name_size:room_name_size + payload_size].decode("utf-8")
         
         return (
             room_name_size,  # ルーム名のサイズ
@@ -270,17 +258,17 @@ class TCPServer:
 
     def register_client(self, addr, room_name, payload, operation):
         # ペイロードをパースしてユーザー情報を取得
-        info     = json.loads(payload) if payload else {}
+        info = json.loads(payload) if payload else {}
 
         # クライアント識別用のトークンを生成
-        token    = secrets.token_bytes(self.TOKEN_MAX_BYTE)
+        token = secrets.token_bytes(255)
 
         # ユーザー名・パスワードを抽出（無い場合は空文字）
         username = info.get("username", "")
         password = info.get("password", "")
 
         # 操作がルーム作成ならホストとみなす（1: 作成）
-        is_host  = int(operation == 1)
+        is_host = int(operation == 1)
 
         # 初期状態では未参加ルーム、最後のアクティブ時間を記録
         joined_room = ""
@@ -366,11 +354,11 @@ class UDPServer:
     def decode_message(self, data):
         # ヘッダとボディを切り出す
         header = data[:2]
-        body   = data[2:]
+        body = data[2:]
 
         # ヘッダから各フィールドを抽出
         room_name_size = int.from_bytes(header[:1], "big")
-        token_size     = int.from_bytes(header[1:2], "big")
+        token_size = int.from_bytes(header[1:2], "big")
 
         # ボディから各フィールドを抽出
         room_name         = body[:room_name_size].decode("utf-8")
@@ -434,7 +422,7 @@ class UDPServer:
 
     def disconnect(self, token, info):
         addr, room, username, is_host = info[:4]
-        members     = self.room_tokens.get(room, [])
+        members = self.room_tokens.get(room, [])
         timeout_msg = b"Timeout!"
 
         # ログ記録 (USER_TIMEOUT)
@@ -482,7 +470,7 @@ class UDPServer:
 if __name__ == "__main__":
     
     # サーバーの IPアドレス と ポート番号 を設定
-    server_address  = '0.0.0.0'
+    server_address = '0.0.0.0'
     tcp_server_port = 9001
     udp_server_port = 9002
 

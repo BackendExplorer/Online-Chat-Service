@@ -13,7 +13,7 @@ class RSAKeyExchange:
     def __init__(self):
         # ランダムな AES 鍵と IV（初期化ベクトル）を生成して保持
         self.aes_key = secrets.token_bytes(16)
-        self.iv      = secrets.token_bytes(16)
+        self.iv = secrets.token_bytes(16)
 
     def encrypted_shared_secret(self, server_pub_key):
         # AES 鍵と IV を連結して共有秘密情報を作成
@@ -27,7 +27,7 @@ class AESCipherCFB:
     def __init__(self, key, iv):
         # AES 共通鍵と初期化ベクトル（IV）を保存
         self.key = key
-        self.iv  = iv
+        self.iv = iv
 
     def encrypt(self, data):
         # AES CFBモードで与えられたデータを暗号化して返す
@@ -43,7 +43,7 @@ class SecureSocket:
     def __init__(self, raw_sock, cipher):
         # 生のソケットと暗号化用の AES オブジェクトを保持
         self.raw_sock = raw_sock
-        self.cipher   = cipher
+        self.cipher = cipher
 
     # 指定されたバイト数を受信するまで繰り返す
     def recv_exact(self, n):
@@ -63,8 +63,6 @@ class SecureSocket:
     def recv(self):
         # 最初の 4 バイトで暗号化データの長さを取得し、その長さ分を受信して復号
         length_bytes = self.recv_exact(4)
-        if not length_bytes:
-            return b''
         ciphertext = self.recv_exact(int.from_bytes(length_bytes, 'big'))
         return self.cipher.decrypt(ciphertext)
 
@@ -74,16 +72,11 @@ class SecureSocket:
 
 class TCPClient:
     
-    HEADER_ROOM_LEN    = 1
-    HEADER_OP_LEN      = 1
-    HEADER_STATE_LEN   = 1
-    HEADER_PAYLOAD_LEN = 29    
-
     def __init__(self, server_address, server_port):
         self.server_address = server_address
-        self.server_port    = server_port
+        self.server_port = server_port
         self.cipher = None    
-        self.sock   = None
+        self.sock = None
 
     def connect_and_handshake(self):
         # TCP ソケットを作成し、サーバに接続
@@ -101,13 +94,13 @@ class TCPClient:
 
         # 暗号化通信のための SecureSocket を確立
         self.cipher = AESCipherCFB(key_exchanger.aes_key, key_exchanger.iv)
-        self.sock   = SecureSocket(tcp_socket, self.cipher)
+        self.sock = SecureSocket(tcp_socket, self.cipher)
 
     def make_header(self, room_bytes, op, state, payload_bytes):
-        room_size    = len(room_bytes).to_bytes(self.HEADER_ROOM_LEN, 'big')
-        op_code      = op.to_bytes(self.HEADER_OP_LEN, 'big')
-        state_code   = state.to_bytes(self.HEADER_STATE_LEN, 'big')
-        payload_size = len(payload_bytes).to_bytes(self.HEADER_PAYLOAD_LEN, 'big')
+        room_size    = len(room_bytes).to_bytes(1, 'big')
+        op_code      = op.to_bytes(1, 'big')
+        state_code   = state.to_bytes(1, 'big')
+        payload_size = len(payload_bytes).to_bytes(29, 'big')
     
         return room_size + op_code + state_code + payload_size
 
