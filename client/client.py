@@ -285,14 +285,10 @@ class UDPClient:
 
         try:
             while True:
-                packet, _ = self.sock.recvfrom(4096)
-
-                # ヘッダーからルーム名とトークンの長さを抽出
-                room_len = packet[0]
-                token_len = packet[1]
-
-                # 暗号化メッセージ部分を切り出し、復号
-                encrypted_msg = packet[2 + room_len + token_len:]
+                # サーバーから受信したデータは、暗号化されたメッセージ本体そのもの
+                encrypted_msg, _ = self.sock.recvfrom(4096)
+                
+                # そのまま復号する
                 message = self.cipher.decrypt(encrypted_msg).decode()
 
                 # 終了通知メッセージはスキップ
@@ -304,6 +300,12 @@ class UDPClient:
                     new_messages.append(message)
 
         except socket.timeout:
+            pass
+        except UnicodeDecodeError:
+            # 復号に失敗した壊れたパケットは無視する
+            pass
+        except Exception:
+            # その他の予期せぬエラーもとりあえず無視
             pass
 
         return new_messages
