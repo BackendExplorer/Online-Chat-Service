@@ -1,6 +1,6 @@
 # Online Chat Service 
 
-![Python](https://img.shields.io/badge/Python-3.13.2-blue)
+![Python](https://img.shields.io/badge/Python-blue)
 ![Streamlit](https://img.shields.io/badge/UI-Streamlit-red) 
 ![Docker Compose](https://img.shields.io/badge/Orchestration-Docker_Compose-2496ED?logo=docker&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/CI-GitHub_Actions-black?logo=githubactions&logoColor=white)
@@ -8,27 +8,25 @@
 [![License: Custom - Evaluation Only](https://img.shields.io/badge/License-Evaluation--Only-lightgrey.svg)](./LICENSE)
 
 
+<br>
+
+### ゼロから構築したグールプチャットアプリ
+
+### 暗号通信 + 独自プロトコル + CI/CDパイプライン を自作
 
 <br>
 
-### ゼロから構築した暗号化マルチスレッドチャットシステム
-
-### 独自プロトコル＋TCP/UDP通信＋Docker運用まで自作
+## ⭐ デモ画像
 
 <br>
 
-## ⭐ デモ動画
+### チャットルーム作成と会話の流れを確認できるデモ画像
 
 <br>
 
-### チャットルーム作成と会話の流れを確認できるデモ動画
-
-<br>
-
-![Image](https://github.com/user-attachments/assets/9c7608ac-3291-4aa1-8f2a-72da07aab874)
-
-![Image](https://github.com/user-attachments/assets/787643c5-a1da-4b60-ab98-b92fe79911a7)
-  
+| <img width="550" height="444" alt="スクリーンショット 2025-09-14 0 12 41" src="https://github.com/user-attachments/assets/b307c46c-8fdb-4f58-a3bc-41e5a19c06cf" /> | <img width="552" height="466" alt="スクリーンショット 2025-09-14 0 12 46" src="https://github.com/user-attachments/assets/ee9cc7b8-6267-477a-a831-8223013e8695" /> |
+|:---:|:---:|
+| <img width="531" height="498" alt="スクリーンショット 2025-09-13 23 59 09" src="https://github.com/user-attachments/assets/3fbc13fb-b474-4f56-a6a4-1eaa7b2323c1" /> | <img width="550" height="488" alt="スクリーンショット 2025-09-13 23 59 16" src="https://github.com/user-attachments/assets/0b3d35fb-3b6c-4af3-9ed7-a968fcd17f0a" /> |  
 <br>
 
 
@@ -50,9 +48,9 @@
 
 - [システム全体の構成図](#システム全体の構成図)
 
-- [クラス設計](#クラス構成とモジュール設計)
+- [並列化とクラス設計](#クラス構成とモジュール設計)
 
-- [CI（継続的インテグレーション）](#ci)
+- [CI/CDの概要](#ci)
 
 - [使用技術](#使用技術)
 
@@ -134,7 +132,7 @@
 
 3. **得られた学び**
 
-      通信・暗号・並列処理を含むシステム設計と実装、`Docker化`、`GitHub Actions`によるビルドテストの経験
+      通信・暗号・並列処理を含むシステム設計と実装、Docker化、GitHub Actionsによるビルドテストの経験
 
 <br>
 
@@ -195,7 +193,17 @@ http://localhost:8501 でアクセス可能です。
 
 | ホスト | ゲスト |
 |:-------:|:--------:|
-|<br><img alt="Image" src="https://github.com/user-attachments/assets/16bf1e34-e667-4bfc-8742-7f602c4e3695" width="100%" /> |<br><img alt="Image" src="https://github.com/user-attachments/assets/61029b89-75c0-4764-bcff-ff80dd3d34a3" width="100%" /> |
+|<br><img width="550" height="488" alt="スクリーンショット 2025-09-13 23 59 16" src="https://github.com/user-attachments/assets/4c714a0e-82c0-44a6-821b-628e800ce2ea" /> |<br><img width="550" height="488" alt="スクリーンショット 2025-09-13 23 59 16" src="https://github.com/user-attachments/assets/62e51020-7cb9-4d57-97dd-0992f1ca9c17" /> |
+
+
+
+
+
+
+
+
+
+
 
 <br>
 
@@ -231,39 +239,47 @@ Start --> 選択
   
 ## <a id="システム全体の構成図"></a>⚙️ システム全体の構成図
 
+
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Compose as Docker-Compose
-    participant Docker as Docker デーモン
-    participant ClientContainer as クライアントコンテナ
-    participant ServerContainer as サーバコンテナ
 
-    %% コンテナ起動フロー
-    Compose ->> Docker: Dockerfileからイメージをビルド
-    Docker ->> ServerContainer: サーバーコンテナを起動 (server.py)
-    Docker ->> ClientContainer: クライアントコンテナを起動 (client.py)
+    participant ユーザー
+    participant クライアント
+    participant サーバー
+    participant SQLite
+
+    %% 起動フロー
+    ユーザー ->> サーバー: サーバープロセスを起動 (docker-compose up)
+    note right of サーバー: サーバーコンテナが起動
+    サーバー ->> SQLite: サーバー起動ログを記録
+    
+    ユーザー ->> クライアント: クライアントプロセスを起動 (docker-compose up)
+    note right of クライアント: クライアントコンテナが起動
 
     %% メッセージ交換
-    ClientContainer ->> ServerContainer: TCP接続＋RSA/AES鍵交換
-    ServerContainer -->> ClientContainer: トークン／ルーム一覧応答
-    ClientContainer ->> ServerContainer: UDP通信（AES暗号化）
-    ServerContainer -->> ClientContainer: メッセージブロードキャスト
-
-    %% クライアント内フロー (コンテナ内)
-    note right of ServerContainer: ルーム管理・タイムアウト監視を常時実行
-    note over Compose: docker-compose up で一発起動
+    クライアント ->> サーバー: TCP接続＋RSA/AES鍵交換
+    サーバー -->> クライアント: トークン／ルーム一覧応答
     
+    クライアント ->> サーバー: UDP通信（AES暗号化）
+    サーバー ->> SQLite: メッセージログを記録
+    サーバー -->> クライアント: メッセージブロードキャスト
 
+    %% サーバー内部の継続処理
+    note right of サーバー: ルーム管理・タイムアウト監視を常時実行
 ```
 
-<img width="709" alt="Image" src="https://github.com/user-attachments/assets/a824ab62-2775-4593-9358-5cef36a8bdc4" />
+<br>
+
+<img width="789" height="564" alt="スクリーンショット 2025-09-16 22 34 31" src="https://github.com/user-attachments/assets/17b7978e-69aa-4626-b8c9-a0d7a38d0a97" />
+
+
 
 ---
 
 
 
-## <a id="クラス構成とモジュール設計"></a>📌 クラス設計
+## <a id="クラス構成とモジュール設計"></a>📌 並列化とクラス設計
 
 <br>
 
@@ -358,9 +374,9 @@ UDPServer --> AESCipherCFB : uses
 
   `TCPServer` と `UDPServer` をそれぞれ別スレッドで起動し、並列処理を実現。
 
-  クライアント情報やルーム情報は `TCPServer` のクラス変数（`room_members_map`、`clients_map`）
+  クライアント情報やルーム情報は `TCPServer` のクラス変数に集約し、
 
-  に集約し、`UDPServer` からも直接参照できるように設計。
+  `UDPServer` からも直接参照できるように設計。
  
 <br>
     
@@ -372,15 +388,39 @@ UDPServer --> AESCipherCFB : uses
 
   安定したチャット体験を提供。  
 
+<br><br>
+
+
+<img width="704" height="473" alt="スクリーンショット 2025-09-26 0 00 09" src="https://github.com/user-attachments/assets/f725711b-81e8-4c4b-b576-4369424d4805" />
+
+
+### スレッドの起動フロー
 
 <br>
 
+1. **Main Thread**
 
+    接続管理用の `TCP Thread` と通信用の `UDP Thread` を起動します。
 
+<br>
+
+2. **TCP Thread**
+
+    クライアントからの接続要求があるたびに、個別の `Client Thread` を生成します。
+
+<br>
+
+3. **UDP Thread**
+   
+    自身の起動と同時に、メッセージを扱う `Message Thread` と
+
+    タイムアウトを監視する `Timeout Monitor Thread` を生成し、これらを常時稼働させます。
+
+<br>
 
 ---
 
-## 🔀 CI（継続的インテグレーション） <a id="ci"></a>
+## 🔀 CI/CDの概要 <a id="ci"></a>
 
 <br>
 
@@ -388,18 +428,35 @@ UDPServer --> AESCipherCFB : uses
 
 <br>
 
-- **導入の背景**
+<br><br>
 
-  コード変更やサーバーコンテナ数の増加など、
-  
-  構成が変化した際にも確実にビルド・起動できることを確認するため、
-  
-  `docker compose build` と `up` を実行し、`ps コマンド`で起動状態を確認、
+### GitHub Actions で **ビルド → 配布** を自動化しています
 
-  最後に `down` によりクリーンアップするGitHub Actionsを導入しました。
+<br>
 
-  手動での確認作業を不要とし、CI上で常時チェックを行うことで、開発の効率と信頼性を向上させました。
+- **コンテナの起動テスト**
 
+  コード変更をトリガーに自動でビルドと起動検証を実行します
+
+<br>
+
+- **Dockerイメージの自動プッシュ**
+
+  ビルドしたイメージをDocker Hubへ自動的にプッシュ。
+
+  クラウド化の際にAWS EC2などから最新イメージを即座に pull＆起動できる仕組みを構築しました。
+
+  自動プッシュされたイメージは、[Docker Hubリポジトリ](https://hub.docker.com/repository/docker/tenshinnoji/video-processor-server/general)で確認できます。
+
+<br>
+
+- **今後の拡張予定：ログ機能の導入**
+
+  アーキテクチャ図に示したSQLiteコンテナは、今後の拡張機能として導入を計画しています。
+
+  これにより、チャットログやシステムのエラーログを永続的に保存し、
+
+  サービスの監視・分析をしやすくすることを目指します。
 
 <br>
 
@@ -408,66 +465,60 @@ UDPServer --> AESCipherCFB : uses
 
 <br>
 
-### 1. 技術選定の理由
-
-- **`Python`**
-
-  豊富な標準ライブラリと高い可読性によって、複雑なシステムを効率的に実装するため
-
-- **`TCPソケット`**
-
-  ルーム参加・ユーザー認証など、確実なデータ転送が必要な処理に利用するため
-
-- **`UDPソケット`**
-
-  チャットメッセージ送信などリアルタイム性を重視する通信に利用するため
-
-- **`ハイブリッド暗号方式`**
-
-  大量のクライアントがサーバに接続したとき、安全性を確保しつつ通信効率を維持するため
-
-- **`マルチスレッド`**
-
-  クライアントごとの並行処理を軽量に行うため
-
-- **`Streamlit`**
-
-  Pythonのみで手軽にWeb UIを構築できるため、開発効率を重視して採用
-
-- **`Docker`**
-
-  依存関係をコンテナ内に隔離し、環境差異を排除してどこでも同じ動作を保証するため
-
-- **`Docker-Compose`**
-
-  サーバコンテナとクライアントコンテナを同時に起動し、起動手順を簡素化するため
-
-- **`Github Actions`**
-
-  プッシュやプルリクエスト時に、docker compose を用いたビルド・起動・動作確認・クリーンアップを
-
-  自動化し、構成変更などによって生じた不具合を素早く検出・修正できるようにするため
-
-
-
-<br>
-
-### 2.  技術スタックと 開発環境 の全体像
-
-<br>
-
-| カテゴリ       | 採用技術 と 使用ツール                                                                                     　　|
-|----------------|----------------------------------------------------------------------------------------------------------------------|
-| 開発言語       | ![Python](https://img.shields.io/badge/Python-3.13.2-blue) <br>標準ライブラリ使用：`socket`, `threading`, `logging`, `time`, `sys` |
-| 通信技術       | ![TCP](https://img.shields.io/badge/Protocol-TCP-blue) ![UDP](https://img.shields.io/badge/Protocol-UDP-blue) <br>独自プロトコルTCRP（Talk Chat Room Protocol）を用いた通信設計 |
-| 暗号技術       | ![PyCryptodome](https://img.shields.io/badge/Encryption-PyCryptodome-blue) <br>ハイブリッド暗号方式 (RSA＋AES) で通信
-| 並列処理       | ![Threading](https://img.shields.io/badge/Concurrency-Threading-yellow) <br>マルチスレッドによる並列処理                      |
-| UIフレームワーク | ![Streamlit](https://img.shields.io/badge/UI-Streamlit-red) <br>Webベースのインターフェースを簡易に構築 |
-| 開発環境       | ![macOS](https://img.shields.io/badge/OS-macOS-lightgrey)&nbsp;&nbsp;&nbsp;&nbsp;![VSCode](https://img.shields.io/badge/Editor-VSCode-blue) |
-| バージョン管理 | ![Git](https://img.shields.io/badge/VersionControl-Git-orange)&nbsp;&nbsp;&nbsp;&nbsp;![GitHub](https://img.shields.io/badge/Repo-GitHub-black) |
-| インフラ | ![Docker](https://img.shields.io/badge/Container-Docker-blue) ![Docker Compose](https://img.shields.io/badge/Orchestration-Docker_Compose-2496ED?logo=docker&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/CI-GitHub_Actions-black?logo=githubactions&logoColor=white) |
-| 描画ツール     | ![Mermaid](https://img.shields.io/badge/Diagram-Mermaid-green)&nbsp;&nbsp;&nbsp;&nbsp;![LaTeX](https://img.shields.io/badge/Doc-LaTeX-9cf) |
-
+<table>
+  <tr>
+    <th>カテゴリ</th>
+    <th>技術スタック</th>
+  </tr>
+  <tr>
+    <td>開発言語</td>
+    <td>Python</td>
+  </tr>
+  <tr>
+    <td rowspan="3">通信・暗号</td>
+    <td>TCP / UDPソケット</td>
+  </tr>
+  <tr>
+    <td>独自プロトコル (TCRP)</td>
+  </tr>
+  <tr>
+    <td>ハイブリッド暗号方式 (RSA + AES)</td>
+  </tr>
+  <tr>
+    <td>並列処理</td>
+    <td>マルチスレッド</td>
+  </tr>
+  <tr>
+    <td>UIフレームワーク</td>
+    <td>Streamlit</td>
+  </tr>
+    <tr>
+    <td rowspan="3">インフラ・コンテナ</td>
+    <td>Docker</td>
+  </tr>
+  <tr>
+    <td>Docker Compose</td>
+  </tr>
+  <tr>
+    <td>AWS EC2 (クラウド展開予定)</td>
+  </tr>
+  <tr>
+    <td>CI/CD</td>
+    <td>GitHub Actions</td>
+  </tr>
+  <tr>
+    <td>バージョン管理</td>
+    <td>Git / GitHub</td>
+  </tr>
+  <tr>
+    <td>描画・ドキュメント</td>
+    <td>Mermaid / LaTeX</td>
+  </tr>
+  <tr>
+    <td>開発環境</td>
+    <td>macOS / VSCode</td>
+  </tr>
+</table>
 
 <br>
 
@@ -478,52 +529,19 @@ UDPServer --> AESCipherCFB : uses
 
 <br>
 
-- **プロトコル仕様**
+- **独自プロトコルの導入背景**
 
-  以下は、チャットルーム接続のために設計された
-  
-  独自プロトコル **TCRP（Talk Chat Room Protocol）** のパケット構造を表します。
+  TCP通信では、異なる種類のデータを送る際ときに、データの境界を明確に区別できなかったので、
+
+  各データのデータサイズをヘッダに入れて、受信側がデータの中身を簡単に特定できるようにしました。
+
+  これによって、パケットの解析処理が容易になり、拡張性も高まりました。
 
 <br>
 
 <img width="805" alt="Image" src="https://github.com/user-attachments/assets/1801cebc-8540-4fac-8833-9619ade31ab1" />
 
 <br>
-
-- **課題点**
-
-  チャットルームの作成・参加をTCP通信で制御するにあたり、  
-  
-  状態管理や処理の区別を正確に行う必要がありました。
-  
-  特に、Room作成・参加・応答といった複数の段階を整理して通信する仕組みが必要でした。
-
-<br>
-
-- **解決アプローチ**
-
-  ヘッダー部に `RoomNameSize（1B）`、`Operation（1B）`、`State（1B）`、
-  
-  `OperationPayloadSize（29B）` を固定長で定義。
-  
-  その後に、RoomName（最大8バイト）と OperationPayload（最大21バイト）を送信する構成としました。
-  
-  各フィールドのサイズを明示することで、サーバー側での解析を簡潔にし、
-
-  通信の一貫性と可読性を確保しました。
-
-<br>
-
-- **得られた成果**
-
-  クライアントとサーバー間のチャットルーム管理が明確に区分され、
-  
-  状態遷移（初期要求 → 応答 → 完了）も正確に処理できるようになりました。
-  
-  今後のプロトコル拡張（認証追加・通知処理など）にも対応しやすい柔軟な設計となっています。
-
-<br>
-
 
 ---
 
@@ -575,27 +593,29 @@ UDPServer --> AESCipherCFB : uses
 
 - **課題点**
 
-  現在はローカル環境でのみ動作しており、外部ユーザーが利用できる状態ではありません。  
+  現状では、このサービスはローカルでしか動作せず、外部のユーザーは利用できません。
 
-  また、手動での更新は手間とミスの原因になります。
-
+  また、機能追加のたびに手動でサーバーを更新する必要があるので、ミスが起きやすいです。
+  
 <br>
 
 - **解決アプローチ**
 
-  公開環境として AWS EC2 を採用し、サーバーを常時起動可能にします。
-  
-  GitHub Actions で Docker イメージを自動ビルド・更新し、
-  
-  EC2 側で自動的に pull・起動する仕組みを構築します。
+  サーバーの実行環境をAWS EC2へ移行し、インターネットへ公開します。
+
+  また、GitHub ActionsでCI/CDパイプラインを構築し、
+
+  コードが更新されるとDockerイメージのビルドからEC2へのデプロイまでを完全自動化します。
 
 <br>
 
 - **得られる成果**
 
-  外部公開が可能になり、実利用に近い環境での運用が実現します。
-  
-  自動化によって保守も簡単になり、本番展開にもつながります。
+  デプロイを自動化することで、ヒューマンエラーがなくなり、サービスの信頼性が向上します。
+
+  また、デプロイの手間が省けるので、開発効率も高まります。
+
+
   
 
 
@@ -641,23 +661,23 @@ UDPServer --> AESCipherCFB : uses
 
 - [Python socket - ソケット通信](https://docs.python.org/3/library/socket.html)
 
-  `TCP・UDP通信`の基本構文と使い方を参照
+  TCP・UDP通信の基本構文と使い方を参照
 
 - [Python threading - マルチスレッド](https://docs.python.org/3/library/threading.html)
 
-  `マルチスレッド処理`（Thread の生成・開始・join）を実装するために参照
+  マルチスレッド処理（Thread の生成・開始・join）を実装するために参照
 
 - [PyCryptodome — RSA](https://pycryptodome.readthedocs.io/en/latest/src/cipher/oaep.html)
 
-  `RSA公開鍵暗号`の暗号化・復号化の仕組みを理解するために参照
+  RSA公開鍵暗号の暗号化・復号化の仕組みを理解するために参照
 
 - [PyCryptodome — AES](https://www.pycryptodome.org/)
 
-  `共通鍵暗号方式`によるデータの暗号化のために参照
+  共通鍵暗号方式によるデータの暗号化のために参照
 
 - [Streamlit](https://docs.streamlit.io/)
 
-  `GUI`を迅速に実装するために参照
+  GUIを迅速に実装するために参照
   
 <br>
 
@@ -689,7 +709,3 @@ UDPServer --> AESCipherCFB : uses
 </ul>
 
 <br>
-
-
-
-docker-compose exec server sqlite3 /app/logs.db "SELECT * FROM logs ORDER BY id DESC LIMIT 20;"

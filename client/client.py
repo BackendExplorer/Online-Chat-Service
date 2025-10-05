@@ -479,7 +479,7 @@ class AppController:
 if __name__ == "__main__":
     
     # サーバーの IPアドレス と ポート番号 を設定
-    server_address = 'server'
+    server_address = '54.91.145.226'
     tcp_server_port = 9001
     udp_server_port = 9002
     controller = AppController(server_address, tcp_server_port, udp_server_port)
