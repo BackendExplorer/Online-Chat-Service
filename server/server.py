@@ -482,7 +482,7 @@ if __name__ == "__main__":
     udp_server_port = 9002
 
     # loggerインスタンスを生成
-    logger = SQLiteLogger('/app/logs.db')
+    logger = SQLiteLogger('/app/logs/logs.db')
     logger.log('SERVER_START', details='Server process started.')
 
     # TCPサーバー と UDPサーバー を作成
