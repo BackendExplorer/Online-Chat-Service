@@ -382,22 +382,28 @@ class UDPServer:
         # 指定されたルームの全参加者に対してループ
         if room_name not in self.room_tokens:
             return
-
+            
         for token in self.room_tokens.get(room_name, []):
             client_info = self.client_data.get(token)
             if not client_info or not client_info[0]:
-                continue # 無効なクライアントはスキップ
+                continue    # 無効なクライアントはスキップ
 
             # 対応する暗号オブジェクトでメッセージを暗号化
             cipher = self.encryption_objects.get(token)
-            if not cipher:
-                continue
+            encrypted_message = cipher.encrypt(message.encode()) if cipher else message.encode()
 
-            encrypted_message = cipher.encrypt(message.encode())
-            
+            # パケットを構築（ルーム名長 + トークン長 + ルーム名 + トークン + メッセージ）
+            packet = (
+                len(room_name).to_bytes(1, 'big') +
+                len(token).to_bytes(1, 'big')     +
+                room_name.encode()                +
+                token                             +
+                encrypted_message
+            )
+
             try:
-                # 暗号化したメッセージ本体だけをクライアントに送信
-                self.sock.sendto(encrypted_message, client_info[0])
+                # クライアントにメッセージを送信
+                self.sock.sendto(packet, client_info[0])
             except Exception as e:
                 self.logger.log('ERROR', details=f"UDP Broadcast Error to {client_info[0]}: {e}")
                 pass
@@ -482,7 +488,7 @@ if __name__ == "__main__":
     udp_server_port = 9002
 
     # loggerインスタンスを生成
-    logger = SQLiteLogger('/app/logs/logs.db')
+    logger = SQLiteLogger('/app/logs.db')
     logger.log('SERVER_START', details='Server process started.')
 
     # TCPサーバー と UDPサーバー を作成
