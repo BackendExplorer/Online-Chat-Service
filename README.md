@@ -252,6 +252,7 @@ docker compose exec server sqlite3 /app/logs.db "SELECT * FROM logs;"
 <img width="930" height="165" alt="Image" src="https://github.com/user-attachments/assets/a20cc1ed-80cc-4bfa-aa5d-2a9ce9ed28fb" />
 
 <br>
+
 ---
 
 
