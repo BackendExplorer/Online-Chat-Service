@@ -223,6 +223,35 @@ Start --> 選択
 
 <br>
 
+
+### 3. ログの確認
+
+<br>
+
+docker-compose.ymlがあるフォルダで、以下のコマンドを実行するとログを表示できます
+
+```bash
+docker compose exec server sqlite3 /app/logs.db "SELECT * FROM logs;"
+```
+
+<br>
+
+| 項目名       | 説明                                               |
+|--------------|--------------------------------------------------|
+| `id`         | ログの通し番号（自動で増分）                     |
+| `timestamp`  | ログが記録された日時（自動で現在時刻が設定される）|
+| `event_type` | イベントの種類（例：'login', 'message', 'join_room' など）|
+| `username`   | イベントに関連するユーザー名（任意）             |
+| `room_name`  | イベントが発生したルーム名（任意）               |
+| `details`    | イベントの詳細情報（任意）                       |
+| `client_ip`  | クライアントのIPアドレス（任意）                 |
+
+
+<br>
+
+<img width="930" height="165" alt="Image" src="https://github.com/user-attachments/assets/a20cc1ed-80cc-4bfa-aa5d-2a9ce9ed28fb" />
+
+<br>
 ---
 
 
