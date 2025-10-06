@@ -193,20 +193,8 @@ http://localhost:8501 でアクセス可能です。
 <br>
 
 | ホスト | ゲスト |
-|:-------:|:--------:|
-|<br><img width="698" height="654" alt="Image" src="https://github.com/user-attachments/assets/5ac5d0de-3619-4e81-8f1a-bdb6270cdba9" />
-|<img width="729" height="635" alt="Image" src="https://github.com/user-attachments/assets/c74332bb-d066-4db0-bc7e-2566c6a1137c" />
-|
-
-
-
-
-
-
-
-
-
-
+|:--:|:--:|
+| <img src="https://github.com/user-attachments/assets/5ac5d0de-3619-4e81-8f1a-bdb6270cdba9" width="100%"> | <img src="https://github.com/user-attachments/assets/c74332bb-d066-4db0-bc7e-2566c6a1137c" width="100%"> |
 
 <br>
 
