@@ -241,11 +241,11 @@ sequenceDiagram
     participant SQLite
 
     %% 起動フロー
-    ユーザー ->> サーバー: サーバープロセスを起動 (docker-compose up)
+    ユーザー ->> サーバー: サーバーを起動 
     note right of サーバー: サーバーコンテナが起動
     サーバー ->> SQLite: サーバー起動ログを記録
     
-    ユーザー ->> クライアント: クライアントプロセスを起動 (docker-compose up)
+    ユーザー ->> クライアント: クライアントを起動 
     note right of クライアント: クライアントコンテナが起動
 
     %% メッセージ交換
