@@ -292,7 +292,7 @@ sequenceDiagram
 
 <br>
 
-<img width="789" height="564" alt="スクリーンショット 2025-09-16 22 34 31" src="https://github.com/user-attachments/assets/17b7978e-69aa-4626-b8c9-a0d7a38d0a97" />
+<img width="640" height="458" alt="Image" src="https://github.com/user-attachments/assets/fbec3498-b1fc-4e47-9699-737efa9acf1f" />
 
 
 
@@ -412,8 +412,7 @@ UDPServer --> AESCipherCFB : uses
 <br><br>
 
 
-<img width="704" height="473" alt="スクリーンショット 2025-09-26 0 00 09" src="https://github.com/user-attachments/assets/f725711b-81e8-4c4b-b576-4369424d4805" />
-
+<img width="640" height="429" alt="Image" src="https://github.com/user-attachments/assets/a0e30d39-8eda-4fac-9bec-f61fa9a27dd1" />
 
 ### スレッドの起動フロー
 
